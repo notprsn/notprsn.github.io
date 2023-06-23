@@ -1,26 +1,36 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Personal Website</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=San+Francisco&display=swap" rel="stylesheet">
-</head>
-<body>
-    <header>
-        <h1 class="underlined">Home</h1>
-        <h2>My Personal Website</h2>
-    </header>
-    <main>
-        <h3>About me</h3>
-        <p>I want to see if I can make money off of this someday</p>
-    </main>
-    <footer>
-        <div id="counter">0</div>
-    </footer>
+body {
+    background-color: #778874;
+    font-family: 'San Francisco', sans-serif;
+    color: #E1C8AC;
+}
 
-    <script src="scripts.js"></script>
-</body>
-</html>
+header {
+    background-color: #383F32;
+    padding: 10px;
+}
+
+h1.underlined {
+    text-decoration: underline;
+    color: #A67852;
+}
+
+h2 {
+    font-size: smaller;
+    color: #CEA780;
+}
+
+main {
+    background-color: #825239;
+    padding: 10px;
+}
+
+footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: #000;
+    color: #00ff00;
+    text-align: center;
+}
+
