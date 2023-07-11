@@ -86,6 +86,3 @@ function generateDigitSVG(segments) {
         </svg>
     `;
 }
-
-
-
