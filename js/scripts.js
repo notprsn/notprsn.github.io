@@ -55,34 +55,34 @@ const segmentMap = {
     9: [1, 1, 1, 1, 0, 1, 1]
 };
 
-document.addEventListener("DOMContentLoaded", function(event) { 
-    let count = 0;
-    if (localStorage.getItem('visitCount')) {
-        count = Number(localStorage.getItem('visitCount')) + 1;
-    } else {
-        count = 1;
-    }
-    localStorage.setItem('visitCount', count);
+// document.addEventListener("DOMContentLoaded", function(event) { 
+//     let count = 0;
+//     if (localStorage.getItem('visitCount')) {
+//         count = Number(localStorage.getItem('visitCount')) + 1;
+//     } else {
+//         count = 1;
+//     }
+//     localStorage.setItem('visitCount', count);
     
-    // generate SVG for the visitor count
-    let counterSVG = '';
-    const digits = count.toString().padStart(7, "0").split('');
-    digits.forEach(digit => {
-        counterSVG += generateDigitSVG(segmentMap[digit]);
-    });
-    document.getElementById('visitorCount').innerHTML = counterSVG;
-});
+//     // generate SVG for the visitor count
+//     let counterSVG = '';
+//     const digits = count.toString().padStart(7, "0").split('');
+//     digits.forEach(digit => {
+//         counterSVG += generateDigitSVG(segmentMap[digit]);
+//     });
+//     document.getElementById('visitorCount').innerHTML = counterSVG;
+// });
 
-function generateDigitSVG(segments) {
-    return `
-        <svg width="30" height="60" style="margin: 0 5px;">
-            <rect x="5" y="0" width="20" height="5" style="fill: ${segments[0] ? '#39ff14' : '#333'}" />
-            <rect x="25" y="5" width="5" height="20" style="fill: ${segments[1] ? '#39ff14' : '#333'}" />
-            <rect x="25" y="30" width="5" height="20" style="fill: ${segments[2] ? '#39ff14' : '#333'}" />
-            <rect x="5" y="50" width="20" height="5" style="fill: ${segments[3] ? '#39ff14' : '#333'}" />
-            <rect x="0" y="30" width="5" height="20" style="fill: ${segments[4] ? '#39ff14' : '#333'}" />
-            <rect x="0" y="5" width="5" height="20" style="fill: ${segments[5] ? '#39ff14' : '#333'}" />
-            <rect x="5" y="25" width="20" height="5" style="fill: ${segments[6] ? '#39ff14' : '#333'}" />
-        </svg>
-    `;
-}
+// function generateDigitSVG(segments) {
+//     return `
+//         <svg width="30" height="60" style="margin: 0 5px;">
+//             <rect x="5" y="0" width="20" height="5" style="fill: ${segments[0] ? '#39ff14' : '#333'}" />
+//             <rect x="25" y="5" width="5" height="20" style="fill: ${segments[1] ? '#39ff14' : '#333'}" />
+//             <rect x="25" y="30" width="5" height="20" style="fill: ${segments[2] ? '#39ff14' : '#333'}" />
+//             <rect x="5" y="50" width="20" height="5" style="fill: ${segments[3] ? '#39ff14' : '#333'}" />
+//             <rect x="0" y="30" width="5" height="20" style="fill: ${segments[4] ? '#39ff14' : '#333'}" />
+//             <rect x="0" y="5" width="5" height="20" style="fill: ${segments[5] ? '#39ff14' : '#333'}" />
+//             <rect x="5" y="25" width="20" height="5" style="fill: ${segments[6] ? '#39ff14' : '#333'}" />
+//         </svg>
+//     `;
+// }
