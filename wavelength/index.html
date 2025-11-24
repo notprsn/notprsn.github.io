@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neural Love Vector | Bengaluru Edition</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'neon-pink': '#ff007f',
+                        'neon-cyan': '#00f3ff',
+                        'dark-bg': '#0f172a',
+                        'glass': 'rgba(255, 255, 255, 0.05)',
+                    },
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                        mono: ['Space Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #050505;
+            color: #e2e8f0;
+            overflow-x: hidden;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+        .neon-text-pink {
+            text-shadow: 0 0 10px rgba(255, 0, 127, 0.7);
+        }
+        .neon-text-cyan {
+            text-shadow: 0 0 10px rgba(0, 243, 255, 0.7);
+        }
+        .nav-dot {
+            transition: all 0.3s ease;
+        }
+        .nav-dot.active {
+            background-color: #00f3ff;
+            box-shadow: 0 0 10px #00f3ff;
+            transform: scale(1.5);
+        }
+        canvas {
+            display: block;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+        .typing-cursor::after {
+            content: '|';
+            animation: blink 1s step-start infinite;
+        }
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-neon-pink selection:text-white">
+
+    <!-- Navigation Dots -->
+    <div class="fixed right-8 top-1/2 transform -translate-y-1/2 z-50 flex flex-col gap-4">
+        <a href="#intro" class="nav-dot w-3 h-3 rounded-full bg-slate-600 hover:bg-white" title="The Problem"></a>
+        <a href="#input-layer" class="nav-dot w-3 h-3 rounded-full bg-slate-600 hover:bg-white" title="The Input"></a>
+        <a href="#gatekeeper" class="nav-dot w-3 h-3 rounded-full bg-slate-600 hover:bg-white" title="The Gatekeeper"></a>
+        <a href="#spark-engine" class="nav-dot w-3 h-3 rounded-full bg-slate-600 hover:bg-white" title="The Spark"></a>
+        <a href="#glue-layer" class="nav-dot w-3 h-3 rounded-full bg-slate-600 hover:bg-white" title="The Glue"></a>
+        <a href="#learning-loop" class="nav-dot w-3 h-3 rounded-full bg-slate-600 hover:bg-white" title="Learning Loop"></a>
+        <a href="#final-match" class="nav-dot w-3 h-3 rounded-full bg-slate-600 hover:bg-white" title="The Match"></a>
+    </div>
+
+    <!-- Module 1: The Problem Statement -->
+    <section id="intro" class="relative h-screen w-full flex items-center justify-center overflow-hidden">
+        <canvas id="nodesCanvas" class="absolute inset-0 z-0"></canvas>
+        <div class="relative z-10 text-center p-8 glass-panel rounded-2xl max-w-3xl mx-4">
+            <h1 class="text-5xl md:text-7xl font-bold mb-4 tracking-tight">
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-neon-cyan to-blue-500">10,000 Souls</span>
+            </h1>
+            <h2 class="text-2xl md:text-3xl font-light text-slate-300 mb-6">in the Silicon Valley of India</h2>
+            <p class="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
+                How do we maximize the probability of true connection in a city of noise?
+                <br>
+                <span class="text-neon-pink text-sm font-mono mt-4 block opacity-80">Hover to disturb the entropy. Scroll to decode.</span>
+            </p>
+        </div>
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <svg class="w-6 h-6 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+        </div>
+    </section>
+
+    <!-- Module 2: The Input Layer -->
+    <section id="input-layer" class="h-screen w-full flex items-center justify-center bg-dark-bg relative border-t border-slate-800">
+        <div class="container mx-auto px-4 flex flex-col md:flex-row gap-8 h-[80vh]">
+            <!-- Chat Interface -->
+            <div class="w-full md:w-2/3 glass-panel rounded-2xl p-6 flex flex-col relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-neon-pink to-neon-cyan"></div>
+                <div class="flex-1 overflow-y-auto space-y-4 mb-4" id="chat-history">
+                    <!-- Messages will appear here -->
+                </div>
+                <div class="h-14 bg-slate-800/50 rounded-lg flex items-center px-4 border border-slate-700">
+                    <span class="text-slate-500 mr-2">></span>
+                    <span id="user-input-display" class="text-slate-300 font-mono typing-cursor"></span>
+                </div>
+            </div>
+            
+            <!-- Extracted Variables Panel -->
+            <div class="w-full md:w-1/3 glass-panel rounded-2xl p-6 flex flex-col">
+                <h3 class="text-neon-cyan font-mono text-sm mb-4 uppercase tracking-wider border-b border-slate-700 pb-2">
+                    Real-time Extraction
+                </h3>
+                <div id="variables-list" class="space-y-3 font-mono text-xs md:text-sm">
+                    <!-- Variables will appear here -->
+                    <div class="text-slate-500 italic">Waiting for input stream...</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Module 3: The Gatekeeper -->
+    <section id="gatekeeper" class="h-screen w-full flex flex-col items-center justify-center bg-black relative overflow-hidden">
+        <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiLz48L3N2Zz4=')] opacity-20"></div>
+        
+        <div class="z-10 text-center mb-8">
+            <h2 class="text-4xl font-bold mb-2 text-white">The Gatekeeper</h2>
+            <p class="text-slate-400">Attractiveness is the gatekeeper. Personality is the key.</p>
+        </div>
+
+        <div class="w-full max-w-4xl h-[50vh] relative glass-panel rounded-xl mb-8 overflow-hidden">
+            <canvas id="eloCanvas" class="w-full h-full"></canvas>
+            <div class="absolute top-4 right-4 bg-black/60 px-3 py-1 rounded text-xs font-mono text-neon-pink border border-neon-pink/30">
+                Matches Found: <span id="match-count">0</span>
+            </div>
+        </div>
+
+        <div class="w-full max-w-md px-8">
+            <label for="elo-slider" class="block text-sm font-mono text-neon-cyan mb-2 flex justify-between">
+                <span>Visual Elo Sensitivity</span>
+                <span id="elo-value">50%</span>
+            </label>
+            <input type="range" id="elo-slider" min="0" max="100" value="50" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-neon-cyan">
+            <div class="flex justify-between text-xs text-slate-600 mt-2 font-mono">
+                <span>Broad</span>
+                <span>Selective</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Module 4: The Spark Engine -->
+    <section id="spark-engine" class="h-screen w-full flex items-center justify-center bg-dark-bg relative">
+        <div class="container mx-auto px-4 flex flex-col md:flex-row items-center gap-12">
+            <div class="w-full md:w-1/2">
+                <h2 class="text-4xl font-bold mb-6">Fisher's 4 Systems</h2>
+                <p class="text-slate-400 mb-8 leading-relaxed">
+                    We map neural architecture to four biological drives. 
+                    <span class="text-neon-pink">Explorers</span> seek novelty. 
+                    <span class="text-blue-400">Builders</span> seek stability.
+                    Opposites attract, or birds of a feather? The algorithm decides.
+                </p>
+                <div class="glass-panel p-6 rounded-xl border-l-4 border-neon-pink">
+                    <h3 class="text-xl font-bold mb-2 text-white">Protagonist Profile</h3>
+                    <ul class="space-y-2 text-sm text-slate-300 font-mono">
+                        <li class="flex justify-between"><span>Primary:</span> <span class="text-neon-pink">Explorer (Dopamine)</span></li>
+                        <li class="flex justify-between"><span>Secondary:</span> <span class="text-neon-cyan">Negotiator (Estrogen)</span></li>
+                        <li class="flex justify-between"><span>Strategy:</span> <span>Seeks Fellow Explorer</span></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="w-full md:w-1/2 flex justify-center">
+                <div class="w-full max-w-md glass-panel p-4 rounded-2xl">
+                    <canvas id="fisherChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Module 5: The Glue Layer -->
+    <section id="glue-layer" class="h-screen w-full flex flex-col items-center justify-center bg-black relative">
+        <div class="container mx-auto px-4 text-center mb-10">
+            <h2 class="text-4xl font-bold mb-4">The Glue & Resilience</h2>
+            <p class="text-slate-400 max-w-2xl mx-auto">Mapping Attachment Styles and Mental Toughness (MTQ48) to predict longevity.</p>
+        </div>
+
+        <div class="relative w-full max-w-3xl aspect-video glass-panel rounded-xl p-4 overflow-hidden">
+            <!-- Quadrant Background -->
+            <div class="absolute inset-0 flex">
+                <div class="w-1/2 h-full border-r border-slate-700/50"></div>
+                <div class="w-1/2 h-full"></div>
+            </div>
+            <div class="absolute inset-0 flex flex-col">
+                <div class="h-1/2 w-full border-b border-slate-700/50"></div>
+                <div class="h-1/2 w-full"></div>
+            </div>
+            
+            <!-- Labels -->
+            <div class="absolute top-2 left-1/2 -translate-x-1/2 text-xs text-slate-500 font-mono">High Anxiety</div>
+            <div class="absolute bottom-2 left-1/2 -translate-x-1/2 text-xs text-slate-500 font-mono">Low Anxiety</div>
+            <div class="absolute left-2 top-1/2 -translate-y-1/2 text-xs text-slate-500 font-mono -rotate-90">High Avoidance</div>
+            <div class="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-slate-500 font-mono rotate-90">Low Avoidance</div>
+
+            <!-- Zones -->
+            <div class="absolute bottom-4 right-4 text-green-500/20 text-4xl font-bold select-none">SECURE</div>
+            <div class="absolute top-4 left-4 text-red-500/20 text-4xl font-bold select-none">TRAP</div>
+
+            <!-- Canvas for Dots -->
+            <canvas id="attachmentCanvas" class="absolute inset-0 w-full h-full z-10"></canvas>
+        </div>
+        
+        <div class="mt-8 flex gap-4">
+            <div class="glass-panel px-4 py-2 rounded-lg border border-slate-700">
+                <span class="block text-xs text-slate-500 uppercase">Your Style</span>
+                <span class="text-neon-pink font-bold">Anxious-Preoccupied</span>
+            </div>
+            <div class="glass-panel px-4 py-2 rounded-lg border border-slate-700">
+                <span class="block text-xs text-slate-500 uppercase">Target</span>
+                <span class="text-green-400 font-bold">Secure Base</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Module 6: Bayesian Learning Loop -->
+    <section id="learning-loop" class="h-screen w-full flex items-center justify-center bg-dark-bg border-t border-slate-800">
+        <div class="container mx-auto px-4 flex flex-col md:flex-row gap-8 h-[80vh]">
+            <!-- User Profile Card -->
+            <div class="w-full md:w-1/2 flex flex-col items-center justify-center">
+                <div class="glass-panel w-full max-w-sm p-6 rounded-2xl border border-slate-700 relative group">
+                    <div class="absolute top-4 right-4 bg-green-500/20 text-green-400 text-xs px-2 py-1 rounded font-mono">96% Match</div>
+                    <div class="w-24 h-24 bg-slate-700 rounded-full mx-auto mb-4 overflow-hidden relative">
+                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" alt="Avatar" class="w-full h-full object-cover">
+                    </div>
+                    <h3 class="text-2xl font-bold text-center mb-1">Arjun, 27</h3>
+                    <p class="text-slate-400 text-center text-sm mb-4">Product Manager @ FinTech</p>
+                    <div class="flex flex-wrap gap-2 justify-center mb-6">
+                        <span class="px-2 py-1 bg-slate-800 rounded text-xs text-slate-300">Director</span>
+                        <span class="px-2 py-1 bg-slate-800 rounded text-xs text-slate-300">Tier 1 Origin</span>
+                        <span class="px-2 py-1 bg-slate-800 rounded text-xs text-slate-300">Type A</span>
+                    </div>
+                    <div class="flex gap-4">
+                        <button id="reject-btn" class="flex-1 bg-red-500/10 hover:bg-red-500/20 text-red-500 py-2 rounded-lg transition border border-red-500/30">Reject</button>
+                        <button class="flex-1 bg-green-500/10 hover:bg-green-500/20 text-green-500 py-2 rounded-lg transition border border-green-500/30">Accept</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Algorithm Brain -->
+            <div class="w-full md:w-1/2 glass-panel rounded-2xl p-8 flex flex-col justify-center relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-4 opacity-20">
+                    <svg class="w-32 h-32 text-neon-cyan" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                </div>
+                <h3 class="text-xl font-mono text-neon-cyan mb-6">Algorithm's Belief State</h3>
+                <div id="algo-log" class="font-mono text-xs md:text-sm space-y-4">
+                    <div class="p-3 bg-slate-800/50 rounded border-l-2 border-green-500">
+                        <div class="text-slate-400 mb-1">Current Hypothesis:</div>
+                        <div class="text-white">User prefers <span class="text-neon-pink">High Confidence (Director)</span> traits.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Module 7: The Explainable Match -->
+    <section id="final-match" class="h-screen w-full flex items-center justify-center bg-black relative">
+        <div class="container mx-auto px-4 max-w-4xl">
+            <div class="glass-panel rounded-3xl p-1 md:p-8 border border-neon-cyan/30 shadow-[0_0_30px_rgba(0,243,255,0.1)]">
+                <div class="flex flex-col md:flex-row gap-8 items-start">
+                    <!-- Match Visual -->
+                    <div class="w-full md:w-1/3 flex flex-col items-center">
+                        <div class="relative w-32 h-32 mb-4">
+                            <div class="absolute inset-0 bg-gradient-to-tr from-neon-pink to-neon-cyan rounded-full animate-pulse blur-md"></div>
+                            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Riya" class="relative w-full h-full rounded-full border-4 border-black object-cover bg-slate-800">
+                            <div class="absolute -bottom-2 -right-2 bg-black text-white text-xs font-bold px-2 py-1 rounded-full border border-neon-cyan">92%</div>
+                        </div>
+                        <h2 class="text-2xl font-bold text-white">Riya, 26</h2>
+                        <p class="text-slate-400 text-sm">UX Designer</p>
+                    </div>
+
+                    <!-- Explanation -->
+                    <div class="w-full md:w-2/3">
+                        <h3 class="text-neon-cyan font-mono text-sm uppercase tracking-widest mb-4">Analysis Complete</h3>
+                        <div id="match-explanation" class="space-y-4 text-slate-300 leading-relaxed font-light">
+                            <!-- Content injected via JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // --- Mock Data Generation ---
+        const generatePopulation = (count) => {
+            const pop = [];
+            const fisherTypes = ['Explorer', 'Builder', 'Director', 'Negotiator'];
+            const attachmentStyles = ['Secure', 'Anxious', 'Avoidant'];
+            const origins = ['Tier 1', 'Tier 2', 'Rural'];
+            
+            for(let i=0; i<count; i++) {
+                pop.push({
+                    id: i,
+                    elo: Math.random() * 100,
+                    fisher: fisherTypes[Math.floor(Math.random() * fisherTypes.length)],
+                    attachment: attachmentStyles[Math.floor(Math.random() * attachmentStyles.length)],
+                    origin: origins[Math.floor(Math.random() * origins.length)],
+                    x: Math.random() * window.innerWidth,
+                    y: Math.random() * window.innerHeight,
+                    vx: (Math.random() - 0.5) * 0.5,
+                    vy: (Math.random() - 0.5) * 0.5,
+                    gender: Math.random() > 0.5 ? 'M' : 'F'
+                });
+            }
+            return pop;
+        };
+
+        const population = generatePopulation(2000); // Reduced from 10k for performance on mobile/web
+
+        // --- Module 1: Intro Canvas ---
+        const initIntroCanvas = () => {
+            const canvas = document.getElementById('nodesCanvas');
+            const ctx = canvas.getContext('2d');
+            let width, height;
+
+            const resize = () => {
+                width = canvas.width = window.innerWidth;
+                height = canvas.height = window.innerHeight;
+            };
+            window.addEventListener('resize', resize);
+            resize();
+
+            const particles = population.slice(0, 300); // Show subset for intro
+            
+            const animate = () => {
+                ctx.fillStyle = '#0f172a';
+                ctx.fillRect(0, 0, width, height);
+                
+                particles.forEach(p => {
+                    p.x += p.vx;
+                    p.y += p.vy;
+
+                    if(p.x < 0 || p.x > width) p.vx *= -1;
+                    if(p.y < 0 || p.y > height) p.vy *= -1;
+
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.gender === 'F' ? 2 : 2, 0, Math.PI * 2);
+                    ctx.fillStyle = p.gender === 'F' ? '#ff007f' : '#00f3ff';
+                    ctx.fill();
+                });
+
+                // Mouse interaction
+                // (Simplified for brevity: particles flee mouse)
+                
+                requestAnimationFrame(animate);
+            };
+            animate();
+        };
+
+        // --- Module 2: Chatbot Logic ---
+        const initChatbot = () => {
+            const chatHistory = document.getElementById('chat-history');
+            const display = document.getElementById('user-input-display');
+            const varList = document.getElementById('variables-list');
+            
+            const script = [
+                {
+                    q: "Tell me about home. Where did you grow up?",
+                    a: "I grew up in Indiranagar mostly, but spent summers in my grandparents' village in Kerala.",
+                    vars: [
+                        { k: 'Origin', v: 'Urban_Tier1', c: 'text-neon-cyan' },
+                        { k: 'Roots', v: 'Rural_Connection', c: 'text-yellow-400' },
+                        { k: 'Status', v: 'High_Mobility', c: 'text-green-400' }
+                    ]
+                },
+                {
+                    q: "What's a memory of your parents that sticks with you?",
+                    a: "They argue a lot, honestly. It was an arranged setup, they stuck it out for duty.",
+                    vars: [
+                        { k: 'Parents_Meeting', v: 'Arranged', c: 'text-purple-400' },
+                        { k: 'Attachment_Risk', v: 'Avoidant_Tendencies', c: 'text-red-400' }
+                    ]
+                },
+                {
+                    q: "When you are angry, what language do you think in?",
+                    a: "I shout in English, but the internal monologue is Kannada.",
+                    vars: [
+                        { k: 'Linguistic_Core', v: 'Kannada', c: 'text-orange-400' },
+                        { k: 'Social_Mask', v: 'English', c: 'text-blue-300' }
+                    ]
+                }
+            ];
+
+            let step = 0;
+            let isTyping = false;
+
+            const typeText = (text, element, speed = 30, callback) => {
+                let i = 0;
+                element.innerHTML = '';
+                const interval = setInterval(() => {
+                    element.innerHTML += text.charAt(i);
+                    i++;
+                    if (i > text.length) {
+                        clearInterval(interval);
+                        if (callback) callback();
+                    }
+                }, speed);
+            };
+
+            const addMessage = (text, isAi) => {
+                const div = document.createElement('div');
+                div.className = `p-3 rounded-lg max-w-[80%] text-sm ${isAi ? 'bg-slate-800 text-slate-200 self-start rounded-tl-none' : 'bg-neon-pink/20 text-white self-end rounded-tr-none border border-neon-pink/30'}`;
+                div.innerText = text;
+                chatHistory.appendChild(div);
+                chatHistory.scrollTop = chatHistory.scrollHeight;
+            };
+
+            const addVars = (vars) => {
+                vars.forEach(v => {
+                    const div = document.createElement('div');
+                    div.className = `flex justify-between items-center p-2 bg-slate-800/50 rounded border-l-2 border-slate-600 animate-pulse`;
+                    div.innerHTML = `<span class="text-slate-400">${v.k}:</span> <span class="${v.c} font-bold">${v.v}</span>`;
+                    varList.appendChild(div);
+                });
+            };
+
+            const runScript = async () => {
+                if (step >= script.length) return;
+                
+                // AI asks
+                addMessage(script[step].q, true);
+                
+                // Wait a bit, then simulate user typing
+                setTimeout(() => {
+                    const answer = script[step].a;
+                    typeText(answer, display, 50, () => {
+                        setTimeout(() => {
+                            // Submit answer
+                            addMessage(answer, false);
+                            display.innerHTML = '';
+                            
+                            // Extract vars
+                            varList.innerHTML = ''; // Clear previous for clean look or append? Plan says side panel. Let's append or replace. Let's keep appending.
+                            if(step === 0) varList.innerHTML = '';
+                            addVars(script[step].vars);
+                            
+                            step++;
+                            setTimeout(runScript, 1500);
+                        }, 500);
+                    });
+                }, 1000);
+            };
+
+            // Start interaction when section is visible
+            const observer = new IntersectionObserver((entries) => {
+                if(entries[0].isIntersecting && step === 0) {
+                    runScript();
+                }
+            }, { threshold: 0.5 });
+            observer.observe(document.getElementById('input-layer'));
+        };
+
+        // --- Module 3: Elo Gatekeeper ---
+        const initElo = () => {
+            const canvas = document.getElementById('eloCanvas');
+            const ctx = canvas.getContext('2d');
+            const slider = document.getElementById('elo-slider');
+            const valDisplay = document.getElementById('elo-value');
+            const countDisplay = document.getElementById('match-count');
+            let width, height;
+
+            // Resize canvas properly
+            const resize = () => {
+                const rect = canvas.parentElement.getBoundingClientRect();
+                canvas.width = rect.width;
+                canvas.height = rect.height;
+                width = canvas.width;
+                height = canvas.height;
+            };
+            window.addEventListener('resize', resize);
+            // Initial resize needs a slight delay to ensure layout is done
+            setTimeout(resize, 100);
+
+            // Generate local points for this viz
+            const points = [];
+            for(let i=0; i<500; i++) {
+                points.push({
+                    x: Math.random(),
+                    y: Math.random(),
+                    elo: Math.random() * 100
+                });
+            }
+
+            const draw = () => {
+                const threshold = parseInt(slider.value);
+                // User Elo assumed 50. Range is +/- (100 - threshold)/2 roughly? 
+                // Let's say slider is "Sensitivity". 
+                // High sensitivity = Narrow band. Low sensitivity = Wide band.
+                // Let's invert logic for UI: Slider value = % of population filtered out?
+                // Plan says: "Visual Elo Sensitivity".
+                // Let's make it: Slider 0 = Everyone. Slider 100 = Only top tier matching user.
+                
+                // Let's assume User Elo is 70.
+                const userElo = 70;
+                const range = (100 - threshold) / 2 + 5; // min range 5
+                
+                const minElo = userElo - range;
+                const maxElo = userElo + range;
+
+                ctx.clearRect(0, 0, width, height);
+                
+                let matchCount = 0;
+
+                points.forEach(p => {
+                    const px = p.x * width;
+                    const py = p.y * height;
+                    const isMatch = p.elo >= minElo && p.elo <= maxElo;
+
+                    ctx.beginPath();
+                    ctx.arc(px, py, isMatch ? 3 : 1.5, 0, Math.PI * 2);
+                    if (isMatch) {
+                        ctx.fillStyle = '#00f3ff';
+                        matchCount++;
+                    } else {
+                        ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+                    }
+                    ctx.fill();
+                });
+
+                valDisplay.innerText = `${threshold}%`;
+                countDisplay.innerText = matchCount;
+            };
+
+            slider.addEventListener('input', draw);
+            // Draw loop not needed, just update on input + initial
+            setTimeout(draw, 200);
+        };
+
+        // --- Module 4: Fisher Chart ---
+        const initFisher = () => {
+            const ctx = document.getElementById('fisherChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['Dopamine (Explorer)', 'Serotonin (Builder)', 'Testosterone (Director)', 'Estrogen (Negotiator)'],
+                    datasets: [{
+                        label: 'You',
+                        data: [85, 40, 60, 30],
+                        backgroundColor: 'rgba(255, 0, 127, 0.2)',
+                        borderColor: '#ff007f',
+                        pointBackgroundColor: '#ff007f',
+                        borderWidth: 2
+                    }, {
+                        label: 'Ideal Match',
+                        data: [80, 50, 30, 70], // Explorer seeks Explorer, Director seeks Negotiator logic mixed
+                        backgroundColor: 'rgba(0, 243, 255, 0.2)',
+                        borderColor: '#00f3ff',
+                        pointBackgroundColor: '#00f3ff',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    scales: {
+                        r: {
+                            angleLines: { color: 'rgba(255,255,255,0.1)' },
+                            grid: { color: 'rgba(255,255,255,0.1)' },
+                            pointLabels: { color: '#94a3b8', font: { family: 'Space Mono' } },
+                            ticks: { display: false }
+                        }
+                    },
+                    plugins: {
+                        legend: { labels: { color: '#fff' } }
+                    }
+                }
+            });
+        };
+
+        // --- Module 5: Attachment Canvas ---
+        const initAttachment = () => {
+            const canvas = document.getElementById('attachmentCanvas');
+            const ctx = canvas.getContext('2d');
+            let width, height;
+
+            const resize = () => {
+                const rect = canvas.parentElement.getBoundingClientRect();
+                canvas.width = rect.width;
+                canvas.height = rect.height;
+                width = canvas.width;
+                height = canvas.height;
+                draw();
+            };
+            window.addEventListener('resize', resize);
+            
+            const draw = () => {
+                ctx.clearRect(0, 0, width, height);
+                
+                // Draw User Dot (Anxious)
+                // High Anxiety (Left), Low Avoidance (Bottom) -> Bottom Left?
+                // Graph: X: Anxiety, Y: Avoidance.
+                // Let's assume Center (0,0).
+                // X: Low Anxiety -> High Anxiety. Y: Low Avoidance -> High Avoidance.
+                // Secure: Low Anx, Low Avoid (Bottom Left).
+                // Anxious: High Anx, Low Avoid (Bottom Right).
+                // Avoidant: Low Anx, High Avoid (Top Left).
+                // Fearful: High Anx, High Avoid (Top Right).
+                
+                // Plan says: Zone Green: Secure. Zone Red: Anxious-Avoidant Trap.
+                
+                const cx = width / 2;
+                const cy = height / 2;
+
+                // User: Anxious (High Anxiety, Low Avoidance) -> Right, Bottom
+                const userX = cx + 100;
+                const userY = cy + 50;
+
+                // Target: Secure (Low Anxiety, Low Avoidance) -> Left, Bottom
+                const targetX = cx - 80;
+                const targetY = cy + 60;
+
+                // Draw Connection
+                ctx.beginPath();
+                ctx.moveTo(userX, userY);
+                ctx.lineTo(targetX, targetY);
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+                ctx.setLineDash([5, 5]);
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                // Draw User
+                ctx.beginPath();
+                ctx.arc(userX, userY, 8, 0, Math.PI * 2);
+                ctx.fillStyle = '#ff007f';
+                ctx.fill();
+                ctx.fillStyle = 'white';
+                ctx.font = '12px Space Mono';
+                ctx.fillText('YOU', userX + 15, userY + 4);
+
+                // Draw Target
+                ctx.beginPath();
+                ctx.arc(targetX, targetY, 8, 0, Math.PI * 2);
+                ctx.fillStyle = '#00f3ff';
+                ctx.fill();
+                ctx.fillText('MATCH', targetX - 50, targetY + 4);
+            };
+            
+            setTimeout(resize, 500); // Delay for layout
+        };
+
+        // --- Module 6: Learning Loop ---
+        const initLearning = () => {
+            const btn = document.getElementById('reject-btn');
+            const log = document.getElementById('algo-log');
+            
+            btn.addEventListener('click', () => {
+                // Add user feedback simulation
+                const feedbackDiv = document.createElement('div');
+                feedbackDiv.className = "p-3 bg-red-900/20 rounded border-l-2 border-red-500 animate-fade-in";
+                feedbackDiv.innerHTML = `
+                    <div class="text-slate-400 mb-1">Action: REJECT</div>
+                    <div class="text-white text-xs">"Too assertive. Gave me arrogant vibes."</div>
+                `;
+                log.appendChild(feedbackDiv);
+
+                // Update Algo
+                setTimeout(() => {
+                    const updateDiv = document.createElement('div');
+                    updateDiv.className = "p-3 bg-blue-900/20 rounded border-l-2 border-neon-cyan animate-pulse";
+                    updateDiv.innerHTML = `
+                        <div class="text-neon-cyan mb-1">Weights Updated:</div>
+                        <div class="text-slate-300 text-xs">
+                            Confidence (Director) <span class="text-red-400">▼ 15%</span><br>
+                            Empathy (Negotiator) <span class="text-green-400">▲ 20%</span>
+                        </div>
+                    `;
+                    log.appendChild(updateDiv);
+                    log.scrollTop = log.scrollHeight;
+                }, 800);
+            });
+        };
+
+        // --- Module 7: Final Explanation ---
+        const initFinal = () => {
+            const container = document.getElementById('match-explanation');
+            const text = `
+                <p><strong class="text-white">Chemistry:</strong> You are both <span class="text-neon-pink">Explorers</span>. You crave novelty and will bond over travel and spontaneity.</p>
+                <p><strong class="text-white">Communication:</strong> You both think in <span class="text-orange-400">English</span> but value your roots. This reduces friction in expressing complex emotions.</p>
+                <p><strong class="text-white">Stability:</strong> Your parents had a rocky arranged marriage, making you <span class="text-red-400">Avoidant</span>. Riya is <span class="text-green-400">Secure</span> and comes from a loving Love Marriage background. She has the emotional bandwidth to reassure you.</p>
+                <div class="mt-6 p-4 bg-slate-800/50 rounded border border-yellow-500/30">
+                    <strong class="text-yellow-400 uppercase text-xs tracking-wide">Risk Factor</strong>
+                    <p class="text-sm text-slate-400 mt-1">You are Type A, she is Type B. You might find her "lazy" occasionally. Be patient.</p>
+                </div>
+            `;
+            
+            const observer = new IntersectionObserver((entries) => {
+                if(entries[0].isIntersecting && container.innerHTML.trim() === '') {
+                    container.innerHTML = text; // Simple insert, could animate line by line if needed
+                    container.classList.add('animate-fade-in-up');
+                }
+            }, { threshold: 0.5 });
+            observer.observe(document.getElementById('final-match'));
+        };
+
+        // --- Main Init ---
+        window.addEventListener('DOMContentLoaded', () => {
+            initIntroCanvas();
+            initChatbot();
+            initElo();
+            initFisher();
+            initAttachment();
+            initLearning();
+            initFinal();
+        });
+
+    </script>
+</body>
+</html>
