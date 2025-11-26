@@ -4,9 +4,9 @@
 export const schemaDocs = {
     overview: {
         title: "Overview",
-        description: "The User Profile V1 is the core data structure for the agentic matchmaking system. It is designed to be maintained by an LLM based on user interactions.",
+        description: "The User Profile V1.1 is the core data structure for the agentic matchmaking system. It is designed to be maintained by an LLM based on user interactions.",
         diagram: "Events -> [LLM Processing] -> Profile (Facts + Inferences) -> [Matching Engine]",
-        content: "The profile consists of three main layers:\n1. Facts: Direct user input.\n2. Inferences: LLM-derived traits with confidence scores.\n3. Hypotheses: Low-confidence guesses to guide future questions."
+        content: "The profile consists of three main layers:\n1. Facts: Direct user input.\n2. Inferences: LLM-derived traits (including Humour & Appearance).\n3. Hypotheses: Low-confidence guesses to guide future questions.\n\nNew in v1.1: Humour Profile, Appearance Placeholders, and MBTI Matching Preferences."
     },
     user_profile_v1: {
         title: "User Profile V1",
@@ -44,21 +44,55 @@ export const schemaDocs = {
 }`
     },
     inferences: {
-        title: "Inferences",
-        description: "Traits derived by the LLM from conversations. Each trait has a value, confidence, and optional evidence.",
+        title: "Inferences (Core)",
+        description: "Traits derived by the LLM from conversations. Now includes Humour and Appearance.",
         typeDefinition: `{
-  mbti_axes: {
-    IE: { value: number; confidence: number; ... }; // 0=Introvert, 1=Extrovert
-    SN: { value: number; confidence: number; ... };
-    FT: { value: number; confidence: number; ... };
-    JP: { value: number; confidence: number; ... };
+  mbti_axes: { ... };
+  mbti_matching_prefs: {
+    sn_strict_mode: { value: boolean; ... };
   };
-  attachment: {
-    anxious: { value: number; confidence: number; ... };
-    avoidant: { value: number; confidence: number; ... };
-  };
+  attachment: { ... };
   hobbies: Hobby[];
   values: Record<string, Trait>;
+  humour_profile: HumourProfile; // See "Inferences: Humour"
+  appearance: Appearance; // See "Inferences: Appearance"
+}`
+    },
+    inferences_humour: {
+        title: "Inferences: Humour",
+        description: "Detailed breakdown of humour styles and tolerances. High-importance for matching.",
+        dataPath: "inferences.humour_profile",
+        typeDefinition: `{
+  styles: {
+    wordplay_puns: Trait;
+    double_entendre: Trait;
+    dry_deadpan: Trait;
+    slapstick_goofy: Trait;
+    dark_morbid: Trait;
+    meta_internet_memes: Trait;
+    sarcasm: Trait;
+  };
+  cringe_tolerance: Trait;
+  offence_tolerance: Trait;
+  performs_vs_appreciates: Trait; // 0=Audience, 1=Performer
+  summary_text: string;
+  evidence_snippets: string[];
+}`
+    },
+    inferences_appearance: {
+        title: "Inferences: Appearance",
+        description: "Placeholder for future attractiveness signals. NOT user-facing.",
+        dataPath: "inferences.appearance",
+        typeDefinition: `{
+  attractiveness_band: {
+    value: number; // 1-5 scale (inferred later)
+    confidence: number;
+    notes: string;
+  };
+  appearance_salience: {
+    value: number; // How much they care about looks
+    confidence: number;
+  };
 }`
     },
     hypotheses: {
@@ -126,6 +160,12 @@ export const schemaDocs = {
   timestamp: string;
   payload: any;
 }>`
+    },
+    matching_algorithms: {
+        title: "Matching Algorithms",
+        description: "Future logic for compatibility scoring (Coming Soon).",
+        content: "The future baseline compatibility function Compat(A,B) will:\n- Treat humour alignment (humour_profile) as a high-weight feature.\n- Use mbti_matching_prefs.sn_strict_mode to enforce S-N matching.\n- Eventually include appearance_salience and indirect attractiveness measures.\n\nPlanned Models:\n- Two-Tower Models for swipe probability.\n- Graph ML layers for community detection.",
+        typeDefinition: "// Logic to be implemented in v2"
     }
 };
 
@@ -174,6 +214,13 @@ export const mockUsers = [
                     FT: { value: 0.3, confidence: 0.75, last_updated_at: "2025-11-26T10:00:00Z" },
                     JP: { value: 0.5, confidence: 0.6, last_updated_at: "2025-11-26T10:00:00Z" }
                 },
+                mbti_matching_prefs: {
+                    sn_strict_mode: {
+                        value: false,
+                        last_updated_at: "2025-11-27T11:00:00Z",
+                        notes: "Flexible on S/N."
+                    }
+                },
                 attachment: {
                     anxious: { value: 0.6, confidence: 0.7, last_updated_at: "2025-11-26T10:00:00Z" },
                     avoidant: { value: 0.2, confidence: 0.6, last_updated_at: "2025-11-26T10:00:00Z" }
@@ -185,6 +232,35 @@ export const mockUsers = [
                 values: {
                     career_focused: { value: 0.8, confidence: 0.9 },
                     risk_taking: { value: 0.6, confidence: 0.7 }
+                },
+                humour_profile: {
+                    styles: {
+                        wordplay_puns: { value: 0.8, confidence: 0.8 },
+                        double_entendre: { value: 0.7, confidence: 0.6 },
+                        dry_deadpan: { value: 0.5, confidence: 0.5 },
+                        slapstick_goofy: { value: 0.3, confidence: 0.6 },
+                        dark_morbid: { value: 0.2, confidence: 0.7 },
+                        meta_internet_memes: { value: 0.6, confidence: 0.8 },
+                        sarcasm: { value: 0.5, confidence: 0.6 }
+                    },
+                    cringe_tolerance: { value: 0.7, confidence: 0.8 },
+                    offence_tolerance: { value: 0.4, confidence: 0.6 },
+                    performs_vs_appreciates: { value: 0.3, confidence: 0.7 },
+                    summary_text: "Enjoys dad jokes and puns. Not into dark humour.",
+                    evidence_snippets: ["Laughed at the 'why did the chicken cross the road' anti-joke."]
+                },
+                appearance: {
+                    attractiveness_band: {
+                        value: 3,
+                        confidence: 0.1,
+                        scale: "1_to_5",
+                        notes: "Placeholder."
+                    },
+                    appearance_salience: {
+                        value: 0.4,
+                        confidence: 0.6,
+                        notes: "Doesn't mention looks often."
+                    }
                 }
             },
             hypotheses: {
@@ -279,6 +355,13 @@ export const mockUsers = [
                     FT: { value: 0.8, confidence: 0.8, last_updated_at: "2025-11-26T11:00:00Z" }, // Feeling
                     JP: { value: 0.3, confidence: 0.6, last_updated_at: "2025-11-26T11:00:00Z" }  // Judging
                 },
+                mbti_matching_prefs: {
+                    sn_strict_mode: {
+                        value: true,
+                        last_updated_at: "2025-11-27T11:00:00Z",
+                        notes: "User is strongly intuitive and explicitly prefers partners who are also intuitive."
+                    }
+                },
                 attachment: {
                     anxious: { value: 0.3, confidence: 0.6, last_updated_at: "2025-11-26T11:00:00Z" },
                     avoidant: { value: 0.4, confidence: 0.5, last_updated_at: "2025-11-26T11:00:00Z" }
@@ -290,6 +373,35 @@ export const mockUsers = [
                 values: {
                     family_oriented: { value: 0.9, confidence: 0.9 },
                     traditional_modern_score: { value: 0.4, confidence: 0.7 }
+                },
+                humour_profile: {
+                    styles: {
+                        wordplay_puns: { value: 0.9, confidence: 0.7 },
+                        double_entendre: { value: 0.8, confidence: 0.6 },
+                        dry_deadpan: { value: 0.4, confidence: 0.7 },
+                        slapstick_goofy: { value: 0.2, confidence: 0.6 },
+                        dark_morbid: { value: 0.1, confidence: 0.5 },
+                        meta_internet_memes: { value: 0.7, confidence: 0.8 },
+                        sarcasm: { value: 0.6, confidence: 0.7 }
+                    },
+                    cringe_tolerance: { value: 0.8, confidence: 0.7 },
+                    offence_tolerance: { value: 0.3, confidence: 0.5 },
+                    performs_vs_appreciates: { value: 0.4, confidence: 0.7 },
+                    summary_text: "Loves wordplay and slightly lame puns, into meme humor, low tolerance for dark jokes.",
+                    evidence_snippets: ["I will laugh at the worst puns if they're delivered with confidence."]
+                },
+                appearance: {
+                    attractiveness_band: {
+                        value: 3,
+                        confidence: 0.2,
+                        scale: "1_to_5",
+                        notes: "Placeholder."
+                    },
+                    appearance_salience: {
+                        value: 0.7,
+                        confidence: 0.8,
+                        notes: "Often talks about aesthetic cafes and fashion."
+                    }
                 }
             },
             hypotheses: {
