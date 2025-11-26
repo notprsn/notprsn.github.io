@@ -38,17 +38,7 @@ function renderSidebar() {
         sidebar.appendChild(item);
     });
 
-    // Add "Coming Soon" section at the bottom
-    const comingSoon = document.createElement('div');
-    comingSoon.className = "mt-8 p-3 text-xs uppercase tracking-widest text-slate-600 font-bold border-t border-slate-800 pt-4";
-    comingSoon.innerText = "Future Modules";
-    sidebar.appendChild(comingSoon);
 
-    const matchingItem = document.createElement('div');
-    matchingItem.className = "p-3 cursor-pointer rounded-lg text-slate-500 hover:text-slate-300 transition-colors";
-    matchingItem.innerText = "Matching Algorithms";
-    matchingItem.onclick = () => alert("Coming Soon: Two-Tower Models & Graph ML layers.");
-    sidebar.appendChild(matchingItem);
 }
 
 // Setup Event Listeners
@@ -118,7 +108,7 @@ function renderContent() {
     if (mode === 'schema') {
         // Show Type Definition
         codeContent = doc.typeDefinition || "// No type definition available.";
-        if (currentSection === 'overview') codeContent = doc.content; // Special case for overview text
+        if (doc.content) codeContent = doc.content; // Use content text if available (e.g. Overview, Matching)
     } else {
         // Show Example Data
         if (currentSection === 'overview') {
@@ -127,13 +117,19 @@ function renderContent() {
             codeContent = JSON.stringify(mockUsers[currentUserIndex].data, null, 2);
         } else {
             // Extract specific section from mock user
-            const data = mockUsers[currentUserIndex].data[currentSection];
+            const path = doc.dataPath || currentSection;
+            const data = getNestedData(mockUsers[currentUserIndex].data, path);
             codeContent = data ? JSON.stringify(data, null, 2) : "// Data not present for this user.";
         }
     }
 
     // Syntax Highlight (Simple regex based)
     codeBlock.innerHTML = syntaxHighlight(codeContent);
+}
+
+// Helper to get nested data
+function getNestedData(obj, path) {
+    return path.split('.').reduce((acc, part) => acc && acc[part], obj);
 }
 
 // Simple JSON Syntax Highlighter
