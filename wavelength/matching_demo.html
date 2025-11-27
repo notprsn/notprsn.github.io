@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wavelength | Baseline Matching Demo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'neon-pink': '#ff007f',
+                        'neon-cyan': '#00f3ff',
+                        'dark-bg': '#0f172a',
+                        'glass': 'rgba(255, 255, 255, 0.05)',
+                    },
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                        mono: ['Space Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #050505; color: #e2e8f0; }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+    </style>
+</head>
+<body class="h-screen flex flex-col overflow-hidden">
+
+    <!-- Header -->
+    <header class="h-16 border-b border-slate-800 flex items-center justify-between px-6 bg-dark-bg z-10">
+        <div class="flex items-center gap-3">
+            <div class="w-3 h-3 bg-neon-cyan rounded-full animate-pulse"></div>
+            <h1 class="text-xl font-bold tracking-tight text-white">Wavelength <span class="text-slate-500 font-normal">/ Matching Demo</span></h1>
+        </div>
+        <a href="schema.html" class="text-xs font-mono text-neon-pink hover:underline">Back to Schema</a>
+    </header>
+
+    <!-- Main Layout -->
+    <div class="flex-1 flex overflow-hidden">
+        
+        <!-- Sidebar: User Selector -->
+        <aside class="w-64 bg-slate-900/50 border-r border-slate-800 flex flex-col overflow-y-auto p-4">
+            <h3 class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4">Select Subject</h3>
+            <div id="user-list" class="space-y-2">
+                <!-- Injected by JS -->
+            </div>
+        </aside>
+
+        <!-- Content Area -->
+        <main class="flex-1 flex flex-col min-w-0 bg-black/50 relative overflow-hidden">
+            
+            <div class="flex-1 overflow-y-auto p-8">
+                <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    
+                    <!-- Left Col: Subject Profile -->
+                    <div class="lg:col-span-1 space-y-6">
+                        <div class="glass-panel p-6 rounded-xl">
+                            <h2 class="text-xl font-bold text-white mb-1" id="subject-name">Select a User</h2>
+                            <p class="text-slate-400 text-sm mb-4" id="subject-details">...</p>
+                            
+                            <div class="space-y-3 text-sm font-mono text-slate-300">
+                                <div class="flex justify-between border-b border-slate-800 pb-1">
+                                    <span>MBTI</span>
+                                    <span id="subject-mbti" class="text-neon-cyan">-</span>
+                                </div>
+                                <div class="flex justify-between border-b border-slate-800 pb-1">
+                                    <span>Humour</span>
+                                    <span id="subject-humour" class="text-neon-pink">-</span>
+                                </div>
+                                <div class="flex justify-between border-b border-slate-800 pb-1">
+                                    <span>Intent</span>
+                                    <span id="subject-intent">-</span>
+                                </div>
+                                <div class="flex justify-between border-b border-slate-800 pb-1">
+                                    <span>Location</span>
+                                    <span id="subject-loc">-</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-4 border border-dashed border-slate-700 rounded-lg bg-slate-900/30">
+                            <h4 class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Matching Logic</h4>
+                            <p class="text-xs text-slate-400 leading-relaxed">
+                                Running <code class="text-neon-cyan">baseline_matcher.js</code> against all opposite-gender profiles in the demo population.
+                                <br><br>
+                                Scores are asymmetric (Male vs Female logic) and include hard filters.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Right Col: Matches -->
+                    <div class="lg:col-span-2">
+                        <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
+                            Top Matches
+                            <span class="text-xs font-normal text-slate-500 bg-slate-800 px-2 py-1 rounded-full" id="match-count">0 found</span>
+                        </h3>
+                        
+                        <div id="matches-list" class="space-y-4">
+                            <!-- Matches injected here -->
+                            <div class="text-slate-500 italic">Select a user to see matches.</div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Load Scripts -->
+    <script src="js/baseline_matcher.js"></script>
+    <script type="module">
+        import { demoPopulation } from './js/demo_population.js';
+
+        const userListEl = document.getElementById('user-list');
+        const matchesListEl = document.getElementById('matches-list');
+        const subjectNameEl = document.getElementById('subject-name');
+        const subjectDetailsEl = document.getElementById('subject-details');
+        const subjectMbtiEl = document.getElementById('subject-mbti');
+        const subjectHumourEl = document.getElementById('subject-humour');
+        const subjectIntentEl = document.getElementById('subject-intent');
+        const subjectLocEl = document.getElementById('subject-loc');
+        const matchCountEl = document.getElementById('match-count');
+
+        let selectedUserId = null;
+
+        // Render Sidebar
+        const renderSidebar = () => {
+            userListEl.innerHTML = '';
+            
+            // Group by Gender
+            ['Male', 'Female'].forEach(gender => {
+                const label = document.createElement('div');
+                label.className = "text-xs font-bold text-slate-600 uppercase mt-4 mb-2 px-2";
+                label.innerText = gender + "s";
+                userListEl.appendChild(label);
+
+                demoPopulation.filter(u => u.gender === gender).forEach(u => {
+                    const btn = document.createElement('button');
+                    btn.className = `w-full text-left px-3 py-2 rounded text-sm font-mono transition-colors ${selectedUserId === u.id ? 'bg-neon-pink text-white' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`;
+                    btn.innerText = `${u.name} (${u.facts.age})`;
+                    btn.onclick = () => selectUser(u.id);
+                    userListEl.appendChild(btn);
+                });
+            });
+        };
+
+        // Select User
+        const selectUser = (id) => {
+            selectedUserId = id;
+            renderSidebar();
+            
+            const user = demoPopulation.find(u => u.id === id);
+            if (!user) return;
+
+            // Update Subject Card
+            subjectNameEl.innerText = `${user.name}, ${user.facts.age}`;
+            subjectDetailsEl.innerText = `${user.facts.job_difficulty === 3 ? 'High' : user.facts.job_difficulty === 2 ? 'Mid' : 'Low'} Tier Job • ${user.facts.diet}`;
+            
+            // MBTI Helper
+            const mbti = user.inferences.mbti_axes;
+            const type = (mbti.IE.value > 0.5 ? 'E' : 'I') +
+                         (mbti.SN.value > 0.5 ? 'N' : 'S') +
+                         (mbti.FT.value > 0.5 ? 'F' : 'T') +
+                         (mbti.JP.value > 0.5 ? 'P' : 'J');
+            subjectMbtiEl.innerText = `${type} (SN strict: ${user.inferences.mbti_matching_prefs.sn_strict_mode.value})`;
+            
+            // Humour Helper
+            const styles = user.inferences.humour_profile.styles;
+            const topStyle = Object.entries(styles).sort((a,b) => b[1].value - a[1].value)[0][0];
+            subjectHumourEl.innerText = topStyle.replace('_', ' ');
+
+            subjectIntentEl.innerText = user.facts.relationship_intent;
+            subjectLocEl.innerText = user.facts.current_area_in_bangalore;
+
+            runMatching(user);
+        };
+
+        // Run Matching
+        const runMatching = (subject) => {
+            const candidates = demoPopulation.filter(u => u.gender !== subject.gender);
+            const results = [];
+
+            candidates.forEach(candidate => {
+                // Determine who is F and M for the function
+                const f = subject.gender === 'Female' ? subject : candidate;
+                const m = subject.gender === 'Male' ? subject : candidate;
+                
+                const score = window.BaselineMatcher.compute_match_scores(f, m);
+                const rankScore = window.BaselineMatcher.compute_ranking_score(score.p_match);
+                
+                results.push({
+                    candidate,
+                    score,
+                    rankScore
+                });
+            });
+
+            // Sort by Rank Score (descending)
+            results.sort((a, b) => b.rankScore - a.rankScore);
+
+            renderMatches(results);
+        };
+
+        // Render Matches
+        const renderMatches = (results) => {
+            matchesListEl.innerHTML = '';
+            matchCountEl.innerText = `${results.length} candidates`;
+
+            results.forEach((res, index) => {
+                const c = res.candidate;
+                const s = res.score;
+                
+                const isMatch = s.p_match > 0.01; // Arbitrary cutoff for "match" visual
+                const percent = (s.p_match * 100).toFixed(1);
+                
+                const div = document.createElement('div');
+                div.className = "glass-panel p-4 rounded-lg border-l-4 " + (isMatch ? "border-neon-cyan" : "border-slate-700 opacity-60");
+                
+                if (s.p_match === 0) {
+                    // Rejected
+                    div.innerHTML = `
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h4 class="font-bold text-slate-500 line-through">${c.name}, ${c.facts.age}</h4>
+                                <p class="text-xs text-red-500 font-mono mt-1">BLOCKED: ${s.reason}</p>
+                            </div>
+                            <div class="text-xs text-slate-600 font-mono">0%</div>
+                        </div>
+                    `;
+                } else {
+                    // Match
+                    div.innerHTML = `
+                        <div class="flex flex-col md:flex-row gap-4">
+                            <div class="flex-1">
+                                <div class="flex justify-between items-center mb-2">
+                                    <h4 class="font-bold text-white text-lg">
+                                        <span class="text-neon-cyan mr-2">#${index + 1}</span>
+                                        ${c.name}, ${c.facts.age}
+                                    </h4>
+                                    <div class="text-right">
+                                        <div class="text-2xl font-bold text-neon-pink leading-none">${percent}%</div>
+                                        <div class="text-[10px] text-slate-500 font-mono">PROBABILITY</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs font-mono text-slate-400 mb-3">
+                                    <div><span class="text-slate-600">LOC:</span> ${c.facts.current_area_in_bangalore}</div>
+                                    <div><span class="text-slate-600">JOB:</span> ${c.facts.job_difficulty}/3</div>
+                                    <div><span class="text-slate-600">DIET:</span> ${c.facts.diet}</div>
+                                    <div><span class="text-slate-600">INTENT:</span> ${c.facts.relationship_intent}</div>
+                                </div>
+
+                                <!-- Score Breakdown Bar -->
+                                <div class="space-y-1">
+                                    <div class="flex justify-between text-[10px] text-slate-500 uppercase tracking-wider">
+                                        <span>Humour</span>
+                                        <span>MBTI</span>
+                                        <span>Values</span>
+                                        <span>Lifestyle</span>
+                                    </div>
+                                    <div class="flex h-1.5 rounded-full overflow-hidden bg-slate-800">
+                                        <div class="bg-purple-500" style="width: ${s.details.HUM * 25}%"></div>
+                                        <div class="bg-blue-500" style="width: ${s.details.MBTI * 25}%"></div>
+                                        <div class="bg-green-500" style="width: ${s.details.VALPOL * 25}%"></div>
+                                        <div class="bg-yellow-500" style="width: ${s.details.SOFTLIFE * 25}%"></div>
+                                    </div>
+                                    <div class="flex justify-between text-[10px] text-slate-600 font-mono">
+                                        <span>${(s.details.HUM*100).toFixed(0)}</span>
+                                        <span>${(s.details.MBTI*100).toFixed(0)}</span>
+                                        <span>${(s.details.VALPOL*100).toFixed(0)}</span>
+                                        <span>${(s.details.SOFTLIFE*100).toFixed(0)}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+                matchesListEl.appendChild(div);
+            });
+        };
+
+        // Init
+        renderSidebar();
+        // Select first user by default
+        selectUser(demoPopulation[0].id);
+
+    </script>
+</body>
+</html>
