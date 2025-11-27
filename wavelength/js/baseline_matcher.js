@@ -14,7 +14,7 @@ const CONFIG = {
     alpha_f_edu: 2.0,
     alpha_f_job: 1.5,
     alpha_f_inc: 1.5,
-    
+
     alpha_m_edu: 1.0,
     alpha_m_job: 1.0,
     alpha_m_inc: 1.0,
@@ -117,15 +117,17 @@ function passes_dealbreakers(u, other) {
     // Implementation of 2.1
     // Check if 'other' violates 'u's dealbreakers
     if (!u.facts.dealbreakers) return 1;
-    
+
     // Example: Diet
     if (u.facts.dealbreakers.diet) {
         const req = u.facts.dealbreakers.diet; // e.g., "must_be_veg"
-        const otherDiet = other.facts.diet;
+        const otherDiet = (other.facts.diet || "").toLowerCase();
+        const otherSmoking = (other.facts.smoking || "").toLowerCase();
+
         if (req === "must_be_veg" && otherDiet !== "veg") return 0;
-        if (req === "must_not_smoke" && other.facts.smoking === "yes") return 0; // Assuming smoking is in facts
+        if (req === "must_not_smoke" && otherSmoking === "yes") return 0;
     }
-    
+
     // Add more specific checks as needed based on schema
     return 1;
 }
@@ -134,9 +136,9 @@ function sn_strict_block(f, m) {
     // Implementation of 2.2
     const sn_f = f.inferences.mbti_axes.SN.value;
     const sn_m = m.inferences.mbti_axes.SN.value;
-    
+
     const strict_mode = f.inferences.mbti_matching_prefs?.sn_strict_mode?.value || false;
-    
+
     if (strict_mode && sn_f >= CONFIG.sn_threshold_high && sn_m <= CONFIG.sn_threshold_low) {
         return 1; // Blocked
     }
@@ -160,7 +162,7 @@ function compute_edu_job_features(f, m) {
     const E_f = sigma(CONFIG.alpha_f_edu * delta_edu);
     const J_f = sigma(CONFIG.alpha_f_job * delta_job);
     const I_f = sigma(CONFIG.alpha_f_inc * delta_inc);
-    
+
     const EDU_f = (E_f + J_f + I_f) / 3;
 
     // Male-side
@@ -177,7 +179,7 @@ function compute_edu_job_features(f, m) {
 function compute_location_score(f, m) {
     const d = dist_km(f, m);
     const D_loc = clip01(1 - d / CONFIG.d_max_km);
-    
+
     const same_area = f.facts.current_area_in_bangalore === m.facts.current_area_in_bangalore;
     const D_sameArea = same_area ? 1 : 0;
 
@@ -200,7 +202,7 @@ function compute_humour_score(f, m) {
         const v_m = hm.styles[k]?.value || 0;
         sum_sq_diff += Math.pow(v_f - v_m, 2);
     });
-    const H_styles = clip01(1 - (1/styles.length) * sum_sq_diff);
+    const H_styles = clip01(1 - (1 / styles.length) * sum_sq_diff);
 
     // 3.3.2 Cringe & Offence
     const H_cringe = 1 - Math.abs(hf.cringe_tolerance.value - hm.cringe_tolerance.value);
@@ -245,7 +247,7 @@ function compute_mbti_score(f, m) {
     const A_f = (IE_f >= CONFIG.ambi_low && IE_f <= CONFIG.ambi_high) ? 1 : 0;
     const A_m = (IE_m >= CONFIG.ambi_low && IE_m <= CONFIG.ambi_high) ? 1 : 0;
     const d_IE = Math.abs(IE_f - IE_m);
-    
+
     let IE_comp;
     if (A_f && A_m) IE_comp = 1;
     else if (A_f || A_m) IE_comp = 1 - 0.5 * d_IE;
@@ -278,7 +280,7 @@ function compute_hobbies_score(f, m) {
     const map_m = {}; h_m.forEach(h => map_m[h.name] = h.involvement);
 
     const all_hobbies = new Set([...Object.keys(map_f), ...Object.keys(map_m)]);
-    
+
     // Overlap
     let sum_sq = 0;
     all_hobbies.forEach(h => {
@@ -286,9 +288,9 @@ function compute_hobbies_score(f, m) {
         const v_m = map_m[h] || 0;
         sum_sq += Math.pow(v_f - v_m, 2);
     });
-    
+
     const V_size = all_hobbies.size || 1;
-    const H_overlap = clip01(1 - (1/V_size) * sum_sq);
+    const H_overlap = clip01(1 - (1 / V_size) * sum_sq);
 
     // Count
     const n_f = h_f.filter(h => h.involvement >= 0.5).length;
@@ -337,14 +339,14 @@ function compute_att_rel_score(f, m) {
     // Assuming these fields exist in relationship_style object
     const rs_f = f.relationship_style;
     const rs_m = m.relationship_style;
-    
+
     // Defaulting to 0.5 if missing (schema plan implies they exist)
     const get_val = (u, k) => u[k]?.value || 0.5;
-    
+
     const R_comm = 1 - Math.abs(get_val(rs_f, 'communication_need') - get_val(rs_m, 'communication_need'));
     const R_indep = 1 - Math.abs(get_val(rs_f, 'independence_need') - get_val(rs_m, 'independence_need'));
     const R_long = 1 - Math.abs(get_val(rs_f, 'long_term_orientation') - get_val(rs_m, 'long_term_orientation'));
-    
+
     const RELSTYLE = clip01((R_comm + R_indep + R_long) / 3);
 
     const ATTREL = clip01(CONFIG.w_ar_att * ATT + CONFIG.w_ar_rel * RELSTYLE);
@@ -452,11 +454,11 @@ function compute_match_scores(f, m) {
 // 5. Ranking
 function compute_ranking_score(p_match) {
     const s_base = Math.log(p_match + CONFIG.epsilon);
-    
+
     // Gumbel noise
     const U = Math.random();
     const G = -Math.log(-Math.log(U));
-    
+
     const s_rank = s_base + CONFIG.tau * G;
     return s_rank;
 }

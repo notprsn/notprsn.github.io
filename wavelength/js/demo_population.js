@@ -47,9 +47,9 @@ export const demoPopulation = [
                 traditional_modern_score: { value: 0.8 }
             },
             political_lean: { scalar_0_1: { value: 0.6 } },
-            attachment: { anxious: { value: 0.3 }, avoidant: { value: 0.4 } },
-            relationship_style: { communication_need: { value: 0.7 }, independence_need: { value: 0.6 }, long_term_orientation: { value: 0.9 } }
-        }
+            attachment: { anxious: { value: 0.3 }, avoidant: { value: 0.4 } }
+        },
+        relationship_style: { communication_need: { value: 0.7 }, independence_need: { value: 0.6 }, long_term_orientation: { value: 0.9 } }
     },
     {
         id: "m2",
@@ -90,9 +90,9 @@ export const demoPopulation = [
                 traditional_modern_score: { value: 0.4 }
             },
             political_lean: { scalar_0_1: { value: 0.8 } },
-            attachment: { anxious: { value: 0.7 }, avoidant: { value: 0.2 } },
-            relationship_style: { communication_need: { value: 0.9 }, independence_need: { value: 0.3 }, long_term_orientation: { value: 0.5 } }
-        }
+            attachment: { anxious: { value: 0.7 }, avoidant: { value: 0.2 } }
+        },
+        relationship_style: { communication_need: { value: 0.9 }, independence_need: { value: 0.3 }, long_term_orientation: { value: 0.5 } }
     },
     {
         id: "m3",
@@ -133,9 +133,9 @@ export const demoPopulation = [
                 traditional_modern_score: { value: 0.3 }
             },
             political_lean: { scalar_0_1: { value: 0.3 } },
-            attachment: { anxious: { value: 0.2 }, avoidant: { value: 0.3 } },
-            relationship_style: { communication_need: { value: 0.5 }, independence_need: { value: 0.6 }, long_term_orientation: { value: 1.0 } }
-        }
+            attachment: { anxious: { value: 0.2 }, avoidant: { value: 0.3 } }
+        },
+        relationship_style: { communication_need: { value: 0.5 }, independence_need: { value: 0.6 }, long_term_orientation: { value: 1.0 } }
     },
     {
         id: "m4",
@@ -176,9 +176,9 @@ export const demoPopulation = [
                 traditional_modern_score: { value: 0.7 }
             },
             political_lean: { scalar_0_1: { value: 0.5 } },
-            attachment: { anxious: { value: 0.4 }, avoidant: { value: 0.4 } },
-            relationship_style: { communication_need: { value: 0.6 }, independence_need: { value: 0.7 }, long_term_orientation: { value: 0.6 } }
-        }
+            attachment: { anxious: { value: 0.4 }, avoidant: { value: 0.4 } }
+        },
+        relationship_style: { communication_need: { value: 0.6 }, independence_need: { value: 0.7 }, long_term_orientation: { value: 0.6 } }
     },
     {
         id: "m5",
@@ -219,9 +219,9 @@ export const demoPopulation = [
                 traditional_modern_score: { value: 0.9 }
             },
             political_lean: { scalar_0_1: { value: 0.9 } },
-            attachment: { anxious: { value: 0.5 }, avoidant: { value: 0.5 } },
-            relationship_style: { communication_need: { value: 0.7 }, independence_need: { value: 0.8 }, long_term_orientation: { value: 0.3 } }
-        }
+            attachment: { anxious: { value: 0.5 }, avoidant: { value: 0.5 } }
+        },
+        relationship_style: { communication_need: { value: 0.7 }, independence_need: { value: 0.8 }, long_term_orientation: { value: 0.3 } }
     },
 
     // --- FEMALES ---
@@ -264,9 +264,9 @@ export const demoPopulation = [
                 traditional_modern_score: { value: 0.7 }
             },
             political_lean: { scalar_0_1: { value: 0.7 } },
-            attachment: { anxious: { value: 0.4 }, avoidant: { value: 0.3 } },
-            relationship_style: { communication_need: { value: 0.8 }, independence_need: { value: 0.5 }, long_term_orientation: { value: 0.9 } }
-        }
+            attachment: { anxious: { value: 0.4 }, avoidant: { value: 0.3 } }
+        },
+        relationship_style: { communication_need: { value: 0.8 }, independence_need: { value: 0.5 }, long_term_orientation: { value: 0.9 } }
     },
     {
         id: "f2",
@@ -307,9 +307,9 @@ export const demoPopulation = [
                 traditional_modern_score: { value: 0.4 }
             },
             political_lean: { scalar_0_1: { value: 0.6 } },
-            attachment: { anxious: { value: 0.3 }, avoidant: { value: 0.4 } },
-            relationship_style: { communication_need: { value: 0.7 }, independence_need: { value: 0.6 }, long_term_orientation: { value: 0.8 } }
-        }
+            attachment: { anxious: { value: 0.3 }, avoidant: { value: 0.4 } }
+        },
+        relationship_style: { communication_need: { value: 0.7 }, independence_need: { value: 0.6 }, long_term_orientation: { value: 0.8 } }
     },
     {
         id: "f3",
@@ -350,9 +350,9 @@ export const demoPopulation = [
                 traditional_modern_score: { value: 0.2 }
             },
             political_lean: { scalar_0_1: { value: 0.4 } },
-            attachment: { anxious: { value: 0.2 }, avoidant: { value: 0.2 } }, // Secure
-            relationship_style: { communication_need: { value: 0.6 }, independence_need: { value: 0.5 }, long_term_orientation: { value: 1.0 } }
-        }
+            attachment: { anxious: { value: 0.2 }, avoidant: { value: 0.2 } }
+        },
+        relationship_style: { communication_need: { value: 0.6 }, independence_need: { value: 0.5 }, long_term_orientation: { value: 1.0 } }
     },
     {
         id: "f4",
@@ -393,9 +393,9 @@ export const demoPopulation = [
                 traditional_modern_score: { value: 0.8 }
             },
             political_lean: { scalar_0_1: { value: 0.8 } },
-            attachment: { anxious: { value: 0.6 }, avoidant: { value: 0.4 } },
-            relationship_style: { communication_need: { value: 0.8 }, independence_need: { value: 0.7 }, long_term_orientation: { value: 0.4 } }
-        }
+            attachment: { anxious: { value: 0.6 }, avoidant: { value: 0.4 } }
+        },
+        relationship_style: { communication_need: { value: 0.8 }, independence_need: { value: 0.7 }, long_term_orientation: { value: 0.4 } }
     },
     {
         id: "f5",
@@ -436,8 +436,8 @@ export const demoPopulation = [
                 traditional_modern_score: { value: 0.6 }
             },
             political_lean: { scalar_0_1: { value: 0.5 } },
-            attachment: { anxious: { value: 0.3 }, avoidant: { value: 0.6 } },
-            relationship_style: { communication_need: { value: 0.4 }, independence_need: { value: 0.9 }, long_term_orientation: { value: 0.8 } }
-        }
+            attachment: { anxious: { value: 0.3 }, avoidant: { value: 0.6 } }
+        },
+        relationship_style: { communication_need: { value: 0.4 }, independence_need: { value: 0.9 }, long_term_orientation: { value: 0.8 } }
     }
 ];
