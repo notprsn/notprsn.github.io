@@ -12,6 +12,7 @@ export const demoPopulation = [
         id: "m1",
         name: "Rohan",
         gender: "Male",
+        ml_cluster_id: 0, // Driven Builder
         facts: {
             name: "Rohan",
             age: 28,
@@ -55,6 +56,7 @@ export const demoPopulation = [
         id: "m2",
         name: "Karthik",
         gender: "Male",
+        ml_cluster_id: 1, // Chill Explorer
         facts: {
             name: "Karthik",
             age: 26,
@@ -98,6 +100,7 @@ export const demoPopulation = [
         id: "m3",
         name: "Vikram",
         gender: "Male",
+        ml_cluster_id: 0, // Driven Builder
         facts: {
             name: "Vikram",
             age: 30,
@@ -141,6 +144,7 @@ export const demoPopulation = [
         id: "m4",
         name: "Aditya",
         gender: "Male",
+        ml_cluster_id: 1, // Chill Explorer
         facts: {
             name: "Aditya",
             age: 24,
@@ -184,6 +188,7 @@ export const demoPopulation = [
         id: "m5",
         name: "Kabir",
         gender: "Male",
+        ml_cluster_id: 1, // Chill Explorer
         facts: {
             name: "Kabir",
             age: 29,
@@ -229,6 +234,7 @@ export const demoPopulation = [
         id: "f1",
         name: "Ananya",
         gender: "Female",
+        ml_cluster_id: 3, // North BLR Corporate
         facts: {
             name: "Ananya",
             age: 27,
@@ -272,6 +278,7 @@ export const demoPopulation = [
         id: "f2",
         name: "Meera",
         gender: "Female",
+        ml_cluster_id: 1, // South BLR Calm
         facts: {
             name: "Meera",
             age: 25,
@@ -315,6 +322,7 @@ export const demoPopulation = [
         id: "f3",
         name: "Priya",
         gender: "Female",
+        ml_cluster_id: 3, // North BLR Corporate
         facts: {
             name: "Priya",
             age: 29,
@@ -358,6 +366,7 @@ export const demoPopulation = [
         id: "f4",
         name: "Zoya",
         gender: "Female",
+        ml_cluster_id: 0, // Koramangala Startup
         facts: {
             name: "Zoya",
             age: 26,
@@ -401,6 +410,7 @@ export const demoPopulation = [
         id: "f5",
         name: "Riya",
         gender: "Female",
+        ml_cluster_id: 2, // Indiranagar Creative
         facts: {
             name: "Riya",
             age: 28,

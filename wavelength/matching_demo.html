@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wavelength | Baseline Matching Demo</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Space+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
@@ -25,32 +28,52 @@
         }
     </script>
     <style>
-        body { background-color: #050505; color: #e2e8f0; }
+        body {
+            background-color: #050505;
+            color: #e2e8f0;
+        }
+
         .glass-panel {
             background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: #0f172a; }
-        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
     </style>
 </head>
+
 <body class="h-screen flex flex-col overflow-hidden">
 
     <!-- Header -->
     <header class="h-16 border-b border-slate-800 flex items-center justify-between px-6 bg-dark-bg z-10">
         <div class="flex items-center gap-3">
             <div class="w-3 h-3 bg-neon-cyan rounded-full animate-pulse"></div>
-            <h1 class="text-xl font-bold tracking-tight text-white">Wavelength <span class="text-slate-500 font-normal">/ Matching Demo</span></h1>
+            <h1 class="text-xl font-bold tracking-tight text-white">Wavelength <span
+                    class="text-slate-500 font-normal">/ Matching Demo</span></h1>
         </div>
         <a href="schema.html" class="text-xs font-mono text-neon-pink hover:underline">Back to Schema</a>
     </header>
 
     <!-- Main Layout -->
     <div class="flex-1 flex overflow-hidden">
-        
+
         <!-- Sidebar: User Selector -->
         <aside class="w-64 bg-slate-900/50 border-r border-slate-800 flex flex-col overflow-y-auto p-4">
             <h3 class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4">Select Subject</h3>
@@ -61,16 +84,16 @@
 
         <!-- Content Area -->
         <main class="flex-1 flex flex-col min-w-0 bg-black/50 relative overflow-hidden">
-            
+
             <div class="flex-1 overflow-y-auto p-8">
                 <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    
+
                     <!-- Left Col: Subject Profile -->
                     <div class="lg:col-span-1 space-y-6">
                         <div class="glass-panel p-6 rounded-xl">
                             <h2 class="text-xl font-bold text-white mb-1" id="subject-name">Select a User</h2>
                             <p class="text-slate-400 text-sm mb-4" id="subject-details">...</p>
-                            
+
                             <div class="space-y-3 text-sm font-mono text-slate-300">
                                 <div class="flex justify-between border-b border-slate-800 pb-1">
                                     <span>MBTI</span>
@@ -92,9 +115,11 @@
                         </div>
 
                         <div class="p-4 border border-dashed border-slate-700 rounded-lg bg-slate-900/30">
-                            <h4 class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Matching Logic</h4>
+                            <h4 class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Matching Logic
+                            </h4>
                             <p class="text-xs text-slate-400 leading-relaxed">
-                                Running <code class="text-neon-cyan">baseline_matcher.js</code> against all opposite-gender profiles in the demo population.
+                                Running <code class="text-neon-cyan">baseline_matcher.js</code> against all
+                                opposite-gender profiles in the demo population.
                                 <br><br>
                                 Scores are asymmetric (Male vs Female logic) and include hard filters.
                             </p>
@@ -105,9 +130,10 @@
                     <div class="lg:col-span-2">
                         <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
                             Top Matches
-                            <span class="text-xs font-normal text-slate-500 bg-slate-800 px-2 py-1 rounded-full" id="match-count">0 found</span>
+                            <span class="text-xs font-normal text-slate-500 bg-slate-800 px-2 py-1 rounded-full"
+                                id="match-count">0 found</span>
                         </h3>
-                        
+
                         <div id="matches-list" class="space-y-4">
                             <!-- Matches injected here -->
                             <div class="text-slate-500 italic">Select a user to see matches.</div>
@@ -124,6 +150,7 @@
     <script src="js/baseline_matcher.js"></script>
     <script type="module">
         import { demoPopulation } from './js/demo_population.js';
+        import { computeFinalMatchProbability, clusterDescriptions } from './js/ml_mock_matcher.js';
 
         const userListEl = document.getElementById('user-list');
         const matchesListEl = document.getElementById('matches-list');
@@ -135,12 +162,82 @@
         const subjectLocEl = document.getElementById('subject-loc');
         const matchCountEl = document.getElementById('match-count');
 
+        // New UI Elements
+        const controlsContainer = document.createElement('div');
+        controlsContainer.className = "glass-panel p-4 rounded-xl mb-6 space-y-4";
+        controlsContainer.innerHTML = `
+            <div class="flex justify-between items-center">
+                <h3 class="text-sm font-bold text-white uppercase tracking-wider">Matching Mode</h3>
+                <select id="mode-select" class="bg-slate-900 border border-slate-700 text-white text-xs rounded px-2 py-1 focus:outline-none focus:border-neon-cyan">
+                    <option value="baseline_only">Baseline Only</option>
+                    <option value="baseline_plus_ml">Baseline + ML (Global)</option>
+                    <option value="cluster_adjusted_plus_ml">Cluster Baseline + ML</option>
+                </select>
+            </div>
+            
+            <div id="ml-controls" class="space-y-3 hidden transition-all duration-300">
+                <div class="border-t border-slate-700 pt-3">
+                    <div class="flex justify-between text-xs text-slate-400 mb-1">
+                        <span>Female Trust (α_f)</span>
+                        <span id="alpha-f-val" class="text-neon-pink">0.6</span>
+                    </div>
+                    <input type="range" id="alpha-f" min="0" max="1" step="0.1" value="0.6" class="w-full h-1 bg-slate-700 rounded-lg appearance-none cursor-pointer">
+                </div>
+                <div>
+                    <div class="flex justify-between text-xs text-slate-400 mb-1">
+                        <span>Male Trust (α_m)</span>
+                        <span id="alpha-m-val" class="text-neon-cyan">0.5</span>
+                    </div>
+                    <input type="range" id="alpha-m" min="0" max="1" step="0.1" value="0.5" class="w-full h-1 bg-slate-700 rounded-lg appearance-none cursor-pointer">
+                </div>
+                <p class="text-[10px] text-slate-500 italic">
+                    Adjust how much the final score relies on the Baseline (1.0) vs ML (0.0).
+                </p>
+            </div>
+        `;
+
+        // Insert controls before the subject profile card
+        document.querySelector('.lg\\:col-span-1').insertBefore(controlsContainer, document.querySelector('.lg\\:col-span-1').firstChild);
+
+        const modeSelect = document.getElementById('mode-select');
+        const mlControls = document.getElementById('ml-controls');
+        const alphaFInput = document.getElementById('alpha-f');
+        const alphaMInput = document.getElementById('alpha-m');
+        const alphaFVal = document.getElementById('alpha-f-val');
+        const alphaMVal = document.getElementById('alpha-m-val');
+
         let selectedUserId = null;
+        let currentMode = "baseline_only";
+        let alphaF = 0.6;
+        let alphaM = 0.5;
+
+        // Event Listeners
+        modeSelect.addEventListener('change', (e) => {
+            currentMode = e.target.value;
+            if (currentMode === 'baseline_only') {
+                mlControls.classList.add('hidden');
+            } else {
+                mlControls.classList.remove('hidden');
+            }
+            if (selectedUserId) selectUser(selectedUserId);
+        });
+
+        alphaFInput.addEventListener('input', (e) => {
+            alphaF = parseFloat(e.target.value);
+            alphaFVal.innerText = alphaF.toFixed(1);
+            if (selectedUserId) selectUser(selectedUserId);
+        });
+
+        alphaMInput.addEventListener('input', (e) => {
+            alphaM = parseFloat(e.target.value);
+            alphaMVal.innerText = alphaM.toFixed(1);
+            if (selectedUserId) selectUser(selectedUserId);
+        });
 
         // Render Sidebar
         const renderSidebar = () => {
             userListEl.innerHTML = '';
-            
+
             // Group by Gender
             ['Male', 'Female'].forEach(gender => {
                 const label = document.createElement('div');
@@ -162,29 +259,50 @@
         const selectUser = (id) => {
             selectedUserId = id;
             renderSidebar();
-            
+
             const user = demoPopulation.find(u => u.id === id);
             if (!user) return;
 
             // Update Subject Card
             subjectNameEl.innerText = `${user.name}, ${user.facts.age}`;
             subjectDetailsEl.innerText = `${user.facts.job_difficulty === 3 ? 'High' : user.facts.job_difficulty === 2 ? 'Mid' : 'Low'} Tier Job • ${user.facts.diet}`;
-            
+
             // MBTI Helper
             const mbti = user.inferences.mbti_axes;
             const type = (mbti.IE.value > 0.5 ? 'E' : 'I') +
-                         (mbti.SN.value > 0.5 ? 'N' : 'S') +
-                         (mbti.FT.value > 0.5 ? 'F' : 'T') +
-                         (mbti.JP.value > 0.5 ? 'P' : 'J');
+                (mbti.SN.value > 0.5 ? 'N' : 'S') +
+                (mbti.FT.value > 0.5 ? 'F' : 'T') +
+                (mbti.JP.value > 0.5 ? 'P' : 'J');
             subjectMbtiEl.innerText = `${type} (SN strict: ${user.inferences.mbti_matching_prefs.sn_strict_mode.value})`;
-            
+
             // Humour Helper
             const styles = user.inferences.humour_profile.styles;
-            const topStyle = Object.entries(styles).sort((a,b) => b[1].value - a[1].value)[0][0];
+            const topStyle = Object.entries(styles).sort((a, b) => b[1].value - a[1].value)[0][0];
             subjectHumourEl.innerText = topStyle.replace('_', ' ');
 
             subjectIntentEl.innerText = user.facts.relationship_intent;
             subjectLocEl.innerText = user.facts.current_area_in_bangalore;
+
+            // Show Cluster Info if relevant
+            const clusterContainer = document.getElementById('cluster-info-container');
+            if (clusterContainer) clusterContainer.remove();
+
+            if (currentMode === 'cluster_adjusted_plus_ml') {
+                const cId = user.ml_cluster_id;
+                const cDesc = clusterDescriptions[user.gender.toLowerCase()][cId];
+
+                const div = document.createElement('div');
+                div.id = 'cluster-info-container';
+                div.className = "mt-4 p-3 bg-slate-800/50 rounded border border-slate-700";
+                div.innerHTML = `
+                    <div class="text-[10px] text-slate-500 uppercase font-bold mb-1">ML Cluster: ${cId}</div>
+                    <div class="text-sm font-bold text-white mb-1">${cDesc.name}</div>
+                    <div class="flex flex-wrap gap-1">
+                        ${cDesc.bullets.map(b => `<span class="text-[10px] bg-slate-700 px-1.5 py-0.5 rounded text-slate-300">${b}</span>`).join('')}
+                    </div>
+                `;
+                document.querySelector('.glass-panel').appendChild(div);
+            }
 
             runMatching(user);
         };
@@ -198,13 +316,25 @@
                 // Determine who is F and M for the function
                 const f = subject.gender === 'Female' ? subject : candidate;
                 const m = subject.gender === 'Male' ? subject : candidate;
-                
-                const score = window.BaselineMatcher.compute_match_scores(f, m);
-                const rankScore = window.BaselineMatcher.compute_ranking_score(score.p_match);
-                
+
+                // 1. Get Baseline Result (Raw)
+                const baselineScore = window.BaselineMatcher.compute_match_scores(f, m);
+
+                // 2. Pass to ML Orchestrator
+                // We need to reconstruct featureGroups roughly or pass them if baseline exposed them.
+                // BaselineMatcher returns 'details' which are the group scores.
+                const featureGroups = baselineScore.details;
+
+                const finalResult = computeFinalMatchProbability(
+                    f, m, featureGroups, baselineScore, currentMode, alphaF, alphaM
+                );
+
+                // Rank Score (using final match prob)
+                const rankScore = window.BaselineMatcher.compute_ranking_score(finalResult.p_match_final);
+
                 results.push({
                     candidate,
-                    score,
+                    score: finalResult,
                     rankScore
                 });
             });
@@ -223,71 +353,111 @@
             results.forEach((res, index) => {
                 const c = res.candidate;
                 const s = res.score;
-                
-                const isMatch = s.p_match > 0.01; // Arbitrary cutoff for "match" visual
-                const percent = (s.p_match * 100).toFixed(1);
-                
+
+                const isMatch = s.p_match_final > 0.01;
+                const percent = (s.p_match_final * 100).toFixed(1);
+
                 const div = document.createElement('div');
                 div.className = "glass-panel p-4 rounded-lg border-l-4 " + (isMatch ? "border-neon-cyan" : "border-slate-700 opacity-60");
-                
-                if (s.p_match === 0) {
-                    // Rejected
+
+                if (s.p_match_final === 0 && currentMode === 'baseline_only') {
+                    // Rejected (only show blocked reason in baseline mode for clarity)
                     div.innerHTML = `
                         <div class="flex justify-between items-start">
                             <div>
                                 <h4 class="font-bold text-slate-500 line-through">${c.name}, ${c.facts.age}</h4>
-                                <p class="text-xs text-red-500 font-mono mt-1">BLOCKED: ${s.reason}</p>
+                                <p class="text-xs text-red-500 font-mono mt-1">BLOCKED: ${s.details.reason || "Hard Filter"}</p>
                             </div>
                             <div class="text-xs text-slate-600 font-mono">0%</div>
                         </div>
                     `;
                 } else {
-                    // Match
-                    div.innerHTML = `
-                        <div class="flex flex-col md:flex-row gap-4">
-                            <div class="flex-1">
-                                <div class="flex justify-between items-center mb-2">
-                                    <h4 class="font-bold text-white text-lg">
-                                        <span class="text-neon-cyan mr-2">#${index + 1}</span>
-                                        ${c.name}, ${c.facts.age}
-                                    </h4>
-                                    <div class="text-right">
-                                        <div class="text-2xl font-bold text-neon-pink leading-none">${percent}%</div>
-                                        <div class="text-[10px] text-slate-500 font-mono">PROBABILITY</div>
-                                    </div>
-                                </div>
-                                
-                                <div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs font-mono text-slate-400 mb-3">
-                                    <div><span class="text-slate-600">LOC:</span> ${c.facts.current_area_in_bangalore}</div>
-                                    <div><span class="text-slate-600">JOB:</span> ${c.facts.job_difficulty}/3</div>
-                                    <div><span class="text-slate-600">DIET:</span> ${c.facts.diet}</div>
-                                    <div><span class="text-slate-600">INTENT:</span> ${c.facts.relationship_intent}</div>
-                                </div>
+                    // Match or ML Mode (ML might give non-zero even if baseline was low, though hard filters usually block first. 
+                    // For this demo, we assume hard filters in baseline return p=0 and we respect that).
 
-                                <!-- Score Breakdown Bar -->
-                                <div class="space-y-1">
-                                    <div class="flex justify-between text-[10px] text-slate-500 uppercase tracking-wider">
-                                        <span>Humour</span>
-                                        <span>MBTI</span>
-                                        <span>Values</span>
-                                        <span>Lifestyle</span>
+                    if (s.p_match_final === 0) {
+                        div.innerHTML = `
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h4 class="font-bold text-slate-500 line-through">${c.name}, ${c.facts.age}</h4>
+                                    <p class="text-xs text-red-500 font-mono mt-1">BLOCKED</p>
+                                </div>
+                                <div class="text-xs text-slate-600 font-mono">0%</div>
+                            </div>
+                        `;
+                    } else {
+                        // Visualization of ML vs Baseline
+                        let mlVisuals = '';
+                        if (currentMode !== 'baseline_only') {
+                            const pBase = (s.p_f_base * s.p_m_base * 100).toFixed(1);
+                            const pML = (s.p_f_ML * s.p_m_ML * 100).toFixed(1); // Synthetic ML prob
+
+                            mlVisuals = `
+                                <div class="mt-3 pt-3 border-t border-slate-800 grid grid-cols-2 gap-4 text-[10px] font-mono">
+                                    <div>
+                                        <span class="text-slate-500 block">BASELINE</span>
+                                        <span class="text-white text-lg">${pBase}%</span>
                                     </div>
-                                    <div class="flex h-1.5 rounded-full overflow-hidden bg-slate-800">
-                                        <div class="bg-purple-500" style="width: ${s.details.HUM * 25}%"></div>
-                                        <div class="bg-blue-500" style="width: ${s.details.MBTI * 25}%"></div>
-                                        <div class="bg-green-500" style="width: ${s.details.VALPOL * 25}%"></div>
-                                        <div class="bg-yellow-500" style="width: ${s.details.SOFTLIFE * 25}%"></div>
+                                    <div class="text-right">
+                                        <span class="text-slate-500 block">ML MODEL</span>
+                                        <span class="text-neon-pink text-lg">${pML}%</span>
                                     </div>
-                                    <div class="flex justify-between text-[10px] text-slate-600 font-mono">
-                                        <span>${(s.details.HUM*100).toFixed(0)}</span>
-                                        <span>${(s.details.MBTI*100).toFixed(0)}</span>
-                                        <span>${(s.details.VALPOL*100).toFixed(0)}</span>
-                                        <span>${(s.details.SOFTLIFE*100).toFixed(0)}</span>
+                                </div>
+                                <div class="w-full bg-slate-800 h-1 mt-1 rounded-full overflow-hidden relative">
+                                    <div class="absolute top-0 left-0 h-full bg-white opacity-30" style="width: ${pBase}%"></div>
+                                    <div class="absolute top-0 left-0 h-full bg-neon-pink opacity-50 mix-blend-overlay" style="width: ${pML}%"></div>
+                                </div>
+                            `;
+                        }
+
+                        div.innerHTML = `
+                            <div class="flex flex-col md:flex-row gap-4">
+                                <div class="flex-1">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <h4 class="font-bold text-white text-lg">
+                                            <span class="text-neon-cyan mr-2">#${index + 1}</span>
+                                            ${c.name}, ${c.facts.age}
+                                        </h4>
+                                        <div class="text-right">
+                                            <div class="text-2xl font-bold text-neon-pink leading-none">${percent}%</div>
+                                            <div class="text-[10px] text-slate-500 font-mono">FINAL PROBABILITY</div>
+                                        </div>
                                     </div>
+                                    
+                                    <div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs font-mono text-slate-400 mb-3">
+                                        <div><span class="text-slate-600">LOC:</span> ${c.facts.current_area_in_bangalore}</div>
+                                        <div><span class="text-slate-600">JOB:</span> ${c.facts.job_difficulty}/3</div>
+                                        <div><span class="text-slate-600">DIET:</span> ${c.facts.diet}</div>
+                                        <div><span class="text-slate-600">INTENT:</span> ${c.facts.relationship_intent}</div>
+                                    </div>
+
+                                    <!-- Score Breakdown Bar -->
+                                    <div class="space-y-1">
+                                        <div class="flex justify-between text-[10px] text-slate-500 uppercase tracking-wider">
+                                            <span>Humour</span>
+                                            <span>MBTI</span>
+                                            <span>Values</span>
+                                            <span>Lifestyle</span>
+                                        </div>
+                                        <div class="flex h-1.5 rounded-full overflow-hidden bg-slate-800">
+                                            <div class="bg-purple-500 transition-all duration-500" style="width: ${s.details.HUM * 25}%"></div>
+                                            <div class="bg-blue-500 transition-all duration-500" style="width: ${s.details.MBTI * 25}%"></div>
+                                            <div class="bg-green-500 transition-all duration-500" style="width: ${s.details.VALPOL * 25}%"></div>
+                                            <div class="bg-yellow-500 transition-all duration-500" style="width: ${s.details.SOFTLIFE * 25}%"></div>
+                                        </div>
+                                        <div class="flex justify-between text-[10px] text-slate-600 font-mono">
+                                            <span>${(s.details.HUM * 100).toFixed(0)}</span>
+                                            <span>${(s.details.MBTI * 100).toFixed(0)}</span>
+                                            <span>${(s.details.VALPOL * 100).toFixed(0)}</span>
+                                            <span>${(s.details.SOFTLIFE * 100).toFixed(0)}</span>
+                                        </div>
+                                    </div>
+
+                                    ${mlVisuals}
                                 </div>
                             </div>
-                        </div>
-                    `;
+                        `;
+                    }
                 }
                 matchesListEl.appendChild(div);
             });
@@ -300,4 +470,5 @@
 
     </script>
 </body>
+
 </html>
