@@ -3,6 +3,7 @@ essays:
 projects:
 - bollywoodle
 - ⁠cloudscript
+- polymarket arbitrage quant
 - ⁠luna
 - ⁠spacele
 
@@ -42,4 +43,6 @@ television:
 - modern family
 - the mentalist
 - monk
+
+who would i sit in a foxhole with?
 

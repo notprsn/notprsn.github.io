@@ -1,0 +1,5 @@
+{
+  "version": 1,
+  "configured": false,
+  "message": "The encrypted archive has not been initialized yet. Generate it locally with scripts/encrypt-love-letters.mjs."
+}

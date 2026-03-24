@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Client-side encrypted love letters archive.">
+    <meta name="author" content="Prasann Iyer">
+    <title>Love Letters | Prasann Iyer</title>
+    <link href="../img/favicon.ico" rel="icon" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="../css/style.css?v=3" rel="stylesheet">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MNTXBV06WJ"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag("js", new Date());
+        gtag("config", "G-MNTXBV06WJ");
+    </script>
+</head>
+<body class="page-love">
+    <header class="site-header">
+        <div class="site-nav-shell">
+            <a class="site-brand" href="/">Prasann Iyer</a>
+            <nav class="site-nav" aria-label="Primary">
+                <a href="/work/">Work</a>
+                <a href="/essays/">Essays</a>
+                <a href="/fun/">Fun Stuff</a>
+                <a href="/love-letters/" aria-current="page">Love Letters</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="page-main page-main--love">
+        <section class="page-intro">
+            <div>
+                <p class="eyebrow">Love Letters</p>
+                <h1>An encrypted archive.</h1>
+                <p class="page-lede">
+                    This page ships ciphertext only. Decryption happens in your browser after you enter the passphrase.
+                    The key is not stored in the repository, and the plaintext never needs to be published.
+                </p>
+            </div>
+            <aside class="page-aside">
+                <p class="panel-label">Security model</p>
+                <p>
+                    Public GitHub Pages cannot give perfect secrecy if a browser must eventually decrypt the content.
+                    The practical defense is strong encryption, no committed password, and a long passphrase shared off-platform.
+                </p>
+            </aside>
+        </section>
+
+        <section class="lock-grid">
+            <article class="lock-panel">
+                <form data-love-letters-form>
+                    <input class="sr-only" type="text" name="archive-name" value="love-letters" autocomplete="username" tabindex="-1" aria-hidden="true">
+                    <div class="form-row">
+                        <label class="lock-label" for="love-letters-password">Passphrase</label>
+                        <input class="lock-input" id="love-letters-password" name="password" type="password" autocomplete="current-password" spellcheck="false" required>
+                    </div>
+                    <button class="lock-button" type="submit">Unlock archive</button>
+                </form>
+                <p class="status-text" data-love-letters-status>
+                    The archive is locked. If the ciphertext bundle has not been initialized yet, this page will tell you.
+                </p>
+            </article>
+
+            <article class="lock-note-card">
+                <p class="panel-label">Public details</p>
+                <ul class="plain-list">
+                    <li>PBKDF2-SHA-256 for key derivation.</li>
+                    <li>AES-256-GCM for authenticated encryption.</li>
+                    <li>Random salt and IV for each generated bundle.</li>
+                    <li>Password never committed to the repository.</li>
+                </ul>
+            </article>
+        </section>
+
+        <section class="letters-output" data-love-letters-output hidden>
+            <article class="letter-shell letter-shell--intro">
+                <p class="panel-label">Archive</p>
+                <h2 data-archive-title>Love Letters</h2>
+                <p data-archive-intro></p>
+            </article>
+            <div class="letters-list" data-letters-list></div>
+        </section>
+    </main>
+
+    <footer class="site-footer site-footer--love">
+        <div class="footer-shell">
+            <span>Love Letters page.</span>
+            <span>&copy; <span data-current-year>2026</span> Prasann Iyer</span>
+        </div>
+    </footer>
+
+    <script src="../js/scripts.js?v=3"></script>
+</body>
+</html>
