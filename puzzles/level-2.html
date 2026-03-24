@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex">
+    <title>not a point and click thing</title>
+    <link href="../img/favicon.ico" rel="icon" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+</head>
+<body data-level="2" data-answer="hover" data-next="level-3.html">
+    <main class="puzzle-shell">
+        <p class="puzzle-kicker">off-grid / 02</p>
+        <h1>not a point and click thing</h1>
+        <p>Movement matters. Pressure does not.</p>
+
+        <div class="hover-board">
+            <span class="hover-hotspot" data-hover-hotspot aria-hidden="true"></span>
+            <p class="hover-reveal" data-hover-reveal>HOVER</p>
+        </div>
+
+        <p class="status-line" data-hover-status>Some answers need movement, not pressure.</p>
+
+        <form class="answer-form" data-answer-form>
+            <input type="text" name="answer" autocomplete="off" spellcheck="false" placeholder="answer">
+            <button type="submit">submit</button>
+            <div class="answer-feedback" aria-live="polite"></div>
+        </form>
+    </main>
+    <script src="common.js"></script>
+</body>
+</html>
