@@ -1,0 +1,139 @@
+body.lab-page {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Source Sans 3", sans-serif;
+  color: #171411;
+  background:
+    radial-gradient(circle at top left, rgba(217, 230, 216, 0.6), transparent 24%),
+    linear-gradient(180deg, #fcfaf6 0%, #f0eadf 100%);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.lab-header,
+.lab-main {
+  width: min(1120px, calc(100vw - 2rem));
+  margin: 0 auto;
+}
+
+.lab-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 0;
+}
+
+.lab-back,
+.lab-nav a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.5rem;
+  padding: 0.55rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid rgba(23, 20, 17, 0.12);
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.lab-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.lab-main {
+  padding: 1rem 0 3rem;
+}
+
+.lab-copy h1 {
+  margin: 0.35rem 0 0;
+  font-family: "Cormorant Garamond", serif;
+  font-size: clamp(3.1rem, 8vw, 5.4rem);
+  font-weight: 500;
+  line-height: 0.92;
+}
+
+.lab-copy p,
+.template-note {
+  color: #5f564c;
+  font-size: 1.08rem;
+  line-height: 1.55;
+}
+
+.lab-eyebrow {
+  margin: 0;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.76rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.lab-controls,
+.lab-canvas-shell,
+.template-note {
+  margin-top: 1.25rem;
+  border: 1px solid rgba(23, 20, 17, 0.12);
+  border-radius: 24px;
+  background: rgba(251, 249, 244, 0.88);
+  box-shadow: 0 22px 50px rgba(31, 24, 18, 0.08);
+}
+
+.lab-controls {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  padding: 1.2rem;
+}
+
+.lab-controls label {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.lab-controls span,
+.lab-controls output {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.lab-controls input {
+  width: 100%;
+}
+
+.lab-canvas-shell {
+  padding: 1rem;
+}
+
+#mod-circle-canvas {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 18px;
+  background: #fffdf9;
+}
+
+.template-list {
+  margin: 0;
+  padding-left: 1.2rem;
+}
+
+.template-list li {
+  margin-top: 0.8rem;
+}
+
+@media (max-width: 780px) {
+  .lab-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .lab-controls {
+    grid-template-columns: 1fr;
+  }
+}

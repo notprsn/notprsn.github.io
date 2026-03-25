@@ -1,7 +1,11 @@
+let writingManifestPromise;
+
 document.addEventListener("DOMContentLoaded", () => {
     setCurrentYear();
     initMatrixRain();
     initLoveLetters();
+    initWritingLinks();
+    initWritingPage();
 });
 
 function setCurrentYear() {
@@ -10,6 +14,30 @@ function setCurrentYear() {
     targets.forEach((target) => {
         target.textContent = year;
     });
+}
+
+function getSiteVersion() {
+    const meta = document.querySelector('meta[name="site-version"]');
+    return meta?.content || "dev";
+}
+
+async function fetchWritingManifest() {
+    if (!writingManifestPromise) {
+        const version = encodeURIComponent(getSiteVersion());
+        writingManifestPromise = fetch(`/data/writings-manifest.json?v=${version}`, { cache: "no-store" })
+            .then(async (response) => {
+                if (!response.ok) {
+                    throw new Error("Could not load writings manifest.");
+                }
+                return response.json();
+            })
+            .catch((error) => {
+                console.warn(error);
+                return { items: [] };
+            });
+    }
+
+    return writingManifestPromise;
 }
 
 function initMatrixRain() {
@@ -91,6 +119,236 @@ function initMatrixRain() {
     window.requestAnimationFrame(tick);
 }
 
+async function initWritingLinks() {
+    const slots = document.querySelectorAll("[data-writing-slot]");
+    if (!slots.length) {
+        return;
+    }
+
+    const manifest = await fetchWritingManifest();
+    const items = Array.isArray(manifest.items) ? manifest.items : [];
+    const bySlug = new Map(items.map((item) => [item.slug, item]));
+
+    slots.forEach((slot) => {
+        const slug = slot.getAttribute("data-writing-slot");
+        const entry = bySlug.get(slug);
+        const linkCluster = slot.querySelector("[data-writing-link]");
+
+        if (!entry || !linkCluster) {
+            return;
+        }
+
+        linkCluster.hidden = false;
+        linkCluster.replaceChildren();
+
+        const status = document.createElement("span");
+        status.className = "writing-status";
+        status.textContent = "Finalized";
+
+        const link = document.createElement("a");
+        link.className = "inline-link";
+        link.href = entry.route;
+        link.textContent = "Read final";
+
+        linkCluster.append(status, link);
+    });
+}
+
+async function initWritingPage() {
+    const root = document.querySelector("[data-writing-page]");
+    if (!root) {
+        return;
+    }
+
+    const titleTarget = document.querySelector("[data-writing-title]");
+    const metaTarget = document.querySelector("[data-writing-meta]");
+    const proseTarget = document.querySelector("[data-writing-prose]");
+    const backLink = document.querySelector("[data-writing-back-link]");
+    const slug = new URLSearchParams(window.location.search).get("slug");
+
+    if (!slug || !titleTarget || !metaTarget || !proseTarget || !backLink) {
+        showWritingPageError("Missing writing slug.");
+        return;
+    }
+
+    const fallbackRoute = routeWritingSlug(slug);
+    backLink.href = fallbackRoute.backPath;
+    backLink.textContent = `Back to ${fallbackRoute.backLabel}`;
+
+    const manifest = await fetchWritingManifest();
+    const items = Array.isArray(manifest.items) ? manifest.items : [];
+    const entry = items.find((item) => item.slug === slug);
+
+    if (!entry) {
+        showWritingPageError("That finalized writing does not exist yet.");
+        return;
+    }
+
+    titleTarget.textContent = entry.title;
+    metaTarget.textContent = `${entry.kindLabel} / finalized writing`;
+    backLink.href = entry.backPath;
+    backLink.textContent = `Back to ${entry.backLabel}`;
+    document.title = `${entry.title} | Prasann Iyer`;
+
+    try {
+        const version = encodeURIComponent(getSiteVersion());
+        const response = await fetch(`${entry.file}?v=${version}`, { cache: "no-store" });
+        if (!response.ok) {
+            throw new Error("Could not load finalized markdown.");
+        }
+
+        const markdown = await response.text();
+        proseTarget.innerHTML = renderMarkdown(markdown);
+    } catch (error) {
+        console.error(error);
+        showWritingPageError("Could not load finalized markdown.");
+    }
+}
+
+function showWritingPageError(message) {
+    const titleTarget = document.querySelector("[data-writing-title]");
+    const metaTarget = document.querySelector("[data-writing-meta]");
+    const proseTarget = document.querySelector("[data-writing-prose]");
+
+    if (titleTarget) {
+        titleTarget.textContent = "Writing unavailable";
+    }
+    if (metaTarget) {
+        metaTarget.textContent = message;
+    }
+    if (proseTarget) {
+        proseTarget.innerHTML = `<p>${escapeHtml(message)}</p>`;
+    }
+}
+
+function routeWritingSlug(slug) {
+    if (slug.startsWith("work-")) {
+        return { backPath: "/work/", backLabel: "Work" };
+    }
+
+    if (slug.startsWith("projects-")) {
+        return { backPath: "/projects/", backLabel: "Projects" };
+    }
+
+    if (slug.startsWith("essays-travel-")) {
+        return { backPath: "/essays/travel/", backLabel: "Travel Essays" };
+    }
+
+    if (slug.startsWith("essays-miscellaneous-")) {
+        return { backPath: "/essays/miscellaneous/", backLabel: "Miscellaneous Essays" };
+    }
+
+    return { backPath: "/writings/", backLabel: "Writings" };
+}
+
+function renderMarkdown(markdown) {
+    const lines = markdown.replace(/\r\n/g, "\n").split("\n");
+    const html = [];
+    let paragraph = [];
+    let listType = null;
+
+    const flushParagraph = () => {
+        if (!paragraph.length) {
+            return;
+        }
+        html.push(`<p>${parseInlineMarkdown(paragraph.join(" "))}</p>`);
+        paragraph = [];
+    };
+
+    const closeList = () => {
+        if (!listType) {
+            return;
+        }
+        html.push(listType === "ol" ? "</ol>" : "</ul>");
+        listType = null;
+    };
+
+    lines.forEach((line) => {
+        const trimmed = line.trim();
+
+        if (!trimmed) {
+            flushParagraph();
+            closeList();
+            return;
+        }
+
+        const headingMatch = trimmed.match(/^(#{1,6})\s+(.*)$/);
+        if (headingMatch) {
+            flushParagraph();
+            closeList();
+            const level = headingMatch[1].length;
+            html.push(`<h${level}>${parseInlineMarkdown(headingMatch[2])}</h${level}>`);
+            return;
+        }
+
+        if (/^[-*]\s+/.test(trimmed)) {
+            flushParagraph();
+            if (listType !== "ul") {
+                closeList();
+                html.push("<ul>");
+                listType = "ul";
+            }
+            html.push(`<li>${parseInlineMarkdown(trimmed.replace(/^[-*]\s+/, ""))}</li>`);
+            return;
+        }
+
+        if (/^\d+\.\s+/.test(trimmed)) {
+            flushParagraph();
+            if (listType !== "ol") {
+                closeList();
+                html.push("<ol>");
+                listType = "ol";
+            }
+            html.push(`<li>${parseInlineMarkdown(trimmed.replace(/^\d+\.\s+/, ""))}</li>`);
+            return;
+        }
+
+        if (/^>\s?/.test(trimmed)) {
+            flushParagraph();
+            closeList();
+            html.push(`<blockquote><p>${parseInlineMarkdown(trimmed.replace(/^>\s?/, ""))}</p></blockquote>`);
+            return;
+        }
+
+        if (/^---+$/.test(trimmed)) {
+            flushParagraph();
+            closeList();
+            html.push("<hr>");
+            return;
+        }
+
+        paragraph.push(trimmed);
+    });
+
+    flushParagraph();
+    closeList();
+
+    return html.join("\n");
+}
+
+function parseInlineMarkdown(text) {
+    let output = escapeHtml(text);
+
+    output = output.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_match, label, url) => {
+        return `<a href="${escapeHtml(url)}">${escapeHtml(label)}</a>`;
+    });
+
+    output = output.replace(/`([^`]+)`/g, (_match, code) => `<code>${escapeHtml(code)}</code>`);
+    output = output.replace(/\*\*([^*]+)\*\*/g, (_match, strong) => `<strong>${escapeHtml(strong)}</strong>`);
+    output = output.replace(/\*([^*]+)\*/g, (_match, emphasis) => `<em>${escapeHtml(emphasis)}</em>`);
+
+    return output;
+}
+
+function escapeHtml(value) {
+    return value
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#39;");
+}
+
 function initLoveLetters() {
     const form = document.querySelector("[data-love-letters-form]");
     if (!form) {
@@ -116,7 +374,8 @@ function initLoveLetters() {
 
     const getBundle = async () => {
         if (!bundlePromise) {
-            bundlePromise = fetch("/data/love-letters.enc.json", { cache: "no-store" }).then(async (response) => {
+            const version = encodeURIComponent(getSiteVersion());
+            bundlePromise = fetch(`/data/love-letters.enc.json?v=${version}`, { cache: "no-store" }).then(async (response) => {
                 if (!response.ok) {
                     throw new Error("Could not load ciphertext bundle.");
                 }

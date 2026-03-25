@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta name="description" content="Mod Circle: a small visual math project by Prasann Iyer.">
+    <meta name="author" content="Prasann Iyer">
+    <meta name="site-version" content="20260325122525935">
+    <title>Mod Circle | Prasann Iyer</title>
+    <link href="../../../img/favicon.ico" rel="icon" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="style.css?v=20260325122525935" rel="stylesheet">
+</head>
+<body class="lab-page">
+    <header class="lab-header">
+        <a class="lab-back" href="/fun/">Back to Fun Stuff</a>
+        <nav class="lab-nav" aria-label="Primary">
+            <a href="/work/">Work</a>
+            <a href="/projects/">Projects</a>
+            <a href="/fun/" aria-current="page">Fun Stuff</a>
+            <a href="/essays/">Essays</a>
+        </nav>
+    </header>
+
+    <main class="lab-main">
+        <section class="lab-copy">
+            <p class="lab-eyebrow">Fun Math Thing 01</p>
+            <h1>Mod Circle</h1>
+            <p>
+                A modular multiplication circle. Increase the multiplier and watch the diagram turn from spokes into lace.
+            </p>
+        </section>
+
+        <section class="lab-controls">
+            <label>
+                <span>Points</span>
+                <input id="points" type="range" min="40" max="300" value="180">
+                <output id="points-value">180</output>
+            </label>
+            <label>
+                <span>Multiplier</span>
+                <input id="multiplier" type="range" min="2" max="220" value="58">
+                <output id="multiplier-value">58</output>
+            </label>
+            <label>
+                <span>Rotation</span>
+                <input id="rotation" type="range" min="0" max="360" value="0">
+                <output id="rotation-value">0°</output>
+            </label>
+        </section>
+
+        <section class="lab-canvas-shell">
+            <canvas id="mod-circle-canvas" width="980" height="980" aria-label="Modular multiplication circle"></canvas>
+        </section>
+    </main>
+
+    <script src="script.js?v=20260325122525935"></script>
+</body>
+</html>
