@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta name="description" content="Interactive recursive fractal tree in p5.js with live controls, presets, and gentle motion.">
+    <meta name="author" content="Prasann Iyer">
+    <meta name="site-version" content="20260325230139745">
+    <title>Fractal Tree | Prasann Iyer</title>
+    <link href="../../../img/favicon.ico" rel="icon" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="style.css?v=20260325230139745" rel="stylesheet">
+</head>
+<body class="tree-page">
+    <header class="lab-header">
+        <a class="lab-back" href="/fun/">Back to Fun Stuff</a>
+        <nav class="lab-nav" aria-label="Primary">
+            <a href="/work/">Work</a>
+            <a href="/projects/">Projects</a>
+            <a href="/fun/" aria-current="page">Fun Stuff</a>
+            <a href="/essays/">Essays</a>
+        </nav>
+    </header>
+
+    <main class="tree-main">
+        <section class="tree-intro">
+            <div class="tree-copy">
+                <p class="lab-eyebrow">Fun Math Thing 03</p>
+                <h1>Fractal Tree</h1>
+                <p>
+                    A recursive tree built from the Coding Train challenge structure, then pushed into a more atmospheric browser sketch
+                    with presets, motion, and live controls.
+                </p>
+            </div>
+            <div class="tree-aside">
+                <p class="hint-card">
+                    The trunk still follows the reference logic: draw, translate, branch left, branch right, repeat until the twigs run out.
+                </p>
+                <button class="controls-toggle" type="button" data-controls-toggle>Open controls</button>
+            </div>
+        </section>
+
+        <section class="tree-layout" data-controls-shell>
+            <aside class="tree-panel" data-control-panel>
+                <div class="panel-section">
+                    <p class="panel-label">Structure</p>
+                    <label class="control-row select-row">
+                        <span>Preset</span>
+                        <select name="preset">
+                            <option value="classic" selected>Classic</option>
+                            <option value="willow">Willow</option>
+                            <option value="winter">Winter</option>
+                            <option value="coral">Coral</option>
+                        </select>
+                    </label>
+                    <label class="control-row">
+                        <span>Angle</span>
+                        <input name="angleDeg" type="range" min="8" max="55" step="0.25" value="25">
+                        <output data-output-for="angleDeg">25.00°</output>
+                    </label>
+                    <label class="control-row">
+                        <span>Branch ratio</span>
+                        <input name="branchRatio" type="range" min="0.55" max="0.79" step="0.01" value="0.67">
+                        <output data-output-for="branchRatio">0.67</output>
+                    </label>
+                    <label class="control-row">
+                        <span>Trunk length</span>
+                        <input name="rootLength" type="range" min="90" max="190" step="1" value="140">
+                        <output data-output-for="rootLength">140</output>
+                    </label>
+                    <label class="control-row">
+                        <span>Minimum twig length</span>
+                        <input name="minLength" type="range" min="4" max="18" step="0.5" value="9">
+                        <output data-output-for="minLength">9.0</output>
+                    </label>
+                </div>
+
+                <div class="panel-section">
+                    <p class="panel-label">Motion</p>
+                    <label class="control-row">
+                        <span>Wind</span>
+                        <input name="wind" type="range" min="0" max="0.85" step="0.01" value="0.18">
+                        <output data-output-for="wind">0.18</output>
+                    </label>
+                    <label class="control-row">
+                        <span>Asymmetry</span>
+                        <input name="asymmetry" type="range" min="-0.45" max="0.45" step="0.01" value="0">
+                        <output data-output-for="asymmetry">0.00</output>
+                    </label>
+                    <label class="control-row">
+                        <span>Thickness decay</span>
+                        <input name="thicknessDecay" type="range" min="0.62" max="0.86" step="0.01" value="0.74">
+                        <output data-output-for="thicknessDecay">0.74</output>
+                    </label>
+                </div>
+
+                <div class="panel-section">
+                    <p class="panel-label">Leaves</p>
+                    <label class="toggle-row">
+                        <input name="showLeaves" type="checkbox" checked>
+                        <span>Show leaves</span>
+                    </label>
+                    <label class="control-row">
+                        <span>Leaf size</span>
+                        <input name="leafSize" type="range" min="0" max="12" step="0.2" value="5.8">
+                        <output data-output-for="leafSize">5.8</output>
+                    </label>
+                    <label class="control-row">
+                        <span>Hue shift</span>
+                        <input name="hueShift" type="range" min="0" max="360" step="1" value="112">
+                        <output data-output-for="hueShift">112</output>
+                    </label>
+                    <button class="reset-button" type="button" data-reset-controls>Reset defaults</button>
+                </div>
+
+                <div class="panel-section stats-panel">
+                    <p class="panel-label">Readout</p>
+                    <dl class="stats-grid">
+                        <div>
+                            <dt>Branches</dt>
+                            <dd id="branch-count">-</dd>
+                        </div>
+                        <div>
+                            <dt>Leaves</dt>
+                            <dd id="leaf-count">-</dd>
+                        </div>
+                        <div>
+                            <dt>Depth</dt>
+                            <dd id="depth-count">-</dd>
+                        </div>
+                        <div>
+                            <dt>Preset</dt>
+                            <dd id="preset-readout">Classic</dd>
+                        </div>
+                    </dl>
+                </div>
+            </aside>
+
+            <section class="tree-stage">
+                <div class="canvas-card">
+                    <div id="tree-stage" class="canvas-host" aria-label="Interactive recursive fractal tree viewer"></div>
+                    <div class="stage-hud" aria-live="polite">
+                        <span class="hud-pill" id="hud-preset">classic</span>
+                        <span class="hud-pill" id="hud-angle">25.00°</span>
+                    </div>
+                </div>
+                <p class="stage-note">Reference-faithful recursion, then a little wind.</p>
+            </section>
+        </section>
+    </main>
+
+    <script src="p5.min.js?v=20260325230139745"></script>
+    <script src="script.js?v=20260325230139745"></script>
+</body>
+</html>

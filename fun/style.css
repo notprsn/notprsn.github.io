@@ -1,0 +1,115 @@
+.page-fun-space {
+  background: #000;
+  color: #f4f6ff;
+  overflow-x: hidden;
+}
+
+.page-fun-space .site-header,
+.page-fun-space .page-main,
+.page-fun-space .site-footer {
+  position: relative;
+  z-index: 2;
+}
+
+.fun-starfield-canvas,
+.fun-starfield-veil {
+  position: fixed;
+  inset: 0;
+}
+
+.fun-starfield-canvas {
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  background: #000;
+}
+
+.fun-starfield-veil {
+  z-index: 1;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 18% 16%, rgba(255, 255, 255, 0.02), transparent 18%),
+    radial-gradient(circle at 82% 12%, rgba(160, 190, 255, 0.05), transparent 18%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.18) 0%, rgba(0, 0, 0, 0.04) 34%, rgba(0, 0, 0, 0.28) 100%);
+}
+
+.page-fun-space .site-header {
+  background: rgba(0, 0, 0, 0.72);
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(14px);
+}
+
+.page-fun-space .site-brand,
+.page-fun-space .eyebrow,
+.page-fun-space .panel-label,
+.page-fun-space .section-index {
+  color: rgba(196, 208, 255, 0.82);
+}
+
+.page-fun-space .site-nav a,
+.page-fun-space .inline-link {
+  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(244, 246, 255, 0.82);
+}
+
+.page-fun-space .site-nav a[aria-current="page"],
+.page-fun-space .site-nav a:hover,
+.page-fun-space .site-nav a:focus-visible,
+.page-fun-space .inline-link:hover,
+.page-fun-space .inline-link:focus-visible {
+  border-color: rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+.page-fun-space .page-intro h1,
+.page-fun-space .section-head h2,
+.page-fun-space .lab-card h3 {
+  color: #ffffff;
+}
+
+.page-fun-space .page-lede,
+.page-fun-space .page-aside p,
+.page-fun-space .section-head p,
+.page-fun-space .lab-card p,
+.page-fun-space .section-card p {
+  color: rgba(231, 235, 250, 0.76);
+}
+
+.page-fun-space .page-aside,
+.page-fun-space .lab-card,
+.page-fun-space .section-card {
+  border-color: rgba(255, 255, 255, 0.08);
+  background: rgba(6, 7, 10, 0.72);
+  box-shadow: 0 28px 90px rgba(0, 0, 0, 0.48);
+  backdrop-filter: blur(18px);
+}
+
+.page-fun-space .section-head {
+  border-bottom-color: rgba(255, 255, 255, 0.12);
+}
+
+.page-fun-space .chip-cloud span {
+  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(244, 246, 255, 0.84);
+}
+
+.page-fun-space .site-footer,
+.page-fun-space .footer-links a {
+  color: rgba(212, 219, 242, 0.78);
+}
+
+.page-fun-space .footer-links a:hover,
+.page-fun-space .footer-links a:focus-visible {
+  color: #ffffff;
+}
+
+@media (max-width: 760px) {
+  .fun-starfield-veil {
+    background:
+      linear-gradient(180deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.06) 28%, rgba(0, 0, 0, 0.3) 100%);
+  }
+}
