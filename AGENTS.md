@@ -8,6 +8,7 @@ Rules
 - Use the latest resume in `references/` as the source of truth for `work/`. Do not invent work facts.
 - Keep `projects/` separate from `work/`.
 - Keep `fun/` experiments inside `fun/projects/<slug>/` with local `index.html`, `style.css`, and `script.js`.
+- When working on p5.js or Processing-based `fun/` projects, consult `skills/p5js-processing/SKILL.md` first and keep any project-specific runtime/assets local to that project unless they are intentionally shared.
 - Keep essay themes inside their own directories under `essays/`.
 - Keep in-progress writing drafts in `writings/pending/` and finalized markdown in `writings/final/`.
 - Never keep the same writing slug in both `writings/pending/` and `writings/final/`.

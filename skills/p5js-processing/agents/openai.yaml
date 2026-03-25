@@ -1,0 +1,7 @@
+interface:
+  display_name: "p5.js + Processing"
+  short_description: "Focused creative-coding guide for p5 and Processing."
+  default_prompt: "Use $p5js-processing to build or port a self-contained p5.js fun project in this repo."
+
+policy:
+  allow_implicit_invocation: true
