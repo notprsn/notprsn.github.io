@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+node scripts/sync-site.mjs
+git add data/writings-manifest.json data/site-meta.json
+git add $(find . -type f -name '*.html' -not -path './.git/*')
