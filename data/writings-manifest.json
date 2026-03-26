@@ -1,5 +1,66 @@
 {
-  "version": "20260326140631995",
-  "generatedAt": "2026-03-26T14:06:31.997Z",
-  "items": []
+  "version": "20260326152156514",
+  "generatedAt": "2026-03-26T15:21:56.516Z",
+  "items": [
+    {
+      "slug": "work-alphagrep",
+      "title": "Alphagrep Securities Pvt. Ltd.",
+      "file": "/writings/final/work-alphagrep.md",
+      "route": "/writings/?slug=work-alphagrep",
+      "backPath": "/work/",
+      "backLabel": "Work",
+      "kind": "work",
+      "kindLabel": "Work"
+    },
+    {
+      "slug": "work-greenland",
+      "title": "Greenland Investment Management LLP",
+      "file": "/writings/final/work-greenland.md",
+      "route": "/writings/?slug=work-greenland",
+      "backPath": "/work/",
+      "backLabel": "Work",
+      "kind": "work",
+      "kindLabel": "Work"
+    },
+    {
+      "slug": "work-metripping",
+      "title": "Metripping Technologies Pvt. Ltd.",
+      "file": "/writings/final/work-metripping.md",
+      "route": "/writings/?slug=work-metripping",
+      "backPath": "/work/",
+      "backLabel": "Work",
+      "kind": "work",
+      "kindLabel": "Work"
+    },
+    {
+      "slug": "work-optiver",
+      "title": "Optiver Services B.V.",
+      "file": "/writings/final/work-optiver.md",
+      "route": "/writings/?slug=work-optiver",
+      "backPath": "/work/",
+      "backLabel": "Work",
+      "kind": "work",
+      "kindLabel": "Work"
+    },
+    {
+      "slug": "work-qicap",
+      "title": "QiCAP.Ai",
+      "file": "/writings/final/work-qicap.md",
+      "route": "/writings/?slug=work-qicap",
+      "backPath": "/work/",
+      "backLabel": "Work",
+      "kind": "work",
+      "kindLabel": "Work"
+    },
+    {
+      "slug": "work-sharpely",
+      "title": "Sharpely (Neam Caps Pvt. Ltd.)",
+      "file": "/writings/final/work-sharpely.md",
+      "route": "/writings/?slug=work-sharpely",
+      "backPath": "/work/",
+      "backLabel": "Work",
+      "kind": "work",
+      "kindLabel": "Work"
+    }
+  ]
 }
