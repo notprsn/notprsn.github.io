@@ -1,18 +1,5 @@
 # Alphagrep Securities Pvt. Ltd.
 
-May '22 - Jun '22
-
-Quantitative Research Intern
-
-## Website copy
-
-- Architected a Jupyter Notebook research framework to evaluate and classify trades using alpha-signal filters and distributional diagnostics.
-- Collaborated with senior researchers to test new alpha features through t-statistics, Sharpe ratio, drawdown, and related metric-based robustness tests.
-- Built a no-code interactive interface with ipywidgets, enabling non-programmers to apply multi-layered logic filters, with automated De Morgan simplification, for rapid hypothesis iteration.
-- Optimized backtesting through vectorized computation and memory-efficient design, accelerating simulations for crypto strategies, several of which advanced to live deployment.
-
-## Long write-up
-
 I joined Alphagrep Securities Pvt. Ltd. in May 2022 as a Quantitative Research Intern. I was supposed to go to Optiver that summer, but my visa got rejected. Funny story, actually. I still have no idea why. I messed up the police-verification process because GOI websites are atrocious, especially when you already have impaired executive functioning. But I managed to get the documents together in time, made the appointment, and thought it had gone smoothly. The visa kept getting delayed as my flight date approached. Dad literally went to the Dutch Embassy in Delhi to press them. I missed the flight, then another, and then a couple of us got our visas rejected a few days later. I still couldn't pattern-recognize the reason. Shoot three random ducks in the bucket, I guess. Or the three ugliest ducks in the pond. I don't know. I'm not a duck person.
 
 Luckily, Alphagrep bit when I started mass-applying on LinkedIn to quant firms that hadn't come for internships. They asked me if I could write code in Python and I said, sure, I guess. I should have known. The internship was fun. There was just the right amount of impostor syndrome to keep me on my toes. I could also sense I wasn't a cultural fit whenever I made the occasional social-cue blunder. And I'm not outrageously gifted enough to be hired on pure talent, so that was that.

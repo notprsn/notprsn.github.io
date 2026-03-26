@@ -17,8 +17,8 @@ const usage = `Usage:
 
 Examples:
   node scripts/diff-writing-against-ref.mjs --work
-  node scripts/diff-writing-against-ref.mjs work-qicap
-  node scripts/diff-writing-against-ref.mjs --ref origin/main work-optiver
+  node scripts/diff-writing-against-ref.mjs work-story-qicap
+  node scripts/diff-writing-against-ref.mjs --ref origin/main work-story-optiver
 
 Notes:
   - Looks for the current file in writings/final/ first, then writings/pending/.

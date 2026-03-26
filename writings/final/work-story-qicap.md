@@ -1,19 +1,5 @@
 # QiCAP.Ai
 
-Jun '24 - Present
-
-Quant Trader
-
-## Website copy
-
-- Served as ML Alpha Researcher for the firm's medium-frequency index options team, designing and evaluating data-driven trading strategies across NIFTY and SENSEX index option chains.
-- Traded a long gamma options strategy that delivered over 3x return on deployed margin within one financial quarter through live runs and continuous performance monitoring.
-- Integrated ML and statistical techniques, linear and ensemble regressors, forward-return bias modelling, and signal evaluation under normal assumptions to isolate persistent predictive features.
-- Engineered the firm's most efficient MF backtesting framework using parquet datasets, vectorised computation, and slurm-based parallelisation, cutting simulation runtimes by over 80%.
-- Automated daily operations of ML black-box deployments and sim-live trading checks across the whole team's active ML strategies, with Slack updates and mismatch diagnosis.
-
-## Long write-up
-
 I joined QiCAP.Ai in June 2024 as a Quant Trader. The initial problem statement was simple to describe and solve: design a profitable strategy to buy ATM straddles on index options on expiry day. I was given about 750 high-frequency signals sampled every five seconds as usable input.
 
 I wrote a backtesting script that simulated buying and closing ATM straddles while tracking the relevant metrics. Buy when the decision is 2, exit when it is 0, hold when it is 1. Keep it simple.

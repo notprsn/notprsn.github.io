@@ -1,18 +1,5 @@
 # Sharpely (Neam Caps Pvt. Ltd.)
 
-Sep '23 - Nov '23
-
-Software Engineering Intern
-
-## Website copy
-
-- Re-engineered the firm's stock screener engine from Pandas to Polars (Rust backend), refactoring thousands of lines of code to achieve nearly 20x lower latency for user-facing computations.
-- Integrated dx-charts, a high-performance open-source charting library, replacing paid TradingView components and eliminating licensing costs while enabling deeper API-level visualization control.
-- Built automated exchange data pipelines for bulk/block deals, insider trades, and corporate actions directly from NSE endpoints, ensuring seamless integration with the production db servers.
-- Prototyped LLM-based modules using LangChain and Hugging Face models to summarize financial PDFs, and integrated the Lean backtester as a potential front-facing framework.
-
-## Long write-up
-
 I joined Sharpely in September 2023. I'd spent a two-month dissociative depression stretch applying to jobs, writing to professors, giving the GRE, and travelling around India with my family after not getting a permanent offer at Optiver. No one was hiring, and the LinkedIn algorithm, seeing my desperation, knew I'd bite.
 
 They were a tiny team: a CEO, a CTO, a frontend engineer, a backend engineer, and the money guy. The hiring project was to build a backtester and run a simple Bollinger-band crossover strategy on it with visuals. Fun project.

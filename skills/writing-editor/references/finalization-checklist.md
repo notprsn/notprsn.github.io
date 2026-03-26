@@ -8,7 +8,12 @@ Use this when a draft is close to done and may be moved from `writings/pending/`
 - The main point is obvious by the end of the first few paragraphs.
 - The strongest sections are not buried.
 - The final paragraph feels finished, not abandoned.
-- Any factual claims in `work-*` drafts line up with the latest resume in `references/`.
+- Any factual claims in `work-story-*` drafts line up with the latest resume in `references/`.
+- `work-story-*` files keep only the narrative:
+  - no date line
+  - no role line
+  - no `## Website copy`
+  - no `## Long write-up`
 
 ## Repo checks
 
@@ -16,7 +21,7 @@ Use this when a draft is close to done and may be moved from `writings/pending/`
 - The same slug does not exist in both `writings/pending/` and `writings/final/`.
 - If finalizing, move the file instead of copying it.
 - Keep section boundaries intact:
-  - `work-*` stays work-related
+  - `work-story-*` stays work-related
   - `projects-*` stays project-related
   - essays stay in the correct theme family
 

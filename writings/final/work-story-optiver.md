@@ -1,17 +1,5 @@
 # Optiver Services B.V.
 
-May '23 - Jun '23
-
-Quantitative Trader Intern
-
-## Website copy
-
-- Completed Optiver's structured trading training programme covering the full spectrum of options theory; from Black-Scholes and volatility to Greeks interpretation and advanced option structures.
-- Traded EURO STOXX 50 options across strikes and expiries spanning the full 8-hour trading day for 3 weeks, dynamically managing Greeks, intraday risk, and event-driven volatility.
-- Led a quantitative research project analysing event-day inefficiencies on single-stock options, quantifying a potential EUR 5 million annual opportunity loss and proposing a statistically fitted execution-width model that was later adopted as an intra-desk optimisation framework.
-
-## Long write-up
-
 Optiver is a psychological battle. You walk in hyper-aware of the talent density and can't help but feel like you're the dumbest person in the room. All the time.
 
 I spent most of theory trying hard to stay alert and understand what was going on while knowing I had no clue. Solving exercises with the others was fun. Playing trading games was fun. Picking the minds of literal geniuses was fun. But staying awake in class was absolutely not it. They should hand out nootropics and three cans of Red Bull a day to interns if they want to sustain the same training model.

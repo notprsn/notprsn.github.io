@@ -83,7 +83,7 @@ function extractTitle(markdown) {
 
 function fallbackTitle(slug) {
     return slug
-        .replace(/^(work|projects|essays)-/, "")
+        .replace(/^(work-story|work|projects|essays)-/, "")
         .split("-")
         .map((part) => {
             if (part.toUpperCase() === "UK") {
@@ -98,6 +98,15 @@ function fallbackTitle(slug) {
 }
 
 function routeForSlug(slug) {
+    if (slug.startsWith("work-story-")) {
+        return {
+            backPath: "/work/",
+            backLabel: "Work",
+            kind: "work-story",
+            kindLabel: "Work Story",
+        };
+    }
+
     if (slug.startsWith("work-")) {
         return {
             backPath: "/work/",
