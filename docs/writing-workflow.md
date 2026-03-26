@@ -5,8 +5,8 @@ Directories
 - `writings/final/`: finalized markdown files that should be considered closed loops.
 
 Slug format
-- `work-qicap.md`
-- `work-sharpely.md`
+- `work-story-qicap.md`
+- `work-story-sharpely.md`
 - `projects-cloudscript.md`
 - `essays-travel-uk.md`
 - `essays-miscellaneous-jigsaw-puzzles.md`
@@ -18,7 +18,12 @@ Rules
 
 Website wiring
 - Final files are exposed through `/writings/?slug=<slug>`.
-- Relevant cards on the site automatically show a `Read final` link once the slug exists in `writings/final/`.
+- Work stories use the `work-story-*` slug family and route back to `/work/`.
+- Work-story markdown should contain the narrative only:
+  - keep the `# Company` title for manifest metadata
+  - do not repeat dates, role, or resume bullets inside the markdown
+  - the resume bullets live on `/work/`
+- Relevant cards on the site automatically wire their story links from the manifest once the slug exists in `writings/final/`.
 - The manifest lives at `data/writings-manifest.json` and is generated automatically.
 
 Automation

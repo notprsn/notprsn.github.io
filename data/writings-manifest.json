@@ -1,66 +1,66 @@
 {
-  "version": "20260326152156514",
-  "generatedAt": "2026-03-26T15:21:56.516Z",
+  "version": "20260326204134096",
+  "generatedAt": "2026-03-26T20:41:34.104Z",
   "items": [
     {
-      "slug": "work-alphagrep",
+      "slug": "work-story-alphagrep",
       "title": "Alphagrep Securities Pvt. Ltd.",
-      "file": "/writings/final/work-alphagrep.md",
-      "route": "/writings/?slug=work-alphagrep",
+      "file": "/writings/final/work-story-alphagrep.md",
+      "route": "/writings/?slug=work-story-alphagrep",
       "backPath": "/work/",
       "backLabel": "Work",
-      "kind": "work",
-      "kindLabel": "Work"
+      "kind": "work-story",
+      "kindLabel": "Work Story"
     },
     {
-      "slug": "work-greenland",
+      "slug": "work-story-greenland",
       "title": "Greenland Investment Management LLP",
-      "file": "/writings/final/work-greenland.md",
-      "route": "/writings/?slug=work-greenland",
+      "file": "/writings/final/work-story-greenland.md",
+      "route": "/writings/?slug=work-story-greenland",
       "backPath": "/work/",
       "backLabel": "Work",
-      "kind": "work",
-      "kindLabel": "Work"
+      "kind": "work-story",
+      "kindLabel": "Work Story"
     },
     {
-      "slug": "work-metripping",
+      "slug": "work-story-metripping",
       "title": "Metripping Technologies Pvt. Ltd.",
-      "file": "/writings/final/work-metripping.md",
-      "route": "/writings/?slug=work-metripping",
+      "file": "/writings/final/work-story-metripping.md",
+      "route": "/writings/?slug=work-story-metripping",
       "backPath": "/work/",
       "backLabel": "Work",
-      "kind": "work",
-      "kindLabel": "Work"
+      "kind": "work-story",
+      "kindLabel": "Work Story"
     },
     {
-      "slug": "work-optiver",
+      "slug": "work-story-optiver",
       "title": "Optiver Services B.V.",
-      "file": "/writings/final/work-optiver.md",
-      "route": "/writings/?slug=work-optiver",
+      "file": "/writings/final/work-story-optiver.md",
+      "route": "/writings/?slug=work-story-optiver",
       "backPath": "/work/",
       "backLabel": "Work",
-      "kind": "work",
-      "kindLabel": "Work"
+      "kind": "work-story",
+      "kindLabel": "Work Story"
     },
     {
-      "slug": "work-qicap",
+      "slug": "work-story-qicap",
       "title": "QiCAP.Ai",
-      "file": "/writings/final/work-qicap.md",
-      "route": "/writings/?slug=work-qicap",
+      "file": "/writings/final/work-story-qicap.md",
+      "route": "/writings/?slug=work-story-qicap",
       "backPath": "/work/",
       "backLabel": "Work",
-      "kind": "work",
-      "kindLabel": "Work"
+      "kind": "work-story",
+      "kindLabel": "Work Story"
     },
     {
-      "slug": "work-sharpely",
+      "slug": "work-story-sharpely",
       "title": "Sharpely (Neam Caps Pvt. Ltd.)",
-      "file": "/writings/final/work-sharpely.md",
-      "route": "/writings/?slug=work-sharpely",
+      "file": "/writings/final/work-story-sharpely.md",
+      "route": "/writings/?slug=work-story-sharpely",
       "backPath": "/work/",
       "backLabel": "Work",
-      "kind": "work",
-      "kindLabel": "Work"
+      "kind": "work-story",
+      "kindLabel": "Work Story"
     }
   ]
 }

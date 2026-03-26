@@ -141,16 +141,22 @@ async function initWritingLinks() {
         linkCluster.hidden = false;
         linkCluster.replaceChildren();
 
-        const status = document.createElement("span");
-        status.className = "writing-status";
-        status.textContent = "Finalized";
-
         const link = document.createElement("a");
-        link.className = "inline-link";
+        link.className = "story-link";
         link.href = entry.route;
-        link.textContent = "Read final";
+        link.setAttribute("aria-label", `Open the story for ${entry.title}`);
 
-        linkCluster.append(status, link);
+        const label = document.createElement("span");
+        label.className = "story-link-label";
+        label.textContent = "Open story";
+
+        const arrow = document.createElement("span");
+        arrow.className = "story-link-arrow";
+        arrow.setAttribute("aria-hidden", "true");
+        arrow.textContent = ">";
+
+        link.append(label, arrow);
+        linkCluster.append(link);
     });
 }
 
@@ -164,6 +170,10 @@ async function initWritingPage() {
     const metaTarget = document.querySelector("[data-writing-meta]");
     const proseTarget = document.querySelector("[data-writing-prose]");
     const backLink = document.querySelector("[data-writing-back-link]");
+    const intro = document.querySelector("[data-writing-intro]");
+    const shell = document.querySelector("[data-writing-shell]");
+    const shellTop = document.querySelector("[data-writing-shell-top]");
+    const storyBackLink = document.querySelector("[data-writing-story-back]");
     const slug = new URLSearchParams(window.location.search).get("slug");
 
     if (!slug || !titleTarget || !metaTarget || !proseTarget || !backLink) {
@@ -190,6 +200,23 @@ async function initWritingPage() {
     backLink.textContent = `Back to ${entry.backLabel}`;
     document.title = `${entry.title} | Prasann Iyer`;
 
+    const isWorkStory = entry.kind === "work-story";
+    document.body.classList.toggle("page-work-story", isWorkStory);
+
+    if (intro) {
+        intro.hidden = isWorkStory;
+    }
+
+    if (shell) {
+        shell.classList.toggle("writing-shell--work-story", isWorkStory);
+    }
+
+    if (shellTop && storyBackLink) {
+        shellTop.hidden = !isWorkStory;
+        storyBackLink.href = entry.backPath;
+        storyBackLink.textContent = "< Back";
+    }
+
     try {
         const version = encodeURIComponent(getSiteVersion());
         const response = await fetch(`${entry.file}?v=${version}`, { cache: "no-store" });
@@ -198,7 +225,7 @@ async function initWritingPage() {
         }
 
         const markdown = await response.text();
-        proseTarget.innerHTML = renderMarkdown(markdown);
+        proseTarget.innerHTML = renderMarkdown(isWorkStory ? stripLeadingTitle(markdown) : markdown);
     } catch (error) {
         console.error(error);
         showWritingPageError("Could not load finalized markdown.");
@@ -222,6 +249,10 @@ function showWritingPageError(message) {
 }
 
 function routeWritingSlug(slug) {
+    if (slug.startsWith("work-story-")) {
+        return { backPath: "/work/", backLabel: "Work" };
+    }
+
     if (slug.startsWith("work-")) {
         return { backPath: "/work/", backLabel: "Work" };
     }
@@ -239,6 +270,10 @@ function routeWritingSlug(slug) {
     }
 
     return { backPath: "/writings/", backLabel: "Writings" };
+}
+
+function stripLeadingTitle(markdown) {
+    return markdown.replace(/^#\s+.+\n+(?=\S)/, "");
 }
 
 function renderMarkdown(markdown) {

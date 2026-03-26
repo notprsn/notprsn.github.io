@@ -1,17 +1,5 @@
 # Metripping Technologies Pvt. Ltd.
 
-May '21 - Jul '21
-
-Full Stack Developer Intern
-
-## Website copy
-
-- Engineered a high-coverage web-scraping system to collect weather and tourism data for 20,000+ destinations, eliminating dependence on paid data vendors and reducing recurring acquisition costs.
-- Built and deployed end-to-end modules powering user interaction logging, behavioural analytics, and ML-driven insights for a real-time travel-analytics platform.
-- Implemented the system using Django (backend), Angular (frontend), and REST APIs to capture, visualise, and pipeline user data for downstream modelling.
-
-## Long write-up
-
 During lockdown there was a Software Engineer Intern role whose screening test was basically JavaScript syntax fill-in-the-blanks. The interface was hackable, so I googled my way through far too many answers. I still knew zero JavaScript. Good thing the role was remote and the company was small enough not to care. All they really wanted was cheap labour from IITB. That is how I got an internship meant for third years as a sophomore.
 
 They first asked me to build a scraper for weather data across 20,000 destinations. Without AI coding, can you imagine? I suffered through Stack Overflow and hacked it together. It worked. Maybe I should take that as a sign and work on that Polymarket weather-markets desk next.

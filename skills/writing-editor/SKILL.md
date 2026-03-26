@@ -15,13 +15,13 @@ Use this skill for:
 Keep the skill lean:
 - read only the reference file needed for the current task
 - preserve the author's voice instead of flattening it into generic clean prose
-- for `work-` drafts, use the latest resume in `references/` as the source of truth and do not invent facts
+- for `work-story-*` drafts, use the latest resume in `references/` as the source of truth and do not invent facts
 - when a draft is too thin to finish honestly, surface the missing facts or gaps instead of hallucinating
 
 ## Quick workflow
 
 1. Identify the draft type from the slug:
-   - `work-*`
+   - `work-story-*`
    - `projects-*`
    - `essays-travel-*`
    - `essays-miscellaneous-*`
@@ -46,7 +46,11 @@ Keep the skill lean:
 - Keep tone consistent from start to finish unless the shift is intentional.
 - Use concrete detail and story when the draft feels abstract or over-explained.
 - Do not simultaneously invent structure and micro-polish every sentence. Solve the big shape first.
-- If a `work-*` or `projects-*` draft makes a factual claim, keep it grounded in provided material.
+- If a `work-story-*` or `projects-*` draft makes a factual claim, keep it grounded in provided material.
+- For `work-story-*`, keep the markdown narrative-only:
+  - keep the `# Company` title
+  - remove date, role, and resume-bullet sections from the markdown body
+  - leave the factual bullets to `/work/`
 
 ## Reference map
 
