@@ -1,0 +1,22 @@
+# Alphagrep Securities Pvt. Ltd.
+
+May '22 - Jun '22
+
+Quantitative Research Intern
+
+## Website copy
+
+- Architected a Jupyter Notebook research framework to evaluate and classify trades using alpha-signal filters and distributional diagnostics.
+- Collaborated with senior researchers to test new alpha features through t-statistics, Sharpe ratio, drawdown, and related metric-based robustness tests.
+- Built a no-code interactive interface with ipywidgets, enabling non-programmers to apply multi-layered logic filters, with automated De Morgan simplification, for rapid hypothesis iteration.
+- Optimized backtesting through vectorized computation and memory-efficient design, accelerating simulations for crypto strategies, several of which advanced to live deployment.
+
+## Long write-up
+
+I joined Alphagrep Securities Pvt. Ltd. in May 2022 as a Quantitative Research Intern. I was supposed to go to Optiver that summer, but my visa got rejected. Funny story, actually. I still have no idea why. I messed up the police-verification process because GOI websites are atrocious, especially when you already have impaired executive functioning. But I managed to get the documents together in time, made the appointment, and thought it had gone smoothly. The visa kept getting delayed as my flight date approached. Dad literally went to the Dutch Embassy in Delhi to press them. I missed the flight, then another, and then a couple of us got our visas rejected a few days later. I still couldn't pattern-recognize the reason. Shoot three random ducks in the bucket, I guess. Or the three ugliest ducks in the pond. I don't know. I'm not a duck person.
+
+Luckily, Alphagrep bit when I started mass-applying on LinkedIn to quant firms that hadn't come for internships. They asked me if I could write code in Python and I said, sure, I guess. I should have known. The internship was fun. There was just the right amount of impostor syndrome to keep me on my toes. I could also sense I wasn't a cultural fit whenever I made the occasional social-cue blunder. And I'm not outrageously gifted enough to be hired on pure talent, so that was that.
+
+I must have tried the most random trading strategies imaginable there. The idea was to take a bunch of historical data, simulate the most random buy-sell ideas, and then flip buys for sells and sells for buys across a universe of conditions that was equally random. If you have that setup and play around with the condition space like a monkey with a typewriter, you'll land on 8-Sharpe and 14-Sharpe ideas. The best part is that this outrageous trading-strategy setup actually printed in live too.
+
+In other things, during the internship I unexpectedly became friends with someone from my department. We did an escape room together and hung out. My Alphagrep football team also won the Alphagrep Cup. I got a medal and everything. This was also my first real income, with tax implications and all that jazz. Big whoop.
