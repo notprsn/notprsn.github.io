@@ -32,6 +32,10 @@ html {
 body {
   margin: 0;
   min-height: 100vh;
+  min-height: 100svh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
   font-family: var(--font-body);
   color: var(--ink);
   background:
@@ -48,8 +52,6 @@ body.page-essays {
 
 body.page-home {
   background: var(--matrix-bg);
-  color: #f5f3ec;
-  overflow-x: hidden;
 }
 
 body.page-love {
@@ -57,6 +59,11 @@ body.page-love {
     radial-gradient(circle at 12% 10%, rgba(45, 107, 77, 0.18), transparent 20%),
     linear-gradient(180deg, #13171c 0%, #090b0e 100%);
   color: #ece7dc;
+}
+
+.page-dark {
+  color: #f5f3ec;
+  overflow-x: hidden;
 }
 
 img {
@@ -99,7 +106,7 @@ input {
   border-bottom: 1px solid rgba(23, 20, 17, 0.08);
 }
 
-.site-header--home {
+.site-header--transparent {
   position: relative;
   background: transparent;
   border-bottom: 0;
@@ -125,7 +132,7 @@ input {
 .eyebrow,
 .panel-label,
 .section-index,
-.home-eyebrow,
+.landing-eyebrow,
 .lock-label,
 .accordion-meta,
 .accordion-note,
@@ -177,31 +184,29 @@ input {
   color: var(--ink);
 }
 
-.page-home .site-nav a,
-.page-home .inline-link,
-.page-love .site-nav a,
-.page-love .inline-link,
-.page-love .lock-button {
+.page-dark .site-nav a,
+.page-dark .inline-link,
+.page-dark .lock-button {
   border-color: rgba(255, 255, 255, 0.12);
   background: rgba(255, 255, 255, 0.04);
   color: rgba(245, 243, 236, 0.82);
 }
 
-.page-home .site-nav a[aria-current="page"],
-.page-home .site-nav a:hover,
-.page-home .site-nav a:focus-visible,
-.page-home .inline-link:hover,
-.page-home .inline-link:focus-visible,
-.page-love .site-nav a[aria-current="page"],
-.page-love .site-nav a:hover,
-.page-love .site-nav a:focus-visible,
-.page-love .inline-link:hover,
-.page-love .inline-link:focus-visible,
-.page-love .lock-button:hover,
-.page-love .lock-button:focus-visible {
+.page-dark .site-nav a[aria-current="page"],
+.page-dark .site-nav a:hover,
+.page-dark .site-nav a:focus-visible,
+.page-dark .inline-link:hover,
+.page-dark .inline-link:focus-visible,
+.page-dark .lock-button:hover,
+.page-dark .lock-button:focus-visible {
   background: rgba(255, 255, 255, 0.09);
   border-color: rgba(255, 255, 255, 0.24);
   color: #ffffff;
+}
+
+.page-main,
+.landing-shell {
+  flex: 1 0 auto;
 }
 
 .page-main {
@@ -223,7 +228,7 @@ input {
 
 .page-intro h1,
 .essay-hero h1,
-.home-title,
+.landing-title,
 .section-head h2,
 .project-card h2,
 .project-card h3,
@@ -564,8 +569,8 @@ input {
   transform: translateX(-3px);
 }
 
-.home-shell,
-.site-footer--home {
+.landing-shell,
+.site-footer--scene {
   position: relative;
   z-index: 2;
 }
@@ -592,37 +597,41 @@ input {
     linear-gradient(180deg, rgba(5, 7, 10, 0.24) 0%, rgba(5, 7, 10, 0.62) 68%, rgba(5, 7, 10, 0.84) 100%);
 }
 
-.home-shell {
+.landing-shell {
   width: var(--content-width);
   margin: 0 auto;
   min-height: calc(100vh - 8.5rem);
+  min-height: calc(100dvh - 8.5rem);
   display: flex;
   align-items: center;
   padding: clamp(2rem, 6vw, 4rem) 0 3rem;
 }
 
-.home-card {
+.landing-copy {
   width: min(720px, 100%);
 }
 
-.home-title {
+.landing-title {
   font-size: clamp(4.1rem, 13vw, 8rem);
   line-height: 0.86;
   margin-top: 0.4rem;
 }
 
-.home-copy {
+.landing-copy-block {
   margin-top: 1.2rem;
 }
 
-.home-line {
+.landing-line {
   margin: 0.9rem 0 0;
   font-size: clamp(1.08rem, 2.2vw, 1.32rem);
   line-height: 1.65;
+}
+
+.page-dark .landing-line {
   color: rgba(245, 243, 236, 0.82);
 }
 
-.home-actions {
+.landing-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 0.7rem;
@@ -801,7 +810,8 @@ input {
 }
 
 .site-footer {
-  padding: 0 0 2rem;
+  margin-top: auto;
+  padding: 0 0 calc(1rem + env(safe-area-inset-bottom, 0px));
 }
 
 .footer-shell {
@@ -814,8 +824,7 @@ input {
   color: var(--muted);
 }
 
-.site-footer--home .footer-shell,
-.site-footer--love .footer-shell {
+.page-dark .footer-shell {
   border-top-color: rgba(255, 255, 255, 0.12);
   color: rgba(245, 243, 236, 0.62);
 }
@@ -844,7 +853,7 @@ input {
     grid-column: span 12;
   }
 
-  .home-shell {
+  .landing-shell {
     min-height: auto;
   }
 }
@@ -870,7 +879,7 @@ input {
     max-width: none;
   }
 
-  .home-shell {
+  .landing-shell {
     padding-top: 1rem;
   }
 

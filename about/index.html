@@ -6,15 +6,16 @@
     <meta http-equiv="Expires" content="0">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta name="description" content="About page placeholder for Prasann Iyer.">
+    <meta name="description" content="About Prasann Iyer: math, music, curiosity, and whatever intuition says to build next.">
     <meta name="author" content="Prasann Iyer">
-    <meta name="site-version" content="20260326204134096">
+    <meta name="site-version" content="20260327142840818">
     <title>About | Prasann Iyer</title>
     <link href="../img/favicon.ico" rel="icon" type="image/x-icon">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
-    <link href="../css/style.css?v=20260326204134096" rel="stylesheet">
+    <link href="../css/style.css?v=20260327142840818" rel="stylesheet">
+    <link href="style.css?v=20260327142840818" rel="stylesheet">
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-MNTXBV06WJ"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
@@ -23,8 +24,12 @@
         gtag("config", "G-MNTXBV06WJ");
     </script>
 </head>
-<body class="page-paper">
-    <header class="site-header">
+<body class="page-about page-dark">
+    <canvas class="about-rain-canvas" data-about-rain-canvas aria-hidden="true"></canvas>
+    <div class="about-veil" aria-hidden="true"></div>
+    <div class="about-grid" aria-hidden="true"></div>
+
+    <header class="site-header site-header--transparent">
         <div class="site-nav-shell">
             <a class="site-brand" href="/">Prasann Iyer</a>
             <nav class="site-nav" aria-label="Primary">
@@ -36,27 +41,64 @@
         </div>
     </header>
 
-    <main class="page-main">
-        <section class="page-intro">
-            <div>
-                <p class="eyebrow">About</p>
-                <h1>This page is waiting for you.</h1>
-                <p class="page-lede">
-                    Placeholder only. Write the version of yourself you actually want here later.
-                </p>
+    <main class="landing-shell about-shell">
+        <section class="landing-copy about-copy" aria-labelledby="about-title">
+            <p class="landing-eyebrow">about</p>
+            <h1 class="landing-title" id="about-title">About Me</h1>
+
+            <div class="landing-copy-block">
+                <p class="landing-line">Hi, my name is Prasann Iyer.</p>
+                <p class="landing-line">I was an undergraduate at IIT Bombay where I did my BTech with Honors in Electrical Engineering and a Minor in Computer Science.</p>
+                <p class="landing-line">After that I did Quant Trading at various <a class="text-link" href="/work/">places</a>.</p>
+                <p class="landing-line">I'm currently building whatever my intuition tells me to as I've found myself in a Quantum Entanglement where I know exactly what to do and just do it. <a class="text-link" href="https://timdenning.substack.com/p/you-can-just-do-things-hides-a-deeper" target="_blank" rel="noreferrer">You can just do things</a>.</p>
+                <p class="landing-line">I mainly like math and music (I know: Yet another nerd who likes math and music. How original).</p>
+                <p class="landing-line">I'm also pretty curious about psychology, neuroscience, philosophy, game theory, puzzles and english to name a few. I've been described as exhaustingly curious and intense. I like to think of myself as funny too.</p>
             </div>
-            <aside class="page-aside">
-                <p class="panel-label">Current status</p>
-                <p>Empty on purpose. The home page already points here; the copy can come later.</p>
-            </aside>
         </section>
+
+        <div class="about-figure-stage" aria-hidden="true">
+            <svg class="about-figure" viewBox="0 0 320 560" role="presentation">
+                <defs>
+                    <linearGradient id="aboutHairGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#8ac8ff"></stop>
+                        <stop offset="55%" stop-color="#5da9ff"></stop>
+                        <stop offset="100%" stop-color="#00f5ff"></stop>
+                    </linearGradient>
+                </defs>
+
+                <g class="about-figure-dancer">
+                    <path class="about-figure-hair" d="M160 58c44 0 74 30 74 80 0 58-14 108-42 151-14 22-25 36-32 40h-11c-8-5-18-18-33-41-27-41-40-92-40-150 0-50 31-80 84-80z"></path>
+                    <path class="about-figure-bangs" d="M105 92c19-14 38-20 57-20 20 0 39 6 57 20"></path>
+                    <circle class="about-figure-head" cx="160" cy="122" r="32"></circle>
+                    <path class="about-figure-neck" d="M152 153 L148 184 M168 153 L172 184"></path>
+                    <path class="about-figure-torso" d="M160 184 L160 302"></path>
+                    <path class="about-figure-hips" d="M125 286 C146 300 174 300 195 286"></path>
+
+                    <g class="about-figure-arm about-figure-arm--left">
+                        <path d="M160 204 C142 184 126 164 113 138"></path>
+                        <path d="M113 138 C101 113 95 92 98 74"></path>
+                        <path d="M98 74 C102 61 113 55 123 60"></path>
+                    </g>
+
+                    <g class="about-figure-arm about-figure-arm--right">
+                        <path d="M160 210 C184 222 207 234 229 252"></path>
+                        <path d="M229 252 C244 266 251 280 253 296"></path>
+                        <path d="M253 296 C251 309 241 316 230 312"></path>
+                    </g>
+
+                    <path class="about-figure-leg" d="M160 302 C145 338 132 372 120 406 C112 430 108 454 106 479"></path>
+                    <path class="about-figure-leg about-figure-leg--right" d="M160 302 C178 337 194 373 210 409 C220 432 229 457 236 484"></path>
+                    <path class="about-figure-foot" d="M99 481 C112 478 123 480 132 486"></path>
+                    <path class="about-figure-foot" d="M224 486 C236 480 248 478 259 483"></path>
+                </g>
+            </svg>
+        </div>
     </main>
 
-    <footer class="site-footer">
+    <footer class="site-footer site-footer--scene">
         <div class="footer-shell">
-            <span>About page.</span>
+            <span>About</span>
             <div class="footer-links">
-                <a href="/love-letters/">Love Letters</a>
                 <a href="/gallery/">Gallery</a>
                 <a href="/glossary/">Glossary</a>
                 <a href="https://github.com/notprsn" target="_blank" rel="noreferrer">GitHub</a>
@@ -65,6 +107,7 @@
         </div>
     </footer>
 
-    <script src="../js/scripts.js?v=20260326204134096"></script>
+    <script src="../js/scripts.js?v=20260327142840818"></script>
+    <script src="script.js?v=20260327142840818"></script>
 </body>
 </html>
