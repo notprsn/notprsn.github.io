@@ -23,6 +23,12 @@ Finalize a writing
 4. Commit normally. The pre-commit hook will refresh the manifest and cache-bust site assets.
 5. Do not leave a copy behind in `writings/pending/`.
 
+Restyle an existing section
+1. Reuse shared primitives from `css/style.css` first, especially nav, footer, typography, and landing/page shells.
+2. Keep section-only animation or background code inside that section.
+3. If a second section starts using the same local pattern, promote it into the shared style layer.
+4. Update `docs/style-language.md` when the shared language changes.
+
 Add a new glossary page
 1. Add the term page under `glossary/`.
 2. Link back to the section that motivated the term.

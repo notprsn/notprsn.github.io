@@ -1,0 +1,218 @@
+.page-about {
+  background:
+    radial-gradient(circle at 12% 12%, rgba(93, 169, 255, 0.12), transparent 22%),
+    radial-gradient(circle at 84% 16%, rgba(255, 46, 136, 0.14), transparent 24%),
+    linear-gradient(180deg, #0f1422 0%, #0b0f1a 100%);
+}
+
+.about-rain-canvas,
+.about-veil,
+.about-grid {
+  position: fixed;
+  inset: 0;
+}
+
+.about-rain-canvas {
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.about-veil {
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(93, 169, 255, 0.06) 0%, rgba(11, 15, 26, 0.04) 36%, rgba(11, 15, 26, 0.5) 76%, rgba(11, 15, 26, 0.9) 100%),
+    radial-gradient(circle at 75% 120%, rgba(212, 20, 90, 0.16), transparent 36%);
+}
+
+.about-grid {
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.08;
+  background:
+    repeating-linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0 1px, transparent 1px 6px);
+}
+
+.page-about .landing-shell,
+.page-about .site-footer--scene {
+  position: relative;
+  z-index: 2;
+}
+
+.about-shell {
+  min-height: calc(100vh - 8.25rem);
+  min-height: calc(100dvh - 8.25rem);
+}
+
+.about-copy {
+  width: min(840px, 100%);
+  position: relative;
+}
+
+.about-copy::before {
+  content: "";
+  position: absolute;
+  inset: -2rem -2.5rem;
+  z-index: -1;
+  border-radius: 40px;
+  background:
+    radial-gradient(circle at 30% 42%, rgba(11, 15, 26, 0.72) 0%, rgba(11, 15, 26, 0.52) 42%, rgba(11, 15, 26, 0.16) 72%, transparent 100%);
+  filter: blur(18px);
+  pointer-events: none;
+}
+
+.page-about .landing-eyebrow {
+  color: rgba(0, 245, 255, 0.86);
+}
+
+.page-about .landing-title {
+  text-shadow: 0 0 24px rgba(93, 169, 255, 0.16);
+}
+
+.page-about .landing-line {
+  max-width: 54rem;
+  text-wrap: pretty;
+}
+
+.about-figure-stage {
+  display: none;
+}
+
+@media (min-width: 941px) {
+  .about-shell {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(260px, 340px);
+    gap: clamp(2rem, 6vw, 5rem);
+    align-items: center;
+  }
+
+  .about-copy {
+    width: min(760px, 100%);
+  }
+
+  .about-figure-stage {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    pointer-events: none;
+  }
+
+  .about-figure {
+    width: min(320px, 26vw);
+    height: auto;
+    opacity: 0.74;
+    overflow: visible;
+    filter: drop-shadow(0 0 18px rgba(255, 46, 136, 0.18)) drop-shadow(0 0 30px rgba(93, 169, 255, 0.18));
+  }
+
+  .about-figure-dancer {
+    transform-origin: 50% 82%;
+    animation: about-figure-sway 7.2s ease-in-out infinite;
+  }
+
+  .about-figure-hair {
+    fill: url(#aboutHairGradient);
+    opacity: 0.88;
+  }
+
+  .about-figure-bangs {
+    fill: none;
+    stroke: rgba(173, 223, 255, 0.96);
+    stroke-width: 8;
+    stroke-linecap: round;
+  }
+
+  .about-figure-head,
+  .about-figure-neck,
+  .about-figure-torso,
+  .about-figure-hips,
+  .about-figure-leg,
+  .about-figure-foot {
+    fill: none;
+    stroke: rgba(255, 92, 176, 0.86);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .about-figure-head {
+    stroke-width: 4;
+  }
+
+  .about-figure-neck,
+  .about-figure-torso,
+  .about-figure-hips,
+  .about-figure-leg,
+  .about-figure-foot {
+    stroke-width: 6;
+  }
+
+  .about-figure-arm {
+    fill: none;
+    stroke: rgba(255, 92, 176, 0.86);
+    stroke-width: 6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .about-figure-arm--left {
+    transform-origin: 160px 204px;
+    animation: about-figure-arm-wave 5.6s ease-in-out infinite;
+  }
+
+  .about-figure-arm--right {
+    transform-origin: 160px 210px;
+    animation: about-figure-arm-drift 6.4s ease-in-out infinite;
+  }
+}
+
+@keyframes about-figure-sway {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-1.5deg);
+  }
+
+  50% {
+    transform: translateY(-6px) rotate(2deg);
+  }
+}
+
+@keyframes about-figure-arm-wave {
+  0%,
+  100% {
+    transform: rotate(-2deg) translateY(0);
+  }
+
+  50% {
+    transform: rotate(6deg) translateY(-4px);
+  }
+}
+
+@keyframes about-figure-arm-drift {
+  0%,
+  100% {
+    transform: rotate(1deg);
+  }
+
+  50% {
+    transform: rotate(-4deg) translateX(-3px);
+  }
+}
+
+@media (max-width: 940px) {
+  .about-shell {
+    min-height: auto;
+    padding-top: 1.2rem;
+  }
+
+  .about-copy::before {
+    inset: -1.5rem -1.2rem;
+  }
+}
+
+@media (max-width: 720px) {
+  .about-shell {
+    padding-top: 0.8rem;
+  }
+}
