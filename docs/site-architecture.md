@@ -16,7 +16,8 @@ Structure principles
 - Shared CSS/JS should stay minimal and generic.
 - New experiments or essays should be added as subdirectories inside their parent section.
 - Shared page chrome and reusable layout primitives live in `css/style.css`.
-- Section-only visuals and effects should live with their section unless a second section reuses them.
+- Top-level page-specific styles live in `css/pages/`.
+- Mini-project styles under `fun/projects/<slug>/` stay local to that project.
 
 Patterns
 - Work: resume-backed, factual, low-interpretation.

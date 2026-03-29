@@ -25,9 +25,10 @@ Finalize a writing
 
 Restyle an existing section
 1. Reuse shared primitives from `css/style.css` first, especially nav, footer, typography, and landing/page shells.
-2. Keep section-only animation or background code inside that section.
-3. If a second section starts using the same local pattern, promote it into the shared style layer.
-4. Update `docs/style-language.md` when the shared language changes.
+2. Put top-level page-specific CSS in `css/pages/<page>.css`.
+3. Keep `fun/projects/<slug>/style.css` local to each mini project.
+4. If a second page starts using the same pattern, promote it into the shared style layer.
+5. Update `docs/style-language.md` when the shared language changes.
 
 Add a new glossary page
 1. Add the term page under `glossary/`.

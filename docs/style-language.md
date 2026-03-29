@@ -3,7 +3,7 @@
 This site has two layers of styling:
 
 1. Shared language in `css/style.css`
-2. Section-owned visuals in local section files
+2. Page-owned visuals in `css/pages/*.css`
 
 Use the shared layer for anything that should feel consistent across the site:
 - typography tokens
@@ -12,11 +12,13 @@ Use the shared layer for anything that should feel consistent across the site:
 - cards, lists, panels, and writing shells
 - reusable dark landing primitives
 
-Keep section-owned visuals local when they are specific to one section:
+Keep page-owned visuals in `css/pages/*.css` when they are specific to one top-level page:
 - canvas backgrounds
 - one-off animations
 - section-only layout tweaks
 - experimental treatments that are not reused elsewhere
+
+The exception is `fun/projects/<slug>/`, where each mini project keeps its own `style.css`.
 
 ## Shared dark landing pattern
 
@@ -36,9 +38,10 @@ That keeps nav sizing, footer spacing, display typography, and body copy scale a
 
 ## Ownership rules
 
-- Do not restyle nav or footer in page-local CSS unless the shared language is missing a reusable primitive.
-- If a visual treatment is reused by a second section, promote it into `css/style.css`.
-- If a treatment is only for one section, keep it next to that section, for example `about/style.css` and `about/script.js`.
+- Do not restyle nav or footer in page-specific CSS unless the shared language is missing a reusable primitive.
+- If a visual treatment is reused by a second page, promote it into `css/style.css`.
+- Keep top-level page-specific CSS under `css/pages/`, for example `css/pages/about.css` and `css/pages/fun.css`.
+- Keep mini-project CSS inside `fun/projects/<slug>/style.css`.
 - Shared JS in `js/scripts.js` should stay generic. Section-only effects should not be added there unless they become shared behavior.
 
 ## Current examples
