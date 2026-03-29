@@ -1,10 +1,10 @@
 # AGENTS
 
-This repo is a static personal site. Keep changes local to the section they belong to.
+This repo is a static personal site. Keep content and behavior local to the section they belong to, with non-mini-project styling organized under `css/`.
 
 Rules
 - Treat `references/` as read-only source material. Do not edit files there.
-- Keep section content self-contained. Link across sections when needed, but do not centralize section-specific assets in shared folders unless at least two sections need them.
+- Keep section content self-contained. Link across sections when needed, but organize non-mini-project styles under `css/` rather than inside section directories.
 - Use the latest resume in `references/` as the source of truth for `work/`. Do not invent work facts.
 - Keep `projects/` separate from `work/`.
 - Keep `fun/` experiments inside `fun/projects/<slug>/` with local `index.html`, `style.css`, and `script.js`.
@@ -12,10 +12,11 @@ Rules
 - Keep essay themes inside their own directories under `essays/`.
 - Keep in-progress writing drafts in `writings/pending/` and finalized markdown in `writings/final/`.
 - Never keep the same writing slug in both `writings/pending/` and `writings/final/`.
-- Use shared files only for truly shared concerns:
-  - `css/style.css`
-  - `js/scripts.js`
-  - global page chrome
+- Organize styling under `css/`:
+  - `css/style.css` for shared primitives and global page chrome
+  - `css/pages/<page>.css` for top-level page-specific styles
+  - keep `fun/projects/<slug>/style.css` local to each mini project
+- Keep shared JS in `js/scripts.js` for truly shared concerns.
 - Leave `data/love-letters.enc.json` encrypted-only. Plaintext stays under ignored local files.
 - Prefer small, explicit placeholder copy over invented marketing language.
 

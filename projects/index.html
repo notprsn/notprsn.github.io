@@ -8,13 +8,13 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta name="description" content="Current projects of Prasann Iyer.">
     <meta name="author" content="Prasann Iyer">
-    <meta name="site-version" content="20260329172726923">
+    <meta name="site-version" content="20260329195048518">
     <title>Projects | Prasann Iyer</title>
     <link href="../img/favicon.ico" rel="icon" type="image/x-icon">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
-    <link href="../css/style.css?v=20260329172726923" rel="stylesheet">
+    <link href="../css/style.css?v=20260329195048518" rel="stylesheet">
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-MNTXBV06WJ"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
@@ -27,17 +27,19 @@
     <header class="site-header">
         <div class="site-nav-shell">
             <a class="site-brand" href="/">Prasann Iyer</a>
-            <nav class="site-nav" aria-label="Primary">
-                <a href="/work/">Work</a>
-                <a href="/projects/" aria-current="page">Projects</a>
-                <a href="/fun/">Fun Stuff</a>
-                <a href="/essays/">Essays</a>
-            </nav>
+            <div class="site-nav-tools">
+                <nav class="site-nav" aria-label="Primary">
+                    <a href="/work/">Work</a>
+                    <a href="/projects/" aria-current="page">Projects</a>
+                    <a href="/fun/">Fun Stuff</a>
+                    <a href="/essays/">Essays</a>
+                </nav>
+            </div>
         </div>
     </header>
 
-    <main class="page-main">
-        <section class="page-intro">
+    <main class="page-main page-main--paper">
+        <section class="paper-hero">
             <div>
                 <p class="eyebrow">Projects</p>
                 <h1>Current build shelf.</h1>
@@ -46,42 +48,54 @@
                     Where I have resume-backed detail, it is included. Where I do not, the page stays sparse.
                 </p>
             </div>
-            <aside class="page-aside">
+            <aside class="paper-note">
                 <p class="panel-label">Rule</p>
                 <p>Do not over-describe unfinished work in public. A precise placeholder is better than invented polish.</p>
             </aside>
         </section>
 
-        <section class="project-grid">
-            <article class="project-card project-card--feature" data-writing-slot="projects-bollywoodle">
-                <p class="panel-label">Aug '25 - Present</p>
-                <h2>Bollywoodle</h2>
-                <p class="project-meta-line">Full-Stack ML Music Game</p>
-                <ul class="detail-list">
-                    <li>Orchestrated a full-stack music-intelligence game that decomposes Bollywood songs into progressive audio stems for users to identify.</li>
-                    <li>Engineered a large-scale audio-processing pipeline benchmarking Spleeter, Demucs, and MVSEP-MDX23 for multi-stem separation.</li>
-                    <li>Built and optimised vocal-conversion models using Hugging Face checkpoints, performing vocals-to-humming transformations with music-theory-guided segmentation and MIDI note extraction.</li>
-                    <li>Built a Bollywood movie-song database by parsing Wikipedia pages and integrating YouTube and Spotify API data.</li>
-                    <li>Deployed a containerised backend integrated with Firebase Lite and Cloudflare R2 CDN, targeting sub-200 ms playback latency through caching and range-request optimisation.</li>
-                </ul>
-                <div class="writing-link-cluster" data-writing-link hidden></div>
-            </article>
+        <section class="paper-section">
+            <div class="paper-section__head">
+                <span class="section-index">01</span>
+                <div>
+                    <h2>Current projects</h2>
+                    <p>One featured build, two active placeholders, and the same grayscale rhythm as the work page.</p>
+                </div>
+            </div>
 
-            <article class="project-card" data-writing-slot="projects-cloudscript">
-                <p class="panel-label">Current project</p>
-                <h3>CloudScript</h3>
-                <p class="project-meta-line">Public write-up pending.</p>
-                <p>Structure is in place; the public-facing note and links can be added once you are ready to describe it.</p>
-                <div class="writing-link-cluster" data-writing-link hidden></div>
-            </article>
+            <div class="paper-project-grid">
+                <article class="paper-panel paper-project-card" data-writing-slot="projects-bollywoodle">
+                    <p class="paper-project-date">Aug '25 - Present</p>
+                    <h2>Bollywoodle</h2>
+                    <p class="paper-project-subhead">Full-Stack ML Music Game</p>
+                    <ul class="detail-list detail-list--paper">
+                        <li>Orchestrated a full-stack music-intelligence game that decomposes Bollywood songs into progressive audio stems for users to identify.</li>
+                        <li>Engineered a large-scale audio-processing pipeline benchmarking Spleeter, Demucs, and MVSEP-MDX23 for multi-stem separation.</li>
+                        <li>Built and optimised vocal-conversion models using Hugging Face checkpoints, performing vocals-to-humming transformations with music-theory-guided segmentation and MIDI note extraction.</li>
+                        <li>Built a Bollywood movie-song database by parsing Wikipedia pages and integrating YouTube and Spotify API data.</li>
+                        <li>Deployed a containerised backend integrated with Firebase Lite and Cloudflare R2 CDN, targeting sub-200 ms playback latency through caching and range-request optimisation.</li>
+                    </ul>
+                    <div class="writing-link-cluster" data-writing-link hidden></div>
+                </article>
 
-            <article class="project-card" data-writing-slot="projects-polymarket-quant-desk">
-                <p class="panel-label">Current project</p>
-                <h3>Polymarket Quant Desk</h3>
-                <p class="project-meta-line">Public write-up pending.</p>
-                <p>Keeping the slot visible without pretending the write-up exists yet.</p>
-                <div class="writing-link-cluster" data-writing-link hidden></div>
-            </article>
+                <div class="paper-project-stack">
+                    <article class="paper-panel paper-project-card" data-writing-slot="projects-cloudscript">
+                        <p class="paper-project-date">Current project</p>
+                        <h3>CloudScript</h3>
+                        <p class="project-meta-line">Public write-up pending.</p>
+                        <p>Structure is in place; the public-facing note and links can be added once you are ready to describe it.</p>
+                        <div class="writing-link-cluster" data-writing-link hidden></div>
+                    </article>
+
+                    <article class="paper-panel paper-project-card" data-writing-slot="projects-polymarket-quant-desk">
+                        <p class="paper-project-date">Current project</p>
+                        <h3>Polymarket Quant Desk</h3>
+                        <p class="project-meta-line">Public write-up pending.</p>
+                        <p>Keeping the slot visible without pretending the write-up exists yet.</p>
+                        <div class="writing-link-cluster" data-writing-link hidden></div>
+                    </article>
+                </div>
+            </div>
         </section>
     </main>
 
@@ -98,6 +112,6 @@
         </div>
     </footer>
 
-    <script src="../js/scripts.js?v=20260329172726923"></script>
+    <script src="../js/scripts.js?v=20260329195048518"></script>
 </body>
 </html>

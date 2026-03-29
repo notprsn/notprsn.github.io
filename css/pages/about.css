@@ -5,11 +5,20 @@
     linear-gradient(180deg, #0f1422 0%, #0b0f1a 100%);
 }
 
+.page-about .site-header--transparent {
+  background: rgba(11, 15, 26, 0.94);
+  border-bottom: 1px solid rgba(173, 223, 255, 0.08);
+  backdrop-filter: blur(14px);
+}
+
 .about-rain-canvas,
 .about-veil,
 .about-grid {
   position: fixed;
-  inset: 0;
+  top: var(--scene-header-offset);
+  right: 0;
+  bottom: 0;
+  left: 0;
 }
 
 .about-rain-canvas {
