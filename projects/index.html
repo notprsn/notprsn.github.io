@@ -8,13 +8,13 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta name="description" content="Current projects of Prasann Iyer.">
     <meta name="author" content="Prasann Iyer">
-    <meta name="site-version" content="20260329195048518">
+    <meta name="site-version" content="20260329232519632">
     <title>Projects | Prasann Iyer</title>
     <link href="../img/favicon.ico" rel="icon" type="image/x-icon">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
-    <link href="../css/style.css?v=20260329195048518" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Josefin+Sans:wght@400;600;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="../css/style.css?v=20260329232519632" rel="stylesheet">
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-MNTXBV06WJ"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
@@ -39,62 +39,124 @@
     </header>
 
     <main class="page-main page-main--paper">
-        <section class="paper-hero">
+        <section class="paper-hero paper-hero--work">
             <div>
                 <p class="eyebrow">Projects</p>
-                <h1>Current build shelf.</h1>
+                <h1>Build Shelf</h1>
                 <p class="page-lede">
-                    Only the current set for now: Bollywoodle, CloudScript, and Polymarket Quant Desk.
-                    Where I have resume-backed detail, it is included. Where I do not, the page stays sparse.
+                    Vibe-coded projects that are complete and I'm low-key proud of
                 </p>
             </div>
-            <aside class="paper-note">
-                <p class="panel-label">Rule</p>
-                <p>Do not over-describe unfinished work in public. A precise placeholder is better than invented polish.</p>
-            </aside>
         </section>
 
         <section class="paper-section">
-            <div class="paper-section__head">
-                <span class="section-index">01</span>
-                <div>
-                    <h2>Current projects</h2>
-                    <p>One featured build, two active placeholders, and the same grayscale rhythm as the work page.</p>
-                </div>
-            </div>
+            <div class="paper-project-list">
+                <article class="paper-panel paper-project-card paper-project-card--shelf project-shelf-card project-shelf-card--bollywoodle" data-writing-slot="projects-bollywoodle">
+                    <div class="bollywoodle-card__brand">
+                        <div class="bollywoodle-card__icon" aria-hidden="true">
+                            <svg viewBox="0 0 56 56" aria-hidden="true">
+                                <circle cx="24" cy="24" r="14.5" fill="none" stroke="currentColor" stroke-width="2.25"/>
+                                <circle cx="19" cy="19" r="1.65" fill="currentColor"/>
+                                <circle cx="29" cy="19" r="1.65" fill="currentColor"/>
+                                <circle cx="19" cy="29" r="1.65" fill="currentColor"/>
+                                <circle cx="29" cy="29" r="1.65" fill="currentColor"/>
+                                <path d="M34 18.5v18.25c0 3.05 2.08 5.25 5.1 5.25 2.74 0 4.9-1.93 4.9-4.45 0-2.36-1.71-4.02-4.28-4.02-1.08 0-2.18.31-3.22.86V22.25l11.5-2.75v11.95c0 3.05 2.1 5.25 5.12 5.25 2.72 0 4.88-1.93 4.88-4.45 0-2.36-1.7-4.02-4.27-4.02-1.09 0-2.19.31-3.23.86V14.75L34 18.5Z" transform="translate(-8 -5)" fill="currentColor"/>
+                            </svg>
+                        </div>
 
-            <div class="paper-project-grid">
-                <article class="paper-panel paper-project-card" data-writing-slot="projects-bollywoodle">
-                    <p class="paper-project-date">Aug '25 - Present</p>
-                    <h2>Bollywoodle</h2>
-                    <p class="paper-project-subhead">Full-Stack ML Music Game</p>
-                    <ul class="detail-list detail-list--paper">
-                        <li>Orchestrated a full-stack music-intelligence game that decomposes Bollywood songs into progressive audio stems for users to identify.</li>
-                        <li>Engineered a large-scale audio-processing pipeline benchmarking Spleeter, Demucs, and MVSEP-MDX23 for multi-stem separation.</li>
-                        <li>Built and optimised vocal-conversion models using Hugging Face checkpoints, performing vocals-to-humming transformations with music-theory-guided segmentation and MIDI note extraction.</li>
-                        <li>Built a Bollywood movie-song database by parsing Wikipedia pages and integrating YouTube and Spotify API data.</li>
-                        <li>Deployed a containerised backend integrated with Firebase Lite and Cloudflare R2 CDN, targeting sub-200 ms playback latency through caching and range-request optimisation.</li>
-                    </ul>
-                    <div class="writing-link-cluster" data-writing-link hidden></div>
+                        <div class="bollywoodle-card__copy">
+                            <p class="bollywoodle-card__meta">Daily Bollywood music guessing game</p>
+                            <h2>BOLLYWOODLE</h2>
+
+                            <div class="bollywoodle-card__dots" aria-hidden="true">
+                                <span class="is-hit"></span>
+                                <span class="is-hit"></span>
+                                <span class="is-hit"></span>
+                                <span class="is-hit"></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bollywoodle-card__aside">
+                        <div class="bollywoodle-card__modes" aria-label="Game modes">
+                            <span>Heardle</span>
+                            <span>Musicle</span>
+                        </div>
+                        <div class="writing-link-cluster bollywoodle-card__story" data-writing-link hidden></div>
+                    </div>
                 </article>
 
-                <div class="paper-project-stack">
-                    <article class="paper-panel paper-project-card" data-writing-slot="projects-cloudscript">
-                        <p class="paper-project-date">Current project</p>
-                        <h3>CloudScript</h3>
-                        <p class="project-meta-line">Public write-up pending.</p>
-                        <p>Structure is in place; the public-facing note and links can be added once you are ready to describe it.</p>
-                        <div class="writing-link-cluster" data-writing-link hidden></div>
-                    </article>
+                <article class="paper-panel paper-project-card paper-project-card--shelf project-shelf-card project-shelf-card--cloudscript" data-writing-slot="projects-cloudscript">
+                    <div class="cloudscript-card__copy">
+                        <p class="cloudscript-card__meta">Cloud Text Engine</p>
+                        <h2>CloudScript</h2>
+                    </div>
 
-                    <article class="paper-panel paper-project-card" data-writing-slot="projects-polymarket-quant-desk">
-                        <p class="paper-project-date">Current project</p>
-                        <h3>Polymarket Quant Desk</h3>
-                        <p class="project-meta-line">Public write-up pending.</p>
-                        <p>Keeping the slot visible without pretending the write-up exists yet.</p>
-                        <div class="writing-link-cluster" data-writing-link hidden></div>
-                    </article>
-                </div>
+                    <div class="cloudscript-card__aside">
+                        <div class="cloudscript-card__art" aria-hidden="true">
+                            <svg class="cloudscript-card__cloud cloudscript-card__cloud--ghost" viewBox="-150 -45 300 90" aria-hidden="true">
+                                <path d="M -142.73 32.00 L 142.73 32.00 L 142.73 -0.00 L 93.80 -21.23 L 43.99 -33.09 L -1.61 -36.35 L -54.70 -31.30 L -98.86 -19.50 L -142.73 -0.00 Z"/>
+                            </svg>
+                            <svg class="cloudscript-card__cloud cloudscript-card__cloud--main" viewBox="-125 -40 250 80" aria-hidden="true">
+                                <path d="M -117.16 32.00 L 117.16 32.00 L 117.16 -0.00 L 69.90 -19.70 L 25.07 -28.61 L -28.26 -28.26 L -72.98 -18.76 L -117.16 -0.00 Z"/>
+                            </svg>
+                            <svg class="cloudscript-card__cloud cloudscript-card__cloud--tiny" viewBox="0 0 68 24" aria-hidden="true">
+                                <path d="M 4 18 L 64 18 L 64 12 L 54 8 L 44 5 L 31 4 L 20 6 L 10 10 L 4 13 Z"/>
+                            </svg>
+                        </div>
+
+                        <div class="writing-link-cluster cloudscript-card__story" data-writing-link hidden></div>
+                    </div>
+                </article>
+
+                <article class="paper-panel paper-project-card paper-project-card--shelf project-shelf-card project-shelf-card--quant-desk" data-writing-slot="projects-polymarket-quant-desk">
+                    <div class="quant-card__meta">
+                        <p class="quant-card__kicker">Quant Desk</p>
+                        <h2>Polymarket Quant Desk</h2>
+                        <div class="quant-card__chips">
+                            <span class="quant-card__chip quant-card__chip--down">1H Down</span>
+                            <span class="quant-card__chip">Edge / Microstructure / Strategy</span>
+                        </div>
+                    </div>
+
+                    <div class="quant-card__plot" aria-hidden="true">
+                        <svg viewBox="0 0 320 92" aria-hidden="true">
+                            <g stroke="rgba(255,255,255,.06)" stroke-width="1">
+                                <line x1="0" y1="18" x2="320" y2="18"/>
+                                <line x1="0" y1="46" x2="320" y2="46"/>
+                                <line x1="0" y1="74" x2="320" y2="74"/>
+                            </g>
+                            <path d="M0 24 L26 28 L52 21 L78 26 L104 52 L130 58 L156 54 L182 63 L208 55 L234 66 L260 18 L286 39 L320 70" fill="none" stroke="#60A5FA" stroke-width="2"/>
+                            <path d="M0 28 L26 26 L52 30 L78 33 L104 48 L130 55 L156 51 L182 57 L208 49 L234 60 L260 30 L286 42 L320 82" fill="none" stroke="#F8FAFC" stroke-width="2.2"/>
+                            <circle cx="260" cy="18" r="3.5" fill="#F59E0B"/>
+                            <circle cx="320" cy="70" r="3.5" fill="#EF4444"/>
+                        </svg>
+                    </div>
+
+                    <div class="quant-card__aside">
+                        <dl class="quant-card__stats">
+                            <div>
+                                <dt>Run</dt>
+                                <dd>20260324</dd>
+                            </div>
+                            <div>
+                                <dt>Assets</dt>
+                                <dd class="quant-card__assets">
+                                    <span class="asset-btc">BTC</span>
+                                    <span class="asset-eth">ETH</span>
+                                    <span class="asset-sol">SOL</span>
+                                </dd>
+                            </div>
+                            <div>
+                                <dt>Fill</dt>
+                                <dd>97.3%</dd>
+                            </div>
+                        </dl>
+                        <div class="writing-link-cluster quant-card__story" data-writing-link hidden></div>
+                    </div>
+                </article>
             </div>
         </section>
     </main>
@@ -112,6 +174,6 @@
         </div>
     </footer>
 
-    <script src="../js/scripts.js?v=20260329195048518"></script>
+    <script src="../js/scripts.js?v=20260329232519632"></script>
 </body>
 </html>
