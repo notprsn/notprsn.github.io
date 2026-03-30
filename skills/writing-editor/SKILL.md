@@ -1,6 +1,6 @@
 ---
 name: writing-editor
-description: Use when editing or finalizing markdown drafts in writings/pending/ or writings/final/, especially for improving clarity, coherence, tone, structure, and repo-ready finalization without inventing facts.
+description: Use when editing or finalizing markdown drafts in writings/pending/, writings/final/, or work/stories/*/story.md, especially for improving clarity, coherence, tone, structure, and repo-ready finalization without inventing facts.
 ---
 
 # writing-editor
@@ -8,6 +8,7 @@ description: Use when editing or finalizing markdown drafts in writings/pending/
 Use this skill for:
 - polishing drafts in `writings/pending/`
 - tightening finished markdown in `writings/final/`
+- tightening finished work stories in `work/stories/*/story.md`
 - restructuring rough notes into readable essays, project write-ups, or work summaries
 - preserving voice while making prose clearer, sharper, and more coherent
 - deciding whether a draft is ready to move from `writings/pending/` to `writings/final/`
@@ -15,13 +16,13 @@ Use this skill for:
 Keep the skill lean:
 - read only the reference file needed for the current task
 - preserve the author's voice instead of flattening it into generic clean prose
-- for `work-story-*` drafts, use the latest resume in `references/` as the source of truth and do not invent facts
+- for work stories under `work/stories/*/story.md`, use the latest resume in `references/` as the source of truth and do not invent facts
 - when a draft is too thin to finish honestly, surface the missing facts or gaps instead of hallucinating
 
 ## Quick workflow
 
-1. Identify the draft type from the slug:
-   - `work-story-*`
+1. Identify the draft type from the file location or slug:
+   - `work/stories/<slug>/story.md`
    - `projects-*`
    - `essays-travel-*`
    - `essays-miscellaneous-*`
@@ -35,8 +36,9 @@ Keep the skill lean:
    - then paragraph and line edits
    - then read-aloud cleanup
    - then markdown cleanup and final repo checks
-5. If the task is to finalize the piece, move it into `writings/final/` rather than copying it.
-6. Run `node scripts/sync-site.mjs` if hooks are unavailable or the manifest needs a manual refresh.
+5. If the task is to finalize a non-work piece, move it into `writings/final/` rather than copying it.
+6. If the task is to finalize a work story, keep it in `work/stories/<slug>/story.md`.
+7. Run `node scripts/sync-site.mjs` if hooks are unavailable or the manifest needs a manual refresh.
 
 ## Core editing rules
 
@@ -46,8 +48,8 @@ Keep the skill lean:
 - Keep tone consistent from start to finish unless the shift is intentional.
 - Use concrete detail and story when the draft feels abstract or over-explained.
 - Do not simultaneously invent structure and micro-polish every sentence. Solve the big shape first.
-- If a `work-story-*` or `projects-*` draft makes a factual claim, keep it grounded in provided material.
-- For `work-story-*`, keep the markdown narrative-only:
+- If a work story or `projects-*` draft makes a factual claim, keep it grounded in provided material.
+- For work stories, keep the markdown narrative-only:
   - keep the `# Company` title
   - remove date, role, and resume-bullet sections from the markdown body
   - leave the factual bullets to `/work/`
@@ -63,7 +65,8 @@ Keep the skill lean:
 
 ## Repo-specific rules
 
-- `writings/pending/` is the draft queue and `writings/final/` is the closed loop.
+- `writings/pending/` is the draft queue and `writings/final/` is the closed loop for writings routed through `/writings/`.
+- `work/stories/<slug>/story.md` is the canonical location for finalized work stories.
 - Do not keep the same slug in both places.
 - Keep `projects/` separate from `work/`.
 - Use small, explicit improvements over inflated marketing copy.
@@ -80,6 +83,7 @@ Depending on the request, produce one of these:
 - a tighter structure plus rewritten sections
 - a short editorial assessment with the main issues and fixes
 - a finalized markdown file moved into `writings/final/`
+- a finalized work story updated in `work/stories/<slug>/story.md`
 
 When asked to explain edits, focus on:
 - what changed structurally

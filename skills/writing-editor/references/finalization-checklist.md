@@ -1,6 +1,6 @@
 # Finalization Checklist
 
-Use this when a draft is close to done and may be moved from `writings/pending/` to `writings/final/`.
+Use this when a draft is close to done and may be moved from `writings/pending/` to `writings/final/`, or when a work story in `work/stories/*/story.md` is being tightened for publication.
 
 ## Content checks
 
@@ -8,8 +8,8 @@ Use this when a draft is close to done and may be moved from `writings/pending/`
 - The main point is obvious by the end of the first few paragraphs.
 - The strongest sections are not buried.
 - The final paragraph feels finished, not abandoned.
-- Any factual claims in `work-story-*` drafts line up with the latest resume in `references/`.
-- `work-story-*` files keep only the narrative:
+- Any factual claims in work stories line up with the latest resume in `references/`.
+- Work stories keep only the narrative:
   - no date line
   - no role line
   - no `## Website copy`
@@ -21,13 +21,14 @@ Use this when a draft is close to done and may be moved from `writings/pending/`
 - The same slug does not exist in both `writings/pending/` and `writings/final/`.
 - If finalizing, move the file instead of copying it.
 - Keep section boundaries intact:
-  - `work-story-*` stays work-related
+  - work stories stay under `work/stories/`
   - `projects-*` stays project-related
   - essays stay in the correct theme family
 
 ## Site checks
 
-- The markdown renders cleanly in the generic writings page.
+- Non-work markdown renders cleanly in the generic writings page.
+- Work stories render cleanly in the dedicated `work/stories/*` page shell.
 - Lists, headers, and links are intentional.
 - The piece does not depend on unpublished local context to make sense.
 
