@@ -17,12 +17,13 @@ const usage = `Usage:
 
 Examples:
   node scripts/diff-writing-against-ref.mjs --work
-  node scripts/diff-writing-against-ref.mjs work-story-qicap
-  node scripts/diff-writing-against-ref.mjs --ref origin/main work-story-optiver
+  node scripts/diff-writing-against-ref.mjs projects-cloudscript
+  node scripts/diff-writing-against-ref.mjs --ref origin/main work-story:qicap
 
 Notes:
-  - Looks for the current file in writings/final/ first, then writings/pending/.
-  - Looks for the previous file at the given ref in writings/final/ first, then writings/pending/.
+  - Writings slugs look for the current file in writings/final/ first, then writings/pending/.
+  - Work stories use work-story:<slug> and resolve to work/stories/<slug>/story.md.
+  - Looks for the previous file at the given ref in the same path family as the current file.
   - Uses a regular unified diff, so it works even when the current file is untracked.
 `;
 
@@ -33,7 +34,7 @@ if (!compareWork && slugs.length === 0) {
     process.exit(1);
 }
 
-const targetSlugs = compareWork ? await collectCurrentSlugs("work-") : normalizeSlugs(slugs);
+const targetSlugs = compareWork ? await collectCurrentWorkStorySlugs() : normalizeSlugs(slugs);
 
 if (targetSlugs.length === 0) {
     console.error("No matching slugs found.");
@@ -48,7 +49,7 @@ try {
     for (const slug of targetSlugs) {
         const currentPath = await findCurrentPath(slug);
         if (!currentPath) {
-            console.error(`Skipping ${slug}: current file not found in writings/final/ or writings/pending/.`);
+            console.error(`Skipping ${slug}: current file not found.`);
             sawFailure = true;
             continue;
         }
@@ -164,12 +165,41 @@ async function collectCurrentSlugs(prefix) {
     return Array.from(found).sort();
 }
 
+async function collectCurrentWorkStorySlugs() {
+    const storiesRoot = resolve(repoRoot, "work", "stories");
+    let entries = [];
+
+    try {
+        entries = await readdir(storiesRoot, { withFileTypes: true });
+    } catch {
+        return [];
+    }
+
+    const found = [];
+
+    for (const entry of entries) {
+        if (!entry.isDirectory()) {
+            continue;
+        }
+
+        const storyPath = resolve(storiesRoot, entry.name, "story.md");
+        try {
+            await access(storyPath, constants.F_OK);
+            found.push(`work-story:${entry.name}`);
+        } catch {
+            continue;
+        }
+    }
+
+    return found.sort();
+}
+
 function normalizeSlugs(slugs) {
     return slugs.map((slug) => slug.replace(/\.md$/, ""));
 }
 
 async function findCurrentPath(slug) {
-    const candidates = [`writings/final/${slug}.md`, `writings/pending/${slug}.md`];
+    const candidates = resolveCandidates(slug);
 
     for (const candidate of candidates) {
         try {
@@ -184,7 +214,7 @@ async function findCurrentPath(slug) {
 }
 
 function findPreviousPath(ref, slug) {
-    const candidates = [`writings/final/${slug}.md`, `writings/pending/${slug}.md`];
+    const candidates = resolveCandidates(slug);
 
     for (const candidate of candidates) {
         const result = spawnSync("git", ["cat-file", "-e", `${ref}:${candidate}`], {
@@ -198,6 +228,15 @@ function findPreviousPath(ref, slug) {
     }
 
     return "";
+}
+
+function resolveCandidates(slug) {
+    if (slug.startsWith("work-story:")) {
+        const workSlug = slug.replace(/^work-story:/, "");
+        return [`work/stories/${workSlug}/story.md`];
+    }
+
+    return [`writings/final/${slug}.md`, `writings/pending/${slug}.md`];
 }
 
 function gitStdout(args) {

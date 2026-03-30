@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
     initWorkLedgerAccordion();
     initWritingLinks();
     initWritingPage();
+    initWorkStoryPage();
 });
 
 function setCurrentYear() {
@@ -212,9 +213,6 @@ async function initWritingPage() {
     const proseTarget = document.querySelector("[data-writing-prose]");
     const backLink = document.querySelector("[data-writing-back-link]");
     const intro = document.querySelector("[data-writing-intro]");
-    const shell = document.querySelector("[data-writing-shell]");
-    const shellTop = document.querySelector("[data-writing-shell-top]");
-    const storyBackLink = document.querySelector("[data-writing-story-back]");
     const slug = new URLSearchParams(window.location.search).get("slug");
 
     if (!slug || !titleTarget || !metaTarget || !proseTarget || !backLink) {
@@ -241,21 +239,8 @@ async function initWritingPage() {
     backLink.textContent = `Back to ${entry.backLabel}`;
     document.title = `${entry.title} | Prasann Iyer`;
 
-    const isWorkStory = entry.kind === "work-story";
-    document.body.classList.toggle("page-work-story", isWorkStory);
-
     if (intro) {
-        intro.hidden = isWorkStory;
-    }
-
-    if (shell) {
-        shell.classList.toggle("writing-shell--work-story", isWorkStory);
-    }
-
-    if (shellTop && storyBackLink) {
-        shellTop.hidden = !isWorkStory;
-        storyBackLink.href = entry.backPath;
-        storyBackLink.textContent = "< Back";
+        intro.hidden = false;
     }
 
     try {
@@ -266,10 +251,38 @@ async function initWritingPage() {
         }
 
         const markdown = await response.text();
-        proseTarget.innerHTML = renderMarkdown(isWorkStory ? stripLeadingTitle(markdown) : markdown);
+        proseTarget.innerHTML = renderMarkdown(markdown);
     } catch (error) {
         console.error(error);
         showWritingPageError("Could not load finalized markdown.");
+    }
+}
+
+async function initWorkStoryPage() {
+    const root = document.querySelector("[data-work-story-page]");
+    if (!root) {
+        return;
+    }
+
+    const proseTarget = root.querySelector("[data-work-story-prose]");
+    const storyFile = root.getAttribute("data-story-file");
+
+    if (!proseTarget || !storyFile) {
+        return;
+    }
+
+    try {
+        const version = encodeURIComponent(getSiteVersion());
+        const response = await fetch(`${storyFile}?v=${version}`, { cache: "no-store" });
+        if (!response.ok) {
+            throw new Error("Could not load work story markdown.");
+        }
+
+        const markdown = await response.text();
+        proseTarget.innerHTML = renderMarkdown(stripLeadingTitle(markdown));
+    } catch (error) {
+        console.error(error);
+        proseTarget.innerHTML = `<p>${escapeHtml("Could not load work story.")}</p>`;
     }
 }
 
@@ -290,14 +303,6 @@ function showWritingPageError(message) {
 }
 
 function routeWritingSlug(slug) {
-    if (slug.startsWith("work-story-")) {
-        return { backPath: "/work/", backLabel: "Work" };
-    }
-
-    if (slug.startsWith("work-")) {
-        return { backPath: "/work/", backLabel: "Work" };
-    }
-
     if (slug.startsWith("projects-")) {
         return { backPath: "/projects/", backLabel: "Projects" };
     }
