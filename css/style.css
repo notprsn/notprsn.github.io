@@ -957,9 +957,11 @@ body.page-paper {
 }
 
 .paper-project-card--shelf {
+  --project-shelf-height: clamp(9.5rem, 17vw, 11rem);
   display: flex;
   align-items: center;
-  min-height: clamp(7.5rem, 16vw, 10rem);
+  min-height: 0;
+  height: var(--project-shelf-height);
   padding: clamp(1.25rem, 3vw, 2rem);
 }
 
@@ -985,7 +987,7 @@ body.page-paper {
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 1.2rem;
   align-items: center;
-  min-height: clamp(9rem, 18vw, 11rem);
+  min-height: 0;
   padding: clamp(1.35rem, 3vw, 2rem) clamp(1.35rem, 3vw, 2.1rem);
   border: 2px solid var(--bwdl-accent);
   border-radius: 28px;
@@ -1043,26 +1045,9 @@ body.page-paper {
 
 .bollywoodle-card__brand {
   display: grid;
-  grid-template-columns: 3.75rem minmax(0, 1fr);
-  gap: 1rem;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
   align-items: center;
-}
-
-.bollywoodle-card__icon {
-  width: 3.75rem;
-  height: 3.75rem;
-  display: grid;
-  place-items: center;
-  border: 1px solid rgba(223, 161, 104, 0.32);
-  border-radius: 16px;
-  background: rgba(223, 161, 104, 0.08);
-  color: var(--bwdl-accent);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-}
-
-.bollywoodle-card__icon svg {
-  width: 2.8rem;
-  height: 2.8rem;
 }
 
 .bollywoodle-card__copy {
@@ -1172,7 +1157,7 @@ body.page-paper {
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 1.5rem;
   align-items: center;
-  min-height: clamp(8.4rem, 16vw, 10rem);
+  min-height: 0;
   padding: clamp(1.2rem, 3vw, 1.7rem) clamp(1.35rem, 3vw, 2rem);
   border: 1px solid var(--cs-border);
   border-radius: 999px;
@@ -1255,41 +1240,29 @@ body.page-paper {
 
 .cloudscript-card__art {
   position: relative;
-  width: clamp(9rem, 20vw, 14rem);
-  height: 5.4rem;
+  width: clamp(9.4rem, 20vw, 13.4rem);
+  height: clamp(4.9rem, 10vw, 6.8rem);
 }
 
-.cloudscript-card__cloud {
+.cloudscript-card__word {
+  display: block;
   position: absolute;
   height: auto;
-}
-
-.cloudscript-card__cloud path {
-  fill: var(--cs-fill);
-  stroke: var(--cs-stroke);
-  stroke-width: 2;
-  vector-effect: non-scaling-stroke;
-}
-
-.cloudscript-card__cloud--ghost {
-  top: 0.2rem;
-  right: 0.1rem;
-  width: 8rem;
-  opacity: 0.28;
-}
-
-.cloudscript-card__cloud--main {
-  right: 0;
-  bottom: 0;
-  width: 9.3rem;
   filter: drop-shadow(0 6px 14px rgba(15, 23, 42, 0.1));
+  transition: transform 180ms ease;
+  will-change: transform;
 }
 
-.cloudscript-card__cloud--tiny {
-  left: 0.2rem;
-  top: 0.6rem;
-  width: 3.9rem;
-  opacity: 0.78;
+.cloudscript-card__word--cloud {
+  top: 0.05rem;
+  left: 0;
+  width: 48%;
+}
+
+.cloudscript-card__word--script {
+  right: 0;
+  bottom: 0.05rem;
+  width: 66%;
 }
 
 .project-shelf-card--cloudscript .writing-link-cluster {
@@ -1321,12 +1294,12 @@ body.page-paper {
   --qd-profit: #22c55e;
   --qd-loss: #ef4444;
   --qd-signal: #f8fafc;
-  --qd-radius: 999px;
-  --qd-inner-radius: 14px;
+  --qd-radius: 28px;
   display: grid;
-  grid-template-columns: 260px minmax(220px, 1fr) 180px;
-  gap: 18px;
+  grid-template-columns: minmax(0, 1fr) minmax(170px, 0.8fr) auto;
+  gap: 1.75rem;
   align-items: center;
+  min-height: 0;
   padding: 18px 22px;
   border: 1px solid var(--qd-border);
   border-radius: var(--qd-radius);
@@ -1353,8 +1326,8 @@ body.page-paper {
 }
 
 .quant-card__kicker,
-.quant-card__chip,
-.quant-card__stats dt {
+.quant-card__label,
+.quant-card__chip {
   margin: 0;
   font-size: 0.625rem;
   font-weight: 700;
@@ -1365,30 +1338,73 @@ body.page-paper {
 }
 
 .project-shelf-card--quant-desk h2 {
-  margin: 4px 0 10px;
+  margin: 6px 0 0;
   font-family: "IBM Plex Mono", "SF Mono", "Fira Code", monospace;
-  font-size: 1.125rem;
+  font-size: clamp(1.14rem, 2.1vw, 1.48rem);
   font-weight: 700;
-  letter-spacing: 0.06em;
-  line-height: 1.2;
+  letter-spacing: 0.07em;
+  line-height: 1.1;
   text-transform: uppercase;
   color: var(--qd-text);
 }
 
-.quant-card__chips {
+.quant-card__kicker {
+  font-size: 0.66rem;
+  letter-spacing: 0.1em;
+}
+
+.quant-card__meta {
+  align-self: center;
+  max-width: 19rem;
+}
+
+.quant-card__cluster {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 6px;
+  justify-content: flex-end;
+}
+
+.quant-card__stack {
+  display: grid;
+  grid-template-columns: auto auto;
+  align-items: center;
+  column-gap: 0.65rem;
+  justify-items: end;
+}
+
+.quant-card__label {
+  font-size: 0.58rem;
+  letter-spacing: 0.1em;
+  white-space: nowrap;
 }
 
 .quant-card__chip {
   display: inline-flex;
   align-items: center;
-  min-height: 1.8rem;
-  padding: 5px 10px;
+  min-height: 1.45rem;
+  padding: 4px 8px;
   border: 1px solid var(--qd-border);
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.04);
+}
+
+.quant-card__chip--asset.asset-btc {
+  color: #f7931a;
+}
+
+.quant-card__chip--asset.asset-eth {
+  color: #627eea;
+}
+
+.quant-card__chip--asset.asset-sol {
+  color: #00ffa3;
+}
+
+.quant-card__chip--up {
+  color: var(--qd-profit);
+  background: rgba(34, 197, 94, 0.1);
+  border-color: rgba(34, 197, 94, 0.26);
 }
 
 .quant-card__chip--down {
@@ -1398,10 +1414,13 @@ body.page-paper {
 }
 
 .quant-card__plot {
+  display: block;
+  min-width: 0;
   padding: 10px 12px;
   border: 1px solid var(--qd-border);
-  border-radius: var(--qd-inner-radius);
+  border-radius: 16px;
   background: rgba(255, 255, 255, 0.03);
+  overflow: hidden;
 }
 
 .quant-card__plot svg {
@@ -1410,54 +1429,31 @@ body.page-paper {
   height: auto;
 }
 
+.quant-card__line {
+  fill: none;
+  vector-effect: non-scaling-stroke;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 320;
+  stroke-dashoffset: 320;
+  opacity: 0.2;
+}
+
+.quant-card__line--green {
+  stroke: var(--qd-profit);
+  stroke-width: 2;
+}
+
+.quant-card__line--red {
+  stroke: var(--qd-loss);
+  stroke-width: 2;
+}
+
 .quant-card__aside {
   display: grid;
-  gap: 10px;
-}
-
-.quant-card__stats {
-  display: grid;
-  gap: 10px;
-  margin: 0;
-}
-
-.quant-card__stats div {
-  padding: 10px 12px;
-  border: 1px solid var(--qd-border);
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.03);
-}
-
-.quant-card__stats dd {
-  margin: 4px 0 0;
-  font-size: 1rem;
-  font-weight: 700;
-  line-height: 1.2;
-  color: var(--qd-text);
-}
-
-.quant-card__assets {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.45rem;
-}
-
-.quant-card__assets span {
-  display: inline-flex;
-  align-items: center;
-  min-height: 1.2rem;
-}
-
-.quant-card__assets .asset-btc {
-  color: #f7931a;
-}
-
-.quant-card__assets .asset-eth {
-  color: #627eea;
-}
-
-.quant-card__assets .asset-sol {
-  color: #00ffa3;
+  gap: 0.4rem;
+  justify-items: end;
+  align-content: center;
 }
 
 .project-shelf-card--quant-desk .writing-link-cluster {
@@ -1476,6 +1472,18 @@ body.page-paper {
 .project-shelf-card--quant-desk .story-link:hover,
 .project-shelf-card--quant-desk .story-link:focus-visible {
   color: var(--qd-text);
+}
+
+@media (min-width: 941px) and (hover: hover) and (pointer: fine) {
+  .project-shelf-card--quant-desk:hover .quant-card__line--green,
+  .project-shelf-card--quant-desk:focus-within .quant-card__line--green {
+    animation: quant-line-draw 1.6s linear infinite;
+  }
+
+  .project-shelf-card--quant-desk:hover .quant-card__line--red,
+  .project-shelf-card--quant-desk:focus-within .quant-card__line--red {
+    animation: quant-line-draw 1.6s linear 0.16s infinite;
+  }
 }
 
 .paper-grid .paper-panel > p {
@@ -1982,6 +1990,7 @@ body.page-paper {
 
   .cloudscript-card__art {
     width: min(100%, 12rem);
+    height: 5.9rem;
   }
 
   .project-shelf-card--quant-desk {
@@ -1989,13 +1998,24 @@ body.page-paper {
     border-radius: 28px;
   }
 
+  .quant-card__plot {
+    display: none;
+  }
+
   .quant-card__aside {
     justify-items: start;
   }
 
-  .quant-card__stats {
-    width: 100%;
-    grid-template-columns: 1fr;
+  .quant-card__stack {
+    justify-items: start;
+  }
+
+  .quant-card__cluster {
+    justify-content: flex-start;
+  }
+
+  .paper-project-card--shelf {
+    --project-shelf-height: 12.25rem;
   }
 
   .section-card,
@@ -2009,6 +2029,95 @@ body.page-paper {
 
   .landing-shell {
     min-height: auto;
+  }
+}
+
+@keyframes quant-line-draw {
+  0% {
+    stroke-dashoffset: 320;
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+}
+
+@media (min-width: 941px) and (hover: hover) and (pointer: fine) {
+  .project-shelf-card--cloudscript:hover .cloudscript-card__word--cloud,
+  .project-shelf-card--cloudscript:focus-within .cloudscript-card__word--cloud {
+    animation: cloudscript-orbit-cloud 5.8s linear infinite;
+  }
+
+  .project-shelf-card--cloudscript:hover .cloudscript-card__word--script,
+  .project-shelf-card--cloudscript:focus-within .cloudscript-card__word--script {
+    animation: cloudscript-orbit-script 6.9s linear infinite;
+  }
+}
+
+@keyframes cloudscript-orbit-cloud {
+  0% {
+    transform: translate(0, 0);
+  }
+  12.5% {
+    transform: translate(5px, -3px);
+  }
+  25% {
+    transform: translate(8px, -7px);
+  }
+  37.5% {
+    transform: translate(5px, -10px);
+  }
+  50% {
+    transform: translate(0, -12px);
+  }
+  62.5% {
+    transform: translate(-5px, -10px);
+  }
+  75% {
+    transform: translate(-8px, -7px);
+  }
+  87.5% {
+    transform: translate(-5px, -3px);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+@keyframes cloudscript-orbit-script {
+  0% {
+    transform: translate(7px, 0);
+  }
+  12.5% {
+    transform: translate(5px, 5px);
+  }
+  25% {
+    transform: translate(0, 8px);
+  }
+  37.5% {
+    transform: translate(-5px, 5px);
+  }
+  50% {
+    transform: translate(-7px, 0);
+  }
+  62.5% {
+    transform: translate(-5px, -5px);
+  }
+  75% {
+    transform: translate(0, -8px);
+  }
+  87.5% {
+    transform: translate(5px, -5px);
+  }
+  100% {
+    transform: translate(7px, 0);
   }
 }
 
