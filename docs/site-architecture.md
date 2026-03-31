@@ -18,6 +18,7 @@ Structure principles
 - Shared page chrome and reusable layout primitives live in `css/style.css`.
 - Top-level page-family styles live in `css/pages/`.
 - Mini-project styles under `fun/projects/<slug>/` stay local to that project.
+- Contributor workflows live in `docs/section-workflows.md`.
 
 Current page-family CSS
 - `/` uses `css/pages/home.css`.
@@ -25,7 +26,9 @@ Current page-family CSS
 - `/projects/` and `projects/*` use `css/pages/projects.css`.
 - `/essays/`, essay theme pages, and `/writings/` use `css/pages/essays.css`.
 - `/love-letters/` uses `css/pages/love.css`.
-- `/about/`, `/fun/`, and `/puzzles/` keep their existing page CSS under `css/pages/`.
+- `/about/` uses `css/pages/about.css`.
+- `/fun/` uses `css/pages/fun.css`.
+- `/puzzles/` uses `css/pages/puzzles.css`.
 
 Patterns
 - Work: resume-backed, factual, low-interpretation.
@@ -36,7 +39,6 @@ Patterns
 - Shared style language: see `docs/style-language.md`.
 
 Current self-contained directories
-- `fun/projects/mod-circle/`
-- `fun/projects/template/`
+- `fun/projects/<slug>/`
 - `essays/travel/`
 - `essays/miscellaneous/`

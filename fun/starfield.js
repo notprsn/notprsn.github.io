@@ -14,6 +14,9 @@ function initFunStarfield() {
     }
 
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const hasCoarsePointer =
+        window.matchMedia("(pointer: coarse)").matches ||
+        window.matchMedia("(hover: none)").matches;
     const palette = [
         "rgba(255, 255, 255, 0.96)",
         "rgba(214, 230, 255, 0.86)",
@@ -30,7 +33,8 @@ function initFunStarfield() {
     let pointerY = 0;
     let currentSpeed = 0;
     const targetInterval = 1000 / 30;
-    const maxSpeed = 220;
+    const maxSpeed = 110;
+    const densityScale = 0.245;
 
     class Star {
         constructor(initial = false) {
@@ -86,18 +90,24 @@ function initFunStarfield() {
 
             const radius = Math.max(0.2, (1 - this.z / width) * 3.4 * this.twinkle);
             const brightness = (0.3 + (1 - radial) * 0.7) * getContentMask(screenX, screenY);
+            const speedRatio = currentSpeed / maxSpeed;
+            const isStreaking = speedRatio > 0.16;
+            const strokeOpacity = isStreaking ? Math.min(1, brightness + 0.42) : brightness;
 
-            context.strokeStyle = this.color.replace(/[\d.]+\)$/, `${brightness.toFixed(3)})`);
-            context.lineWidth = Math.max(0.2, radius * 0.85);
+            context.strokeStyle = this.color.replace(/[\d.]+\)$/, `${strokeOpacity.toFixed(3)})`);
+            context.lineWidth = Math.max(0.4, radius * 2);
+            context.lineCap = "round";
             context.beginPath();
             context.moveTo(previousX, previousY);
             context.lineTo(screenX, screenY);
             context.stroke();
 
-            context.fillStyle = this.color.replace(/[\d.]+\)$/, `${Math.min(1, brightness + 0.2).toFixed(3)})`);
-            context.beginPath();
-            context.arc(screenX, screenY, radius, 0, Math.PI * 2);
-            context.fill();
+            if (!isStreaking) {
+                context.fillStyle = this.color.replace(/[\d.]+\)$/, `${Math.min(1, brightness + 0.2).toFixed(3)})`);
+                context.beginPath();
+                context.arc(screenX, screenY, radius, 0, Math.PI * 2);
+                context.fill();
+            }
         }
     }
 
@@ -113,7 +123,10 @@ function initFunStarfield() {
         canvas.height = Math.floor(height * dpr);
         context.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-        const starCount = Math.max(1200, Math.min(5600, Math.floor(width * height * 0.0034)));
+        const starCount = Math.max(
+            Math.floor(1200 * densityScale),
+            Math.min(Math.floor(5600 * densityScale), Math.floor(width * height * 0.0034 * densityScale))
+        );
         stars = Array.from({ length: starCount }, () => new Star(true));
 
         context.fillStyle = "#000";
@@ -155,6 +168,10 @@ function initFunStarfield() {
     }
 
     function getPointerSpeed() {
+        if (hasCoarsePointer) {
+            return maxSpeed * 0.1;
+        }
+
         const distance = Math.min(edgeRadius, Math.hypot(pointerX - width * 0.5, pointerY - height * 0.5));
         const proximity = 1 - distance / edgeRadius;
         return maxSpeed * Math.pow(Math.max(0, proximity), 2.4);

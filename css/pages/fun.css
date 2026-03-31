@@ -14,7 +14,7 @@
 .fun-starfield-canvas,
 .fun-starfield-veil {
   position: fixed;
-  top: var(--scene-header-offset);
+  top: 0;
   right: 0;
   bottom: 0;
   left: 0;
@@ -44,9 +44,7 @@
 }
 
 .page-fun-space .site-brand,
-.page-fun-space .eyebrow,
-.page-fun-space .panel-label,
-.page-fun-space .section-index {
+.page-fun-space .eyebrow {
   color: rgba(196, 208, 255, 0.82);
 }
 
@@ -68,36 +66,64 @@
 }
 
 .page-fun-space .page-intro h1,
-.page-fun-space .section-head h2,
 .page-fun-space .lab-card h3 {
   color: #ffffff;
 }
 
-.page-fun-space .page-lede,
-.page-fun-space .page-aside p,
-.page-fun-space .section-head p,
-.page-fun-space .lab-card p,
-.page-fun-space .section-card p {
+.page-fun-space .fun-intro-copy {
+  position: relative;
+  width: min(46rem, 100%);
+  padding: 1.35rem 1.6rem 1.45rem;
+}
+
+.page-fun-space .fun-intro-copy::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: 2rem;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 18% 18%, rgba(255, 255, 255, 0.06), transparent 34%),
+    linear-gradient(135deg, rgba(6, 10, 12, 0.22), rgba(6, 10, 12, 0.38));
+  opacity: 0.9;
+  backdrop-filter: blur(1px);
+  -webkit-backdrop-filter: blur(1px);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+
+.page-fun-space .lab-card {
+  padding: 1.1rem 1.2rem;
+}
+
+.page-fun-space .lab-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.page-fun-space .lab-card h3 {
+  margin-top: 0;
+}
+
+.page-fun-space .lab-card h3 a {
+  color: inherit;
+}
+
+.page-fun-space .lab-card .inline-link {
+  flex: 0 0 auto;
+}
+
+.page-fun-space .page-lede {
   color: rgba(231, 235, 250, 0.76);
 }
 
-.page-fun-space .page-aside,
-.page-fun-space .lab-card,
-.page-fun-space .section-card {
+.page-fun-space .lab-card {
   border-color: rgba(255, 255, 255, 0.08);
   background: rgba(6, 7, 10, 0.72);
   box-shadow: 0 28px 90px rgba(0, 0, 0, 0.48);
   backdrop-filter: blur(18px);
-}
-
-.page-fun-space .section-head {
-  border-bottom-color: rgba(255, 255, 255, 0.12);
-}
-
-.page-fun-space .chip-cloud span {
-  border-color: rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.04);
-  color: rgba(244, 246, 255, 0.84);
 }
 
 .page-fun-space .site-footer,
@@ -114,5 +140,14 @@
   .fun-starfield-veil {
     background:
       linear-gradient(180deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.06) 28%, rgba(0, 0, 0, 0.3) 100%);
+  }
+
+  .page-fun-space .fun-intro-copy {
+    padding: 1.1rem 1.1rem 1.2rem;
+  }
+
+  .page-fun-space .lab-card-head {
+    align-items: flex-start;
+    flex-wrap: wrap;
   }
 }
