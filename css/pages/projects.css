@@ -662,20 +662,13 @@ body.page-paper.page-project-cloudscript {
   max-width: none;
 }
 
-.page-project-bollywoodle .project-writing-page__eyebrow {
-  font-family: "Josefin Sans", var(--font-body);
-  font-size: 0.82rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: rgba(241, 200, 155, 0.72);
-}
-
 .page-project-bollywoodle .project-writing-page__title {
   font-family: "Josefin Sans", var(--font-body);
-  font-size: clamp(2.8rem, 9vw, 5.6rem);
+  font-size: clamp(2.2rem, 8vw, 5.6rem);
   font-weight: 700;
-  letter-spacing: 0.14em;
+  letter-spacing: clamp(0.08em, 0.7vw, 0.14em);
   line-height: 0.9;
+  margin-top: 0.65rem;
   text-transform: uppercase;
   color: #dfa168;
 }
@@ -683,24 +676,6 @@ body.page-paper.page-project-cloudscript {
 .page-project-bollywoodle .project-writing-page__subtitle {
   color: rgba(247, 245, 242, 0.76);
   font-family: "Josefin Sans", var(--font-body);
-}
-
-.page-project-bollywoodle .project-writing-page__bollywoodle-dots {
-  display: flex;
-  gap: 0.45rem;
-  margin-top: 0.95rem;
-}
-
-.page-project-bollywoodle .project-writing-page__bollywoodle-dots span {
-  width: 0.62rem;
-  height: 0.62rem;
-  border-radius: 999px;
-  border: 1px solid #dfa168;
-  background: rgba(123, 112, 104, 0.45);
-}
-
-.page-project-bollywoodle .project-writing-page__bollywoodle-dots .is-hit {
-  background: #8fae5c;
 }
 
 .page-project-bollywoodle .project-card-action {
@@ -800,6 +775,7 @@ body.page-paper.page-project-cloudscript {
 
 .page-project-bollywoodle .project-writing-page__prose code {
   background: rgba(255, 255, 255, 0.06);
+  color: #f6d9a7;
 }
 
 .page-project-bollywoodle .project-writing-page__prose pre {
@@ -808,7 +784,8 @@ body.page-paper.page-project-cloudscript {
 }
 
 .page-project-bollywoodle .project-writing-page__prose pre code {
-  color: rgba(247, 245, 242, 0.88);
+  color: #8fe4ff;
+  text-shadow: 0 0 10px rgba(143, 228, 255, 0.08);
 }
 
 .page-project-bollywoodle .project-writing-page__prose hr {
@@ -1173,5 +1150,13 @@ body.page-paper.page-project-cloudscript {
   .page-project-cloudscript .project-writing-page__cloud-art {
     width: min(100%, 14rem);
     height: 6.8rem;
+  }
+}
+
+@media (max-width: 720px) {
+  .page-project-bollywoodle .project-writing-page__title {
+    font-size: clamp(1.55rem, 9.2vw, 2.55rem);
+    letter-spacing: 0.045em;
+    line-height: 0.98;
   }
 }

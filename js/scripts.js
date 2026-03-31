@@ -509,12 +509,12 @@ function parseInlineMarkdown(text) {
     let output = escapeHtml(text);
 
     output = output.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_match, label, url) => {
-        return `<a href="${escapeHtml(url)}">${escapeHtml(label)}</a>`;
+        return `<a href="${url}">${label}</a>`;
     });
 
-    output = output.replace(/`([^`]+)`/g, (_match, code) => `<code>${escapeHtml(code)}</code>`);
-    output = output.replace(/\*\*([^*]+)\*\*/g, (_match, strong) => `<strong>${escapeHtml(strong)}</strong>`);
-    output = output.replace(/\*([^*]+)\*/g, (_match, emphasis) => `<em>${escapeHtml(emphasis)}</em>`);
+    output = output.replace(/`([^`]+)`/g, (_match, code) => `<code>${code}</code>`);
+    output = output.replace(/\*\*([^*]+)\*\*/g, (_match, strong) => `<strong>${strong}</strong>`);
+    output = output.replace(/\*([^*]+)\*/g, (_match, emphasis) => `<em>${emphasis}</em>`);
 
     return output;
 }
