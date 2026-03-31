@@ -1,0 +1,35 @@
+body.page-essays {
+  background:
+    radial-gradient(circle at 10% 12%, rgba(217, 230, 216, 0.62), transparent 24%),
+    radial-gradient(circle at 95% 8%, rgba(238, 230, 217, 0.84), transparent 26%),
+    linear-gradient(180deg, #fcfaf6 0%, #f0eadf 100%);
+}
+
+.essay-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.18fr) minmax(280px, 0.82fr);
+  gap: 1rem;
+  align-items: start;
+}
+
+.essay-hero h1 {
+  font-size: clamp(3rem, 8vw, 5.3rem);
+  margin-top: 0.35rem;
+  max-width: 12ch;
+}
+
+.page-paper .essay-hero h1 {
+  color: var(--paper-tone-text);
+}
+
+@media (max-width: 940px) {
+  .essay-hero {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .essay-hero h1 {
+    max-width: none;
+  }
+}

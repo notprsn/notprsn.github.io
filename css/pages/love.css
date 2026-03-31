@@ -1,0 +1,85 @@
+body.page-love {
+  background:
+    radial-gradient(circle at 12% 10%, rgba(45, 107, 77, 0.18), transparent 20%),
+    linear-gradient(180deg, #13171c 0%, #090b0e 100%);
+  color: #ece7dc;
+}
+
+.page-love .page-aside,
+.page-love .lock-panel,
+.page-love .lock-note-card,
+.page-love .letter-shell {
+  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow: none;
+}
+
+.page-love .section-head {
+  border-bottom-color: rgba(255, 255, 255, 0.14);
+}
+
+.page-love .chip-cloud span {
+  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.lock-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.18fr) minmax(280px, 0.82fr);
+  gap: 1rem;
+  align-items: start;
+  margin-top: 1.5rem;
+}
+
+.form-row {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.lock-input {
+  min-height: 3.2rem;
+  width: 100%;
+  padding: 0.75rem 0.9rem;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(0, 0, 0, 0.22);
+  color: inherit;
+}
+
+.status-text {
+  min-height: 1.6rem;
+}
+
+.status-text[data-state="error"] {
+  color: #ffb7b7;
+}
+
+.status-text[data-state="success"] {
+  color: #b4f6c1;
+}
+
+.status-text[data-state="pending"] {
+  color: #f1dfb5;
+}
+
+.letter-shell--intro {
+  margin-bottom: 1rem;
+}
+
+.letter-meta {
+  margin-top: 0.2rem;
+  color: rgba(236, 231, 220, 0.62);
+}
+
+.page-main--love .page-lede,
+.page-love .page-aside p,
+.page-love .status-text,
+.page-love .letter-body p {
+  color: rgba(236, 231, 220, 0.76);
+}
+
+@media (max-width: 940px) {
+  .lock-grid {
+    grid-template-columns: 1fr;
+  }
+}
