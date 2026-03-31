@@ -1,122 +1,97 @@
-const RULE_LABELS = {
-    free: "Free choice",
-    "no-repeat": "Never same twice",
-    "no-adjacent": "Skip neighbors",
-};
+const RATIO_OPTIONS = [
+    { label: "1/3", value: 1 / 3 },
+    { label: "3/8", value: 3 / 8 },
+    { label: "2/5", value: 2 / 5 },
+    { label: "3/7", value: 3 / 7 },
+    { label: "1/2", value: 1 / 2 },
+    { label: "4/7", value: 4 / 7 },
+    { label: "3/5", value: 3 / 5 },
+    { label: "5/8", value: 5 / 8 },
+    { label: "2/3", value: 2 / 3 },
+];
 
-const STRUCTURE_KEYS = new Set(["vertices", "ratio", "rule"]);
-const isMobileViewport = window.matchMedia("(max-width: 720px)").matches;
-const DEFAULT_STATE = withResponsiveLimits({
+const PALETTE_FAMILIES = [
+    {
+        saturation: 78,
+        brightness: 100,
+        alpha: 0.16,
+        glowAlpha: 0.045,
+        guideFillAlpha: 0.94,
+    },
+    {
+        saturation: 42,
+        brightness: 100,
+        alpha: 0.18,
+        glowAlpha: 0.055,
+        guideFillAlpha: 0.96,
+    },
+    {
+        saturation: 92,
+        brightness: 100,
+        alpha: 0.14,
+        glowAlpha: 0.04,
+        guideFillAlpha: 0.98,
+    },
+];
+
+const defaultRatio = RATIO_OPTIONS.find((option) => option.label === "1/2");
+const DEFAULT_STATE = {
     vertices: 3,
-    ratio: 0.5,
-    rule: "free",
-    stepsPerFrame: 2200,
-    hueShift: 204,
-    showGuides: true,
-});
+    ratioIndex: defaultRatio ? RATIO_OPTIONS.indexOf(defaultRatio) : 4,
+};
 
 const state = {
     params: { ...DEFAULT_STATE },
-    controlsOpen: false,
     plottedPoints: 0,
-    maxPoints: isMobileViewport ? 120000 : 240000,
+    maxPoints: getPointBudget(DEFAULT_STATE.vertices),
+    targetDurationMs: getTargetDurationMs(),
     complete: false,
     vertices: [],
     currentPoint: null,
-    previousVertex: null,
     graphics: null,
+    palette: [],
+    startedAt: 0,
+    displaySize: { width: 0, height: 0 },
+    sketch: null,
 };
 
 const elements = {
     stage: document.getElementById("chaos-stage"),
-    plotCount: document.getElementById("plot-count"),
-    progressCount: document.getElementById("progress-count"),
-    ruleReadout: document.getElementById("rule-readout"),
-    statusReadout: document.getElementById("status-readout"),
-    hudVertices: document.getElementById("hud-vertices"),
-    hudRatio: document.getElementById("hud-ratio"),
-    controlsShell: document.querySelector("[data-controls-shell]"),
-    controlsToggle: document.querySelector("[data-controls-toggle]"),
-    resetButton: document.querySelector("[data-reset-sim]"),
 };
+
+const controlNodes = new Map(
+    Array.from(document.querySelectorAll("input[name]")).map((node) => [node.name, node])
+);
 
 const outputNodes = new Map(
     Array.from(document.querySelectorAll("[data-output-for]")).map((node) => [node.dataset.outputFor, node])
 );
 
-const controlNodes = new Map(
-    Array.from(document.querySelectorAll("input[name], select[name]")).map((node) => [node.name, node])
-);
-
-if (isMobileViewport) {
-    const stepsNode = controlNodes.get("stepsPerFrame");
-    if (stepsNode) {
-        stepsNode.max = "2600";
-    }
-}
-
 bindControls();
 updateControlUI();
-updateReadout();
 createSketch();
+
 window.addEventListener("pageshow", () => {
-    state.params = withResponsiveLimits(state.params);
-    if (!RULE_LABELS[state.params.rule]) {
-        state.params = { ...DEFAULT_STATE };
-        resetSimulation();
-    }
     updateControlUI();
-    updateReadout();
 });
 
 function bindControls() {
     controlNodes.forEach((node, name) => {
-        const eventName = node.tagName === "SELECT" || node.type === "checkbox" ? "change" : "input";
-        node.addEventListener(eventName, () => {
+        node.addEventListener("input", () => {
             state.params[name] = readControlValue(node);
-            state.params = withResponsiveLimits(state.params);
             updateControlOutput(name);
-
-            if (STRUCTURE_KEYS.has(name)) {
-                resetSimulation();
-            }
-
-            updateReadout();
+            resetSimulation();
         });
-    });
-
-    elements.controlsToggle?.addEventListener("click", () => {
-        state.controlsOpen = !state.controlsOpen;
-        elements.controlsShell?.classList.toggle("controls-open", state.controlsOpen);
-        elements.controlsToggle.textContent = state.controlsOpen ? "Close controls" : "Open controls";
-    });
-
-    elements.resetButton?.addEventListener("click", () => {
-        resetSimulation();
-        updateReadout();
     });
 }
 
 function readControlValue(node) {
-    if (node.type === "checkbox") {
-        return node.checked;
-    }
-
-    if (node.tagName === "SELECT") {
-        return node.value;
-    }
-
     return Number(node.value);
 }
 
 function updateControlUI() {
     controlNodes.forEach((node, name) => {
-        const value = state.params[name];
-        if (node.type === "checkbox") {
-            node.checked = Boolean(value);
-        } else {
-            node.value = `${value}`;
-        }
+        node.value = `${state.params[name]}`;
         updateControlOutput(name);
     });
 }
@@ -127,29 +102,12 @@ function updateControlOutput(name) {
         return;
     }
 
-    const value = state.params[name];
-    switch (name) {
-        case "ratio":
-            output.textContent = Number(value).toFixed(3);
-            break;
-        case "stepsPerFrame":
-            output.textContent = Number(value).toLocaleString();
-            break;
-        default:
-            output.textContent = `${value}`;
-            break;
+    if (name === "ratioIndex") {
+        output.textContent = getSelectedRatioLabel();
+        return;
     }
-}
 
-function updateReadout() {
-    const progress = Math.min(100, (state.plottedPoints / state.maxPoints) * 100);
-    const status = state.complete ? "Settled" : "Growing";
-    elements.plotCount.textContent = state.plottedPoints.toLocaleString();
-    elements.progressCount.textContent = `${progress.toFixed(0)}%`;
-    elements.ruleReadout.textContent = RULE_LABELS[state.params.rule] || RULE_LABELS.free;
-    elements.statusReadout.textContent = status;
-    elements.hudVertices.textContent = `${state.params.vertices} vertices`;
-    elements.hudRatio.textContent = `ratio ${Number(state.params.ratio).toFixed(3)}`;
+    output.textContent = `${state.params[name]}`;
 }
 
 function createSketch() {
@@ -163,7 +121,9 @@ function createSketch() {
             canvas.parent(host);
             p.pixelDensity(1);
             p.colorMode(p.HSB, 360, 100, 100, 1);
-            p.frameRate(60);
+            p.frameRate(isCompactViewport() ? 44 : 50);
+            state.sketch = p;
+            state.displaySize = { width, height };
             initializeGraphics(p, width, height);
             resetSimulation();
         };
@@ -171,21 +131,22 @@ function createSketch() {
         p.draw = () => {
             advanceSimulation(p);
             drawBackdrop(p);
-            p.image(state.graphics, 0, 0);
+            p.image(state.graphics, 0, 0, p.width, p.height);
             drawGuides(p);
             drawCurrentPoint(p);
-            updateReadout();
         };
 
         p.windowResized = () => {
             if (!host) {
                 return;
             }
+
+            updateControlUI();
             const { width, height } = getStageSize(host);
             p.resizeCanvas(width, height);
+            state.displaySize = { width, height };
             initializeGraphics(p, width, height);
             resetSimulation();
-            updateReadout();
         };
     };
 
@@ -193,7 +154,10 @@ function createSketch() {
 }
 
 function initializeGraphics(p, width, height) {
-    state.graphics = p.createGraphics(width, height);
+    const renderScale = getChaosRenderScale();
+    const renderWidth = Math.max(240, Math.round(width * renderScale));
+    const renderHeight = Math.max(240, Math.round(height * renderScale));
+    state.graphics = p.createGraphics(renderWidth, renderHeight);
     state.graphics.pixelDensity(1);
     state.graphics.colorMode(p.HSB, 360, 100, 100, 1);
     state.graphics.clear();
@@ -207,9 +171,13 @@ function resetSimulation() {
     state.graphics.clear();
     state.plottedPoints = 0;
     state.complete = false;
-    state.previousVertex = null;
+    state.maxPoints = getPointBudget(state.params.vertices);
+    state.targetDurationMs = getTargetDurationMs();
     state.vertices = buildPolygonVertices(state.graphics.width, state.graphics.height, state.params.vertices);
+    state.palette = buildPalette(state.params.vertices);
     state.currentPoint = randomStartPoint(state.graphics.width, state.graphics.height);
+    state.startedAt = performance.now();
+    state.sketch?.loop();
 }
 
 function advanceSimulation(p) {
@@ -217,76 +185,69 @@ function advanceSimulation(p) {
         return;
     }
 
+    const elapsed = performance.now() - state.startedAt;
+    const cappedElapsed = Math.min(elapsed, state.targetDurationMs);
+    const desiredPoints = Math.ceil((cappedElapsed / state.targetDurationMs) * state.maxPoints);
     const remaining = state.maxPoints - state.plottedPoints;
-    const iterations = Math.min(state.params.stepsPerFrame, remaining);
-    state.graphics.strokeWeight(isMobileViewport ? 1 : 1.15);
+    const jumpRatio = getSelectedRatioValue();
+    const maxBatch = isCompactViewport() ? 700 : 1300;
+    const minBatch = isCompactViewport() ? 90 : 180;
+    const iterations = Math.min(remaining, Math.max(minBatch, desiredPoints - state.plottedPoints), maxBatch);
+
+    if (iterations <= 0) {
+        return;
+    }
+
+    const ctx = state.graphics.drawingContext;
+    const pointSize = isCompactViewport() ? 1.15 : 1.25;
 
     for (let step = 0; step < iterations; step += 1) {
         const targetIndex = pickTargetIndex();
         const target = state.vertices[targetIndex];
-        state.currentPoint.x = p.lerp(state.currentPoint.x, target.x, state.params.ratio);
-        state.currentPoint.y = p.lerp(state.currentPoint.y, target.y, state.params.ratio);
-        plotPoint(targetIndex);
-        state.previousVertex = targetIndex;
+        state.currentPoint.x += (target.x - state.currentPoint.x) * jumpRatio;
+        state.currentPoint.y += (target.y - state.currentPoint.y) * jumpRatio;
+        plotPoint(ctx, targetIndex, pointSize);
         state.plottedPoints += 1;
     }
 
     if (state.plottedPoints >= state.maxPoints) {
         state.complete = true;
+        state.sketch?.noLoop();
     }
 }
 
-function plotPoint(targetIndex) {
-    const hueBase = state.params.hueShift + (targetIndex / Math.max(1, state.params.vertices)) * 220;
-    const hue = (hueBase + state.plottedPoints * 0.0024) % 360;
-    state.graphics.stroke(hue, 62, 100, 0.16);
-    state.graphics.point(state.currentPoint.x, state.currentPoint.y);
-
-    if (state.plottedPoints % 12 === 0) {
-        state.graphics.stroke(hue, 42, 100, 0.03);
-        state.graphics.strokeWeight(isMobileViewport ? 2 : 2.6);
-        state.graphics.point(state.currentPoint.x, state.currentPoint.y);
-        state.graphics.strokeWeight(isMobileViewport ? 1 : 1.15);
-    }
+function plotPoint(ctx, targetIndex, pointSize) {
+    const color = state.palette[targetIndex];
+    ctx.fillStyle = color.fillStyle;
+    ctx.fillRect(state.currentPoint.x | 0, state.currentPoint.y | 0, pointSize, pointSize);
 }
 
 function drawBackdrop(p) {
-    p.background(196, 38, 6);
-
-    for (let index = 0; index < 9; index += 1) {
-        const glowY = p.map(index, 0, 8, p.height * 0.1, p.height * 0.9);
-        const alpha = p.map(index, 0, 8, 0.08, 0.02);
-        p.noStroke();
-        p.fill(128 + index * 7, 20, 14 + index * 3, alpha);
-        p.ellipse(p.width * 0.5, glowY, p.width * 1.18, p.height * 0.2);
-    }
-
-    p.fill((state.params.hueShift + 28) % 360, 24, 98, 0.08);
-    p.circle(p.width * 0.18, p.height * 0.2, Math.min(p.width, p.height) * 0.17);
-    p.fill((state.params.hueShift + 164) % 360, 18, 95, 0.08);
-    p.circle(p.width * 0.82, p.height * 0.22, Math.min(p.width, p.height) * 0.15);
+    p.background(0);
 }
 
 function drawGuides(p) {
-    if (!state.params.showGuides || !state.vertices.length) {
+    if (!state.vertices.length || !state.palette.length) {
         return;
     }
 
     p.push();
     p.noFill();
-    p.stroke((state.params.hueShift + 26) % 360, 18, 84, 0.22);
+    p.stroke(0, 0, 100, 0.16);
     p.strokeWeight(1);
     p.beginShape();
     for (const vertex of state.vertices) {
-        p.vertex(vertex.x, vertex.y);
+        const displayPoint = toDisplayPoint(vertex);
+        p.vertex(displayPoint.x, displayPoint.y);
     }
     p.endShape(p.CLOSE);
 
     for (let index = 0; index < state.vertices.length; index += 1) {
-        const vertex = state.vertices[index];
-        p.fill((state.params.hueShift + (index / state.vertices.length) * 220) % 360, 30, 96, 0.9);
+        const vertex = toDisplayPoint(state.vertices[index]);
+        const color = state.palette[index];
+        p.fill(color.hue, color.saturation, color.brightness, color.guideFillAlpha);
         p.noStroke();
-        p.circle(vertex.x, vertex.y, 10);
+        p.circle(vertex.x, vertex.y, isCompactViewport() ? 7 : 8.5);
     }
     p.pop();
 }
@@ -297,11 +258,12 @@ function drawCurrentPoint(p) {
     }
 
     p.push();
+    const displayPoint = toDisplayPoint(state.currentPoint);
     p.noStroke();
-    p.fill((state.params.hueShift + 54) % 360, 30, 100, 0.16);
-    p.circle(state.currentPoint.x, state.currentPoint.y, isMobileViewport ? 10 : 14);
-    p.fill((state.params.hueShift + 54) % 360, 24, 100, 0.95);
-    p.circle(state.currentPoint.x, state.currentPoint.y, isMobileViewport ? 4 : 5.2);
+    p.fill(0, 0, 100, 0.18);
+    p.circle(displayPoint.x, displayPoint.y, isCompactViewport() ? 8 : 10);
+    p.fill(0, 0, 100, 0.96);
+    p.circle(displayPoint.x, displayPoint.y, isCompactViewport() ? 3 : 4);
     p.pop();
 }
 
@@ -323,6 +285,24 @@ function buildPolygonVertices(width, height, count) {
     return vertices;
 }
 
+function buildPalette(count) {
+    const family = PALETTE_FAMILIES[Math.floor(Math.random() * PALETTE_FAMILIES.length)];
+    const baseHue = Math.random() * 360;
+
+    return Array.from({ length: count }, (_, index) => ({
+        hue: (baseHue + (index / count) * 360) % 360,
+        saturation: family.saturation,
+        brightness: family.brightness,
+        fillStyle: hsbToRgbaString(
+            (baseHue + (index / count) * 360) % 360,
+            family.saturation,
+            family.brightness,
+            family.alpha
+        ),
+        guideFillAlpha: family.guideFillAlpha,
+    }));
+}
+
 function randomStartPoint(width, height) {
     return {
         x: width * (0.2 + Math.random() * 0.6),
@@ -330,61 +310,107 @@ function randomStartPoint(width, height) {
     };
 }
 
+function getSelectedRatio() {
+    return RATIO_OPTIONS[state.params.ratioIndex] || defaultRatio || RATIO_OPTIONS[4];
+}
+
+function getSelectedRatioLabel() {
+    return getSelectedRatio().label;
+}
+
+function getSelectedRatioValue() {
+    return getSelectedRatio().value;
+}
+
 function pickTargetIndex() {
-    const candidateIndices = [];
-
-    for (let index = 0; index < state.vertices.length; index += 1) {
-        if (!violatesRule(index)) {
-            candidateIndices.push(index);
-        }
-    }
-
-    if (!candidateIndices.length) {
-        for (let index = 0; index < state.vertices.length; index += 1) {
-            if (index !== state.previousVertex) {
-                candidateIndices.push(index);
-            }
-        }
-    }
-
-    if (!candidateIndices.length) {
-        return Math.floor(Math.random() * state.vertices.length);
-    }
-
-    const choice = Math.floor(Math.random() * candidateIndices.length);
-    return candidateIndices[choice];
+    return Math.floor(Math.random() * state.vertices.length);
 }
 
-function violatesRule(index) {
-    if (state.previousVertex === null || state.params.rule === "free") {
-        return false;
+function getPointBudget(vertices) {
+    if (isCompactViewport()) {
+        return 22000 + (vertices - 3) * 2400;
     }
 
-    if (state.params.rule === "no-repeat") {
-        return index === state.previousVertex;
-    }
-
-    if (state.params.rule === "no-adjacent") {
-        const count = state.vertices.length;
-        const previous = state.previousVertex;
-        const next = (previous + 1) % count;
-        const prior = (previous - 1 + count) % count;
-        return index === previous || index === next || index === prior;
-    }
-
-    return false;
+    return 42000 + (vertices - 3) * 3800;
 }
 
-function withResponsiveLimits(params) {
-    const next = { ...params };
-    if (isMobileViewport) {
-        next.stepsPerFrame = Math.min(next.stepsPerFrame, 2600);
-    }
-    return next;
+function getTargetDurationMs() {
+    return isCompactViewport() ? 2600 : 2200;
 }
 
 function getStageSize(host) {
     const width = Math.max(320, Math.floor(host.clientWidth));
-    const height = window.innerWidth < 720 ? Math.max(430, Math.floor(width * 1.04)) : Math.max(620, Math.floor(width * 0.82));
+    const headerHeight = document.querySelector(".site-header")?.getBoundingClientRect().height
+        ?? (window.innerWidth < 720 ? 108 : 69);
+    const footerHeight = document.querySelector(".site-footer")?.getBoundingClientRect().height
+        ?? (window.innerWidth < 720 ? 124 : 76);
+    const main = host.closest(".chaos-main");
+    const mainStyles = main ? window.getComputedStyle(main) : null;
+    const verticalPadding = mainStyles
+        ? parseFloat(mainStyles.paddingTop || "0") + parseFloat(mainStyles.paddingBottom || "0")
+        : 0;
+    const availableHeight = Math.floor(window.innerHeight - headerHeight - footerHeight - verticalPadding - 6);
+    const fallbackHeight = window.innerWidth < 960
+        ? Math.max(430, Math.floor(width * 1.04))
+        : Math.max(420, availableHeight);
+    const height = Math.max(360, Math.floor(host.clientHeight || fallbackHeight));
     return { width, height };
+}
+
+function isCompactViewport() {
+    return window.innerWidth < 960;
+}
+
+function getChaosRenderScale() {
+    return isCompactViewport() ? 0.62 : 0.74;
+}
+
+function toDisplayPoint(point) {
+    if (!state.graphics) {
+        return point;
+    }
+
+    const scaleX = state.displaySize.width / state.graphics.width;
+    const scaleY = state.displaySize.height / state.graphics.height;
+    return {
+        x: point.x * scaleX,
+        y: point.y * scaleY,
+    };
+}
+
+function hsbToRgbaString(hue, saturation, brightness, alpha) {
+    const s = saturation / 100;
+    const v = brightness / 100;
+    const chroma = v * s;
+    const hueSection = ((hue % 360) + 360) % 360 / 60;
+    const x = chroma * (1 - Math.abs((hueSection % 2) - 1));
+    let red = 0;
+    let green = 0;
+    let blue = 0;
+
+    if (hueSection < 1) {
+        red = chroma;
+        green = x;
+    } else if (hueSection < 2) {
+        red = x;
+        green = chroma;
+    } else if (hueSection < 3) {
+        green = chroma;
+        blue = x;
+    } else if (hueSection < 4) {
+        green = x;
+        blue = chroma;
+    } else if (hueSection < 5) {
+        red = x;
+        blue = chroma;
+    } else {
+        red = chroma;
+        blue = x;
+    }
+
+    const match = v - chroma;
+    const r = Math.round((red + match) * 255);
+    const g = Math.round((green + match) * 255);
+    const b = Math.round((blue + match) * 255);
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
