@@ -1,10 +1,11 @@
 # Section Workflows
 
 Add a new fun project
-1. Copy `fun/projects/template/` into `fun/projects/<slug>/`.
-2. Keep all HTML, CSS, and JS local to that new directory.
-3. Add one card on `/fun/` linking to the new page.
-4. If the project needs shared utilities, add them only after a second project needs the same thing.
+1. Create a new `fun/projects/<slug>/` directory with local `index.html`, `style.css`, and `script.js`.
+2. If the project uses p5.js or Processing, consult `skills/p5js-processing/SKILL.md` first and keep the runtime plus any assets in that same directory unless they are intentionally shared.
+3. Keep all project-specific HTML, CSS, JS, and assets local to that directory.
+4. Add one card on `/fun/` linking to the new page.
+5. If the project needs shared utilities, add them only after a second project needs the same thing.
 
 Add a new essay theme
 1. Create `essays/<theme>/index.html`.
