@@ -5,9 +5,11 @@ document.addEventListener("DOMContentLoaded", () => {
     initMatrixRain();
     initLoveLetters();
     initWorkLedgerAccordion();
+    initProjectCardLinks();
     initWritingLinks();
     initWritingPage();
     initWorkStoryPage();
+    initProjectMarkdownPage();
 });
 
 function setCurrentYear() {
@@ -161,6 +163,43 @@ function initWorkLedgerAccordion() {
     mobileQuery.addEventListener("change", syncLedgerState);
 }
 
+function initProjectCardLinks() {
+    const cards = document.querySelectorAll("[data-project-card-link]");
+    if (!cards.length) {
+        return;
+    }
+
+    cards.forEach((card) => {
+        const href = card.getAttribute("data-project-card-link");
+        if (!href) {
+            return;
+        }
+
+        const isInteractiveTarget = (target) => {
+            if (!(target instanceof Element)) {
+                return false;
+            }
+            const interactiveParent = target.closest("a, button, input, select, textarea, summary, [role='button'], [role='link']");
+            return Boolean(interactiveParent && interactiveParent !== card);
+        };
+
+        card.addEventListener("click", (event) => {
+            if (isInteractiveTarget(event.target)) {
+                return;
+            }
+            window.location.href = href;
+        });
+
+        card.addEventListener("keydown", (event) => {
+            if (event.key !== "Enter" && event.key !== " ") {
+                return;
+            }
+            event.preventDefault();
+            window.location.href = href;
+        });
+    });
+}
+
 async function initWritingLinks() {
     const slots = document.querySelectorAll("[data-writing-slot]");
     if (!slots.length) {
@@ -286,6 +325,35 @@ async function initWorkStoryPage() {
     }
 }
 
+async function initProjectMarkdownPage() {
+    const root = document.querySelector("[data-project-markdown-page]");
+    if (!root) {
+        return;
+    }
+
+    const proseTarget = root.querySelector("[data-project-markdown-prose]");
+    const storyFile = root.getAttribute("data-story-file");
+    const stripTitle = root.hasAttribute("data-strip-leading-title");
+
+    if (!proseTarget || !storyFile) {
+        return;
+    }
+
+    try {
+        const version = encodeURIComponent(getSiteVersion());
+        const response = await fetch(`${storyFile}?v=${version}`, { cache: "no-store" });
+        if (!response.ok) {
+            throw new Error("Could not load project markdown.");
+        }
+
+        const markdown = await response.text();
+        proseTarget.innerHTML = renderMarkdown(stripTitle ? stripLeadingTitle(markdown) : markdown);
+    } catch (error) {
+        console.error(error);
+        proseTarget.innerHTML = `<p>${escapeHtml("Could not load project writing.")}</p>`;
+    }
+}
+
 function showWritingPageError(message) {
     const titleTarget = document.querySelector("[data-writing-title]");
     const metaTarget = document.querySelector("[data-writing-meta]");
@@ -327,6 +395,7 @@ function renderMarkdown(markdown) {
     const html = [];
     let paragraph = [];
     let listType = null;
+    let codeBlock = null;
 
     const flushParagraph = () => {
         if (!paragraph.length) {
@@ -344,8 +413,36 @@ function renderMarkdown(markdown) {
         listType = null;
     };
 
+    const flushCodeBlock = () => {
+        if (!codeBlock) {
+            return;
+        }
+        const languageClass = codeBlock.language ? ` class="language-${escapeHtml(codeBlock.language)}"` : "";
+        html.push(`<pre><code${languageClass}>${escapeHtml(codeBlock.lines.join("\n"))}</code></pre>`);
+        codeBlock = null;
+    };
+
     lines.forEach((line) => {
         const trimmed = line.trim();
+
+        if (codeBlock) {
+            if (/^```/.test(trimmed)) {
+                flushCodeBlock();
+            } else {
+                codeBlock.lines.push(line);
+            }
+            return;
+        }
+
+        if (/^```/.test(trimmed)) {
+            flushParagraph();
+            closeList();
+            codeBlock = {
+                language: trimmed.replace(/^```/, "").trim(),
+                lines: [],
+            };
+            return;
+        }
 
         if (!trimmed) {
             flushParagraph();
@@ -403,6 +500,7 @@ function renderMarkdown(markdown) {
 
     flushParagraph();
     closeList();
+    flushCodeBlock();
 
     return html.join("\n");
 }
