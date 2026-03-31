@@ -1,34 +1,51 @@
-const siteVersion = document.querySelector('meta[name="site-version"]')?.content || "dev";
-const isMobileViewport = window.matchMedia("(max-width: 720px)").matches;
+const PHASE_PERIOD = Math.PI;
 const TAU = Math.PI * 2;
+const AUTO_DRIFT_SPEED = 0.18;
+const PHASE_UI_UPDATE_INTERVAL = 4;
+const PALETTE_SIZE = 512;
 
-const DEFAULTS = {
-    phase: 1.85,
-    autoPlay: true,
-    driftSpeed: 0.18,
-    zoom: isMobileViewport ? 1.45 : 1.85,
-    iterations: isMobileViewport ? 180 : 220,
-    paletteShift: 0.18,
+const DEFAULT_PARAMS = {
+    phase: 0.925,
+    radiusX: 0.7885,
+    radiusY: 1.0,
+};
+
+const DEFAULT_VIEW = {
+    zoom: window.innerWidth < 960 ? 1.45 : 1.85,
+    center: { x: 0, y: 0 },
+};
+
+const ZOOM_LIMITS = {
+    min: 0.6,
+    max: 10,
 };
 
 const state = {
-    params: { ...DEFAULTS },
-    center: { x: 0, y: 0 },
-    controlsOpen: false,
-    needsReadoutSync: true,
+    params: { ...DEFAULT_PARAMS },
+    view: {
+        zoom: DEFAULT_VIEW.zoom,
+        center: { ...DEFAULT_VIEW.center },
+    },
+    phaseScrubbing: false,
+    phaseDirection: 1,
+    frameCount: 0,
+    needsRender: true,
+    dragActive: false,
+    displaySize: { width: 0, height: 0 },
+    renderSize: { width: 0, height: 0 },
+    host: null,
+    canvas: null,
+    context: null,
+    imageData: null,
+    palette: buildPalette(PALETTE_SIZE),
+    resizeObserver: null,
+    rafId: 0,
+    lastTick: 0,
 };
 
 const elements = {
     stage: document.getElementById("julia-stage"),
-    constantReadout: document.getElementById("constant-readout"),
-    centerReadout: document.getElementById("center-readout"),
-    zoomReadout: document.getElementById("zoom-readout"),
-    detailReadout: document.getElementById("detail-readout"),
-    hudConstant: document.getElementById("hud-constant"),
-    hudZoom: document.getElementById("hud-zoom"),
-    controlsShell: document.querySelector("[data-controls-shell]"),
-    controlsToggle: document.querySelector("[data-controls-toggle]"),
-    resetButton: document.querySelector("[data-reset-controls]"),
+    resetButton: document.querySelector("[data-reset-view]"),
 };
 
 const outputNodes = new Map(
@@ -40,55 +57,69 @@ const controlNodes = new Map(
 );
 
 bindControls();
+createRenderer();
 updateControlUI();
-updateReadout();
-createSketch();
+renderFrame();
+startAnimation();
+
 window.addEventListener("pageshow", () => {
     updateControlUI();
-    updateReadout();
+    state.needsRender = true;
+});
+
+window.addEventListener("beforeunload", () => {
+    if (state.rafId) {
+        window.cancelAnimationFrame(state.rafId);
+    }
+    state.resizeObserver?.disconnect();
 });
 
 function bindControls() {
     controlNodes.forEach((node, name) => {
-        const eventName = node.type === "checkbox" ? "change" : "input";
-        node.addEventListener(eventName, () => {
-            state.params[name] = readControlValue(node);
+        node.addEventListener("input", () => {
+            state.params[name] = Number(node.value);
+            if (name === "phase") {
+                if (state.params.phase <= 0.001) {
+                    state.phaseDirection = 1;
+                } else if (state.params.phase >= PHASE_PERIOD - 0.001) {
+                    state.phaseDirection = -1;
+                }
+            }
             updateControlOutput(name);
-            state.needsReadoutSync = true;
+            state.needsRender = true;
         });
     });
 
-    elements.controlsToggle?.addEventListener("click", () => {
-        state.controlsOpen = !state.controlsOpen;
-        elements.controlsShell?.classList.toggle("controls-open", state.controlsOpen);
-        elements.controlsToggle.textContent = state.controlsOpen ? "Close controls" : "Open controls";
+    const phaseNode = controlNodes.get("phase");
+    phaseNode?.addEventListener("pointerdown", () => {
+        state.phaseScrubbing = true;
+    });
+    phaseNode?.addEventListener("focus", () => {
+        state.phaseScrubbing = true;
+    });
+    phaseNode?.addEventListener("blur", () => {
+        state.phaseScrubbing = false;
+    });
+    phaseNode?.addEventListener("change", () => {
+        state.phaseScrubbing = false;
+    });
+    window.addEventListener("pointerup", () => {
+        state.phaseScrubbing = false;
+        state.dragActive = false;
     });
 
     elements.resetButton?.addEventListener("click", () => {
-        state.params = { ...DEFAULTS };
-        state.center = { x: 0, y: 0 };
-        updateControlUI();
-        updateReadout();
-        state.needsReadoutSync = false;
+        state.view = {
+            zoom: DEFAULT_VIEW.zoom,
+            center: { ...DEFAULT_VIEW.center },
+        };
+        state.needsRender = true;
     });
-}
-
-function readControlValue(node) {
-    if (node.type === "checkbox") {
-        return node.checked;
-    }
-
-    return Number(node.value);
 }
 
 function updateControlUI() {
     controlNodes.forEach((node, name) => {
-        const value = state.params[name];
-        if (node.type === "checkbox") {
-            node.checked = Boolean(value);
-        } else {
-            node.value = `${value}`;
-        }
+        node.value = `${state.params[name]}`;
         updateControlOutput(name);
     });
 }
@@ -102,15 +133,10 @@ function updateControlOutput(name) {
     const value = state.params[name];
     switch (name) {
         case "phase":
-            output.textContent = `${Number(value).toFixed(2)} rad`;
+            output.textContent = `${(value / Math.PI).toFixed(2)}π`;
             break;
-        case "zoom":
-            output.textContent = `${Number(value).toFixed(2)}x`;
-            break;
-        case "driftSpeed":
-            output.textContent = Number(value).toFixed(2);
-            break;
-        case "paletteShift":
+        case "radiusX":
+        case "radiusY":
             output.textContent = Number(value).toFixed(3);
             break;
         default:
@@ -119,139 +145,310 @@ function updateControlOutput(name) {
     }
 }
 
-function updateReadout() {
-    const constant = getJuliaConstant();
-    elements.constantReadout.textContent = formatComplex(constant);
-    elements.centerReadout.textContent = `${state.center.x.toFixed(3)}, ${state.center.y.toFixed(3)}`;
-    elements.zoomReadout.textContent = `${state.params.zoom.toFixed(2)}x`;
-    elements.detailReadout.textContent = `${Math.round(state.params.iterations)}`;
-    elements.hudConstant.textContent = `c = ${formatComplex(constant)}`;
-    elements.hudZoom.textContent = `${state.params.zoom.toFixed(2)}x`;
+function createRenderer() {
+    const host = elements.stage;
+    if (!host) {
+        return;
+    }
+
+    const canvas = document.createElement("canvas");
+    canvas.setAttribute("aria-hidden", "true");
+    host.innerHTML = "";
+    host.append(canvas);
+
+    const context = canvas.getContext("2d", { alpha: false });
+    if (!context) {
+        renderFallbackMessage(host);
+        return;
+    }
+
+    context.imageSmoothingEnabled = false;
+    state.host = host;
+    state.canvas = canvas;
+    state.context = context;
+
+    syncCanvasSize();
+    bindCanvasInteractions(canvas);
+
+    if ("ResizeObserver" in window) {
+        state.resizeObserver = new ResizeObserver(() => {
+            syncCanvasSize();
+            state.needsRender = true;
+        });
+        state.resizeObserver.observe(host);
+    } else {
+        window.addEventListener("resize", () => {
+            syncCanvasSize();
+            state.needsRender = true;
+        });
+    }
 }
 
-function createSketch() {
-    const sketch = (p) => {
-        let host;
-        let juliaShader;
+function bindCanvasInteractions(canvas) {
+    canvas.addEventListener("pointerdown", (event) => {
+        if (!state.canvas) {
+            return;
+        }
 
-        p.preload = () => {
-            juliaShader = p.loadShader(
-                `julia.vert?v=${encodeURIComponent(siteVersion)}`,
-                `julia.frag?v=${encodeURIComponent(siteVersion)}`
-            );
-        };
+        state.dragActive = true;
+        state.lastPointerX = event.clientX;
+        state.lastPointerY = event.clientY;
+        canvas.setPointerCapture?.(event.pointerId);
+        event.preventDefault();
+    });
 
-        p.setup = () => {
-            host = elements.stage;
-            const { width, height } = getStageSize(host);
-            const canvas = p.createCanvas(width, height, p.WEBGL);
-            canvas.parent(host);
-            p.pixelDensity(1);
-            p.noStroke();
-            p.frameRate(36);
-        };
+    canvas.addEventListener("pointermove", (event) => {
+        if (!state.dragActive) {
+            return;
+        }
 
-        p.draw = () => {
-            if (state.params.autoPlay) {
-                state.params.phase = wrapPhase(state.params.phase + state.params.driftSpeed * 0.01);
-                const phaseNode = controlNodes.get("phase");
-                if (phaseNode) {
-                    phaseNode.value = `${state.params.phase}`;
+        const dx = event.clientX - state.lastPointerX;
+        const dy = event.clientY - state.lastPointerY;
+        state.lastPointerX = event.clientX;
+        state.lastPointerY = event.clientY;
+
+        const aspect = state.displaySize.width / Math.max(state.displaySize.height, 1);
+        state.view.center.x -= (dx / Math.max(state.displaySize.width, 1)) * (2 / state.view.zoom) * aspect;
+        state.view.center.y += (dy / Math.max(state.displaySize.height, 1)) * (2 / state.view.zoom);
+        state.needsRender = true;
+        event.preventDefault();
+    });
+
+    canvas.addEventListener("pointerup", () => {
+        state.dragActive = false;
+    });
+
+    canvas.addEventListener("pointercancel", () => {
+        state.dragActive = false;
+    });
+
+    canvas.addEventListener("wheel", (event) => {
+        event.preventDefault();
+        const factor = event.deltaY > 0 ? 0.92 : 1.08;
+        state.view.zoom = clamp(state.view.zoom * factor, ZOOM_LIMITS.min, ZOOM_LIMITS.max);
+        state.needsRender = true;
+    }, { passive: false });
+}
+
+function syncCanvasSize() {
+    if (!state.host || !state.canvas || !state.context) {
+        return;
+    }
+
+    const displaySize = getStageSize(state.host);
+    const renderSize = getRenderSize(displaySize.width, displaySize.height);
+
+    state.displaySize = displaySize;
+
+    if (state.renderSize.width === renderSize.width && state.renderSize.height === renderSize.height) {
+        return;
+    }
+
+    state.renderSize = renderSize;
+    state.canvas.width = renderSize.width;
+    state.canvas.height = renderSize.height;
+    state.context.imageSmoothingEnabled = false;
+    state.imageData = state.context.createImageData(renderSize.width, renderSize.height);
+}
+
+function startAnimation() {
+    state.lastTick = performance.now();
+
+    const tick = (now) => {
+        const targetFrameTime = 1000 / (isCompactViewport() ? 22 : 28);
+        const elapsed = now - state.lastTick;
+
+        if (elapsed >= targetFrameTime) {
+            const deltaSeconds = Math.min(0.05, elapsed / 1000);
+            state.lastTick = now;
+
+            if (!state.phaseScrubbing) {
+                state.params.phase = advancePhase(state.params.phase, AUTO_DRIFT_SPEED * deltaSeconds);
+                if (state.frameCount % PHASE_UI_UPDATE_INTERVAL === 0) {
+                    const phaseNode = controlNodes.get("phase");
+                    if (phaseNode) {
+                        phaseNode.value = `${state.params.phase}`;
+                    }
+                    updateControlOutput("phase");
                 }
-                updateControlOutput("phase");
-                state.needsReadoutSync = true;
+                state.needsRender = true;
             }
 
-            const constant = getJuliaConstant();
-
-            p.shader(juliaShader);
-            juliaShader.setUniform("u_resolution", [p.width, p.height]);
-            juliaShader.setUniform("u_center", [state.center.x, state.center.y]);
-            juliaShader.setUniform("u_zoom", state.params.zoom);
-            juliaShader.setUniform("u_c", [constant.x, constant.y]);
-            juliaShader.setUniform("u_iterations", state.params.iterations);
-            juliaShader.setUniform("u_paletteShift", state.params.paletteShift);
-            juliaShader.setUniform("u_time", p.millis() / 1000);
-            p.quad(-1, -1, 1, -1, 1, 1, -1, 1);
-
-            if (state.needsReadoutSync || p.frameCount % 8 === 0) {
-                updateReadout();
-                state.needsReadoutSync = false;
-            }
-        };
-
-        p.mouseDragged = () => {
-            if (!pointerInsideCanvas(p)) {
-                return;
+            if (state.needsRender) {
+                renderFrame();
             }
 
-            const aspect = p.width / p.height;
-            state.center.x -= ((p.mouseX - p.pmouseX) / p.width) * (2 / state.params.zoom) * aspect;
-            state.center.y += ((p.mouseY - p.pmouseY) / p.height) * (2 / state.params.zoom);
-            state.needsReadoutSync = true;
-            return false;
-        };
+            state.frameCount += 1;
+        }
 
-        p.mouseWheel = (event) => {
-            if (!pointerInsideCanvas(p)) {
-                return true;
-            }
-
-            const factor = event.delta > 0 ? 0.92 : 1.08;
-            state.params.zoom = clamp(state.params.zoom * factor, 0.6, 8);
-            const zoomNode = controlNodes.get("zoom");
-            if (zoomNode) {
-                zoomNode.value = `${state.params.zoom}`;
-            }
-            updateControlOutput("zoom");
-            state.needsReadoutSync = true;
-            return false;
-        };
-
-        p.windowResized = () => {
-            if (!host) {
-                return;
-            }
-            const { width, height } = getStageSize(host);
-            p.resizeCanvas(width, height);
-        };
+        state.rafId = window.requestAnimationFrame(tick);
     };
 
-    new p5(sketch);
+    state.rafId = window.requestAnimationFrame(tick);
+}
+
+function renderFrame() {
+    if (!state.context || !state.imageData) {
+        return;
+    }
+
+    const width = state.renderSize.width;
+    const height = state.renderSize.height;
+    if (!width || !height) {
+        return;
+    }
+
+    const pixels = state.imageData.data;
+    const palette = state.palette;
+    const iterations = getAdaptiveIterations(state.view.zoom);
+    const constant = getJuliaConstant();
+    const aspect = state.displaySize.width / Math.max(state.displaySize.height, 1);
+    const invZoom = 1 / state.view.zoom;
+    const escapeRadiusSquared = 16;
+    let offset = 0;
+
+    for (let y = 0; y < height; y += 1) {
+        const imaginary = state.view.center.y + (1 - ((y + 0.5) / height) * 2) * invZoom;
+
+        for (let x = 0; x < width; x += 1) {
+            let zx = state.view.center.x + ((((x + 0.5) / width) * 2) - 1) * aspect * invZoom;
+            let zy = imaginary;
+            let iteration = 0;
+            let magnitudeSquared = 0;
+
+            while (iteration < iterations) {
+                const zxSquared = zx * zx;
+                const zySquared = zy * zy;
+                magnitudeSquared = zxSquared + zySquared;
+                if (magnitudeSquared > escapeRadiusSquared) {
+                    break;
+                }
+
+                zy = (2 * zx * zy) + constant.y;
+                zx = (zxSquared - zySquared) + constant.x;
+                iteration += 1;
+            }
+
+            if (iteration >= iterations) {
+                pixels[offset] = 8;
+                pixels[offset + 1] = 8;
+                pixels[offset + 2] = 12;
+                pixels[offset + 3] = 255;
+                offset += 4;
+                continue;
+            }
+
+            const magnitude = Math.sqrt(Math.max(magnitudeSquared, 1.000001));
+            const smoothIteration = iteration + 1 - (Math.log(Math.log(magnitude)) / Math.LN2);
+            const t = clamp(smoothIteration / iterations, 0, 1);
+            const paletteIndex = Math.min(PALETTE_SIZE - 1, Math.floor(t * (PALETTE_SIZE - 1))) * 4;
+
+            pixels[offset] = palette[paletteIndex];
+            pixels[offset + 1] = palette[paletteIndex + 1];
+            pixels[offset + 2] = palette[paletteIndex + 2];
+            pixels[offset + 3] = 255;
+            offset += 4;
+        }
+    }
+
+    state.context.putImageData(state.imageData, 0, 0);
+    state.needsRender = false;
 }
 
 function getJuliaConstant() {
+    const theta = state.params.phase * 2;
     return {
-        x: 0.7885 * Math.cos(state.params.phase),
-        y: -Math.sin(state.params.phase),
+        x: state.params.radiusX * Math.cos(theta),
+        y: -state.params.radiusY * Math.sin(theta),
     };
 }
 
-function formatComplex(value) {
-    const real = value.x.toFixed(3);
-    const imagAbs = Math.abs(value.y).toFixed(3);
-    const sign = value.y >= 0 ? "+" : "-";
-    return `${real} ${sign} ${imagAbs}i`;
+function getAdaptiveIterations(zoom) {
+    return Math.round(clamp(54 + 24 * Math.log2(zoom + 1), 54, isCompactViewport() ? 96 : 132));
 }
 
-function wrapPhase(value) {
-    if (value < 0) {
-        return value + TAU;
+function advancePhase(value, delta) {
+    let nextValue = value + delta * state.phaseDirection;
+
+    if (nextValue >= PHASE_PERIOD) {
+        nextValue = PHASE_PERIOD - (nextValue - PHASE_PERIOD);
+        state.phaseDirection = -1;
+    } else if (nextValue <= 0) {
+        nextValue = Math.abs(nextValue);
+        state.phaseDirection = 1;
     }
-    if (value > TAU) {
-        return value - TAU;
-    }
-    return value;
+
+    return clamp(nextValue, 0, PHASE_PERIOD);
 }
 
 function getStageSize(host) {
     const width = Math.max(320, Math.floor(host.clientWidth));
-    const height = window.innerWidth < 720 ? Math.max(430, Math.floor(width * 1.02)) : Math.max(620, Math.floor(width * 0.84));
+    const headerHeight = document.querySelector(".site-header")?.getBoundingClientRect().height
+        ?? (window.innerWidth < 720 ? 108 : 69);
+    const footerHeight = document.querySelector(".site-footer")?.getBoundingClientRect().height
+        ?? (window.innerWidth < 720 ? 124 : 76);
+    const main = host.closest(".julia-main");
+    const mainStyles = main ? window.getComputedStyle(main) : null;
+    const verticalPadding = mainStyles
+        ? parseFloat(mainStyles.paddingTop || "0") + parseFloat(mainStyles.paddingBottom || "0")
+        : 0;
+    const availableHeight = Math.floor(window.innerHeight - headerHeight - footerHeight - verticalPadding - 6);
+    const fallbackHeight = window.innerWidth < 960
+        ? Math.max(430, Math.floor(width * 1.04))
+        : Math.max(420, availableHeight);
+    const height = Math.max(360, Math.floor(host.clientHeight || fallbackHeight));
     return { width, height };
 }
 
-function pointerInsideCanvas(p) {
-    return p.mouseX >= 0 && p.mouseX <= p.width && p.mouseY >= 0 && p.mouseY <= p.height;
+function getRenderSize(displayWidth, displayHeight) {
+    const baseScale = isCompactViewport() ? 0.42 : 0.5;
+    const maxPixels = isCompactViewport() ? 130000 : 210000;
+    let width = Math.max(220, Math.floor(displayWidth * baseScale));
+    let height = Math.max(220, Math.floor(displayHeight * baseScale));
+
+    const pixelCount = width * height;
+    if (pixelCount > maxPixels) {
+        const scale = Math.sqrt(maxPixels / pixelCount);
+        width = Math.max(220, Math.floor(width * scale));
+        height = Math.max(220, Math.floor(height * scale));
+    }
+
+    return { width, height };
+}
+
+function buildPalette(size) {
+    const palette = new Uint8ClampedArray(size * 4);
+    const a = [0.06, 0.07, 0.10];
+    const b = [0.64, 0.42, 0.28];
+    const c = [1.0, 0.85, 0.68];
+    const d = [0.12, 0.18, 0.24];
+
+    for (let index = 0; index < size; index += 1) {
+        const t = index / Math.max(size - 1, 1);
+        const offset = index * 4;
+        palette[offset] = toByte(a[0] + b[0] * Math.cos(TAU * (c[0] * t + d[0])));
+        palette[offset + 1] = toByte(a[1] + b[1] * Math.cos(TAU * (c[1] * t + d[1])));
+        palette[offset + 2] = toByte(a[2] + b[2] * Math.cos(TAU * (c[2] * t + d[2])));
+        palette[offset + 3] = 255;
+    }
+
+    return palette;
+}
+
+function toByte(value) {
+    return Math.round(clamp(value, 0, 1) * 255);
+}
+
+function renderFallbackMessage(host) {
+    host.innerHTML = `
+        <div class="canvas-fallback" role="status">
+            The Julia renderer could not start on this browser.
+        </div>
+    `;
+}
+
+function isCompactViewport() {
+    return window.innerWidth < 960;
 }
 
 function clamp(value, min, max) {

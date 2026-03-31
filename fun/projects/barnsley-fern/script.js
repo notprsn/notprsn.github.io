@@ -1,114 +1,79 @@
-const X_MIN = -2.182;
-const X_MAX = 2.6558;
-const Y_MIN = 0;
-const Y_MAX = 9.9983;
-
-const PRESETS = {
-    forest: {
-        pointsPerFrame: 900,
-        maxPoints: 120000,
-        pointWeight: 1.1,
-        scale: 0.96,
-        margin: 0.12,
-        autoCycle: true,
-        cycleSeconds: 2.8,
-        glow: 0.18,
-        palette: [
-            [126, 56, 95],
-            [138, 42, 92],
-            [44, 68, 96],
-            [92, 36, 100],
+const FERN_TYPES = [
+    {
+        label: "Classic",
+        totalPointsDesktop: 140000,
+        totalPointsMobile: 84000,
+        durationDesktop: 4400,
+        durationMobile: 5000,
+        stroke: [120, 52, 96],
+        transforms: [
+            { role: "stem", weight: 0.01, a: 0, b: 0, c: 0, d: 0.16, e: 0, f: 0 },
+            { role: "apex", weight: 0.85, a: 0.85, b: 0.04, c: -0.04, d: 0.85, e: 0, f: 1.6 },
+            { role: "left", weight: 0.07, a: 0.2, b: -0.26, c: 0.23, d: 0.22, e: 0, f: 1.6 },
+            { role: "right", weight: 0.07, a: -0.15, b: 0.28, c: 0.26, d: 0.24, e: 0, f: 0.44 },
         ],
-        atmosphereHue: 136,
-        accentHue: 92,
     },
-    dusk: {
-        pointsPerFrame: 820,
-        maxPoints: 110000,
-        pointWeight: 1,
-        scale: 0.94,
-        margin: 0.13,
-        autoCycle: true,
-        cycleSeconds: 2.2,
-        glow: 0.22,
-        palette: [
-            [164, 48, 100],
-            [186, 34, 96],
-            [212, 38, 92],
-            [44, 40, 100],
+    {
+        label: "Bushy",
+        totalPointsDesktop: 148000,
+        totalPointsMobile: 90000,
+        durationDesktop: 4500,
+        durationMobile: 5100,
+        stroke: [118, 50, 96],
+        transforms: [
+            { role: "stem", weight: 0.02, a: 0, b: 0, c: 0, d: 0.18, e: 0, f: 0 },
+            { role: "apex", weight: 0.8, a: 0.82, b: 0.02, c: -0.02, d: 0.87, e: 0, f: 1.62 },
+            { role: "left", weight: 0.09, a: 0.28, b: -0.3, c: 0.24, d: 0.24, e: 0, f: 1.54 },
+            { role: "right", weight: 0.09, a: -0.22, b: 0.31, c: 0.24, d: 0.24, e: 0, f: 0.58 },
         ],
-        atmosphereHue: 202,
-        accentHue: 188,
     },
-    ember: {
-        pointsPerFrame: 1040,
-        maxPoints: 140000,
-        pointWeight: 1.2,
-        scale: 0.98,
-        margin: 0.11,
-        autoCycle: true,
-        cycleSeconds: 1.8,
-        glow: 0.28,
-        palette: [
-            [18, 72, 100],
-            [34, 70, 100],
-            [50, 58, 100],
-            [102, 36, 92],
+    {
+        label: "Tall",
+        totalPointsDesktop: 132000,
+        totalPointsMobile: 80000,
+        durationDesktop: 4300,
+        durationMobile: 4900,
+        stroke: [122, 48, 95],
+        transforms: [
+            { role: "stem", weight: 0.02, a: 0, b: 0, c: 0, d: 0.18, e: 0, f: 0 },
+            { role: "apex", weight: 0.82, a: 0.88, b: 0.01, c: -0.01, d: 0.88, e: 0, f: 1.74 },
+            { role: "left", weight: 0.08, a: 0.18, b: -0.22, c: 0.18, d: 0.19, e: 0, f: 1.54 },
+            { role: "right", weight: 0.08, a: -0.14, b: 0.24, c: 0.18, d: 0.2, e: 0, f: 0.42 },
         ],
-        atmosphereHue: 24,
-        accentHue: 48,
     },
-    frost: {
-        pointsPerFrame: 760,
-        maxPoints: 100000,
-        pointWeight: 0.9,
-        scale: 0.92,
-        margin: 0.14,
-        autoCycle: true,
-        cycleSeconds: 3.4,
-        glow: 0.14,
-        palette: [
-            [176, 28, 100],
-            [192, 30, 96],
-            [146, 18, 100],
-            [210, 14, 92],
+    {
+        label: "Wide",
+        totalPointsDesktop: 144000,
+        totalPointsMobile: 86000,
+        durationDesktop: 4500,
+        durationMobile: 5100,
+        stroke: [124, 50, 96],
+        transforms: [
+            { role: "stem", weight: 0.01, a: 0, b: 0, c: 0, d: 0.16, e: 0, f: 0 },
+            { role: "apex", weight: 0.83, a: 0.84, b: 0.06, c: -0.02, d: 0.84, e: 0, f: 1.56 },
+            { role: "left", weight: 0.08, a: 0.24, b: -0.26, c: 0.26, d: 0.22, e: -0.18, f: 1.5 },
+            { role: "right", weight: 0.08, a: -0.14, b: 0.3, c: 0.24, d: 0.22, e: 0.22, f: 0.5 },
         ],
-        atmosphereHue: 188,
-        accentHue: 170,
     },
-};
+];
 
 const DEFAULT_STATE = {
-    preset: "forest",
-    ...PRESETS.forest,
+    fernTypeIndex: 0,
 };
+const GEOMETRY_CACHE = new Map();
+const POINT_COUNT_SCALE = 0.38;
+const DURATION_SCALE = 0.7;
 
 const state = {
     params: { ...DEFAULT_STATE },
-    controlsOpen: false,
-    paused: false,
-    complete: false,
     resetRequested: false,
     simulation: null,
-    stats: {
-        points: 0,
-        stemShare: 0,
-        frondShare: 0,
-        status: "Growing",
-    },
+    sketch: null,
+    displaySize: { width: 0, height: 0 },
 };
 
 const elements = {
     stage: document.getElementById("fern-stage"),
-    pointCount: document.getElementById("point-count"),
-    stemShare: document.getElementById("stem-share"),
-    frondShare: document.getElementById("frond-share"),
-    statusReadout: document.getElementById("status-readout"),
-    hudPreset: document.getElementById("hud-preset"),
-    hudPoints: document.getElementById("hud-points"),
-    controlsShell: document.querySelector("[data-controls-shell]"),
-    controlsToggle: document.querySelector("[data-controls-toggle]"),
-    runToggle: document.querySelector("[data-run-toggle]"),
     resetButton: document.querySelector("[data-reset-sim]"),
 };
 
@@ -117,52 +82,24 @@ const outputNodes = new Map(
 );
 
 const controlNodes = new Map(
-    Array.from(document.querySelectorAll("input[name], select[name]")).map((node) => [node.name, node])
+    Array.from(document.querySelectorAll("input[name]")).map((node) => [node.name, node])
 );
 
 bindControls();
 updateControlUI();
-updateReadout();
 createSketch();
 
 window.addEventListener("pageshow", () => {
-    if (!state.params.preset || !PRESETS[state.params.preset]) {
-        state.params = { ...DEFAULT_STATE };
-    }
     updateControlUI();
-    updateReadout();
 });
 
 function bindControls() {
     controlNodes.forEach((node, name) => {
-        const eventName = node.tagName === "SELECT" || node.type === "checkbox" ? "change" : "input";
-        node.addEventListener(eventName, () => {
-            const value = readControlValue(node);
-            if (name === "preset") {
-                applyPreset(value);
-                return;
-            }
-
-            state.params[name] = value;
+        node.addEventListener("input", () => {
+            state.params[name] = Number(node.value);
             updateControlOutput(name);
             requestReset();
         });
-    });
-
-    elements.controlsToggle?.addEventListener("click", () => {
-        state.controlsOpen = !state.controlsOpen;
-        elements.controlsShell?.classList.toggle("controls-open", state.controlsOpen);
-        elements.controlsToggle.textContent = state.controlsOpen ? "Close controls" : "Open controls";
-    });
-
-    elements.runToggle?.addEventListener("click", () => {
-        if (state.complete) {
-            requestReset();
-            return;
-        }
-
-        state.paused = !state.paused;
-        updateReadout();
     });
 
     elements.resetButton?.addEventListener("click", () => {
@@ -170,44 +107,9 @@ function bindControls() {
     });
 }
 
-function applyPreset(presetName) {
-    const preset = PRESETS[presetName] || PRESETS.forest;
-    state.params = {
-        ...state.params,
-        ...preset,
-        preset: presetName,
-    };
-    updateControlUI();
-    requestReset();
-}
-
-function requestReset() {
-    state.resetRequested = true;
-    state.paused = false;
-    state.complete = false;
-    updateReadout();
-}
-
-function readControlValue(node) {
-    if (node.type === "checkbox") {
-        return node.checked;
-    }
-
-    if (node.tagName === "SELECT") {
-        return node.value;
-    }
-
-    return Number(node.value);
-}
-
 function updateControlUI() {
     controlNodes.forEach((node, name) => {
-        const value = state.params[name];
-        if (node.type === "checkbox") {
-            node.checked = Boolean(value);
-        } else {
-            node.value = `${value}`;
-        }
+        node.value = `${state.params[name]}`;
         updateControlOutput(name);
     });
 }
@@ -218,33 +120,21 @@ function updateControlOutput(name) {
         return;
     }
 
-    const value = state.params[name];
-    switch (name) {
-        case "pointWeight":
-            output.textContent = Number(value).toFixed(1);
-            break;
-        case "scale":
-        case "margin":
-        case "glow":
-            output.textContent = Number(value).toFixed(2);
-            break;
-        case "cycleSeconds":
-            output.textContent = `${Number(value).toFixed(1)}s`;
-            break;
-        default:
-            output.textContent = `${value}`;
-            break;
+    if (name === "fernTypeIndex") {
+        output.textContent = getCurrentFernType().label;
+        return;
     }
+
+    output.textContent = `${state.params[name]}`;
 }
 
-function updateReadout() {
-    elements.pointCount.textContent = `${state.stats.points}`;
-    elements.stemShare.textContent = `${state.stats.stemShare.toFixed(1)}%`;
-    elements.frondShare.textContent = `${state.stats.frondShare.toFixed(1)}%`;
-    elements.statusReadout.textContent = state.stats.status;
-    elements.hudPreset.textContent = state.params.preset;
-    elements.hudPoints.textContent = `${state.stats.points.toLocaleString()} points`;
-    elements.runToggle.textContent = state.complete ? "Regrow fern" : state.paused ? "Resume growth" : "Pause growth";
+function getCurrentFernType() {
+    return FERN_TYPES[state.params.fernTypeIndex] || FERN_TYPES[0];
+}
+
+function requestReset() {
+    state.resetRequested = true;
+    state.sketch?.loop();
 }
 
 function createSketch() {
@@ -258,7 +148,9 @@ function createSketch() {
             canvas.parent(host);
             p.pixelDensity(1);
             p.colorMode(p.HSB, 360, 100, 100, 1);
-            p.frameRate(36);
+            p.frameRate(isCompactViewport() ? 44 : 50);
+            state.sketch = p;
+            state.displaySize = { width, height };
             createLayer(p);
             resetSimulation(p);
         };
@@ -269,29 +161,25 @@ function createSketch() {
             }
 
             drawBackdrop(p);
-
-            if (!state.paused && !state.complete) {
-                advanceSimulation(p, state.params.pointsPerFrame);
-            } else if (state.params.autoCycle && !state.complete) {
-                syncPaletteCycle(p);
-            }
+            drawGuides(p);
+            advanceSimulation(p);
 
             if (state.simulation?.layer) {
                 p.image(state.simulation.layer, 0, 0, p.width, p.height);
             }
-
-            updateStats();
-            updateReadout();
         };
 
         p.windowResized = () => {
             if (!host) {
                 return;
             }
+
             const { width, height } = getStageSize(host);
             p.resizeCanvas(width, height);
+            state.displaySize = { width, height };
             createLayer(p);
             resetSimulation(p);
+            updateControlUI();
         };
     };
 
@@ -299,137 +187,106 @@ function createSketch() {
 }
 
 function createLayer(p) {
-    const layer = p.createGraphics(p.width, p.height);
+    const renderScale = getFernRenderScale();
+    const layer = p.createGraphics(
+        Math.max(240, Math.round(p.width * renderScale)),
+        Math.max(240, Math.round(p.height * renderScale))
+    );
     layer.pixelDensity(1);
     layer.colorMode(p.HSB, 360, 100, 100, 1);
     layer.clear();
-
-    state.simulation = {
-        x: 0,
-        y: 0,
-        plotted: 0,
-        counts: [0, 0, 0, 0],
-        paletteIndex: 0,
-        lastCycleMillis: p.millis(),
-        layer,
-    };
+    state.simulation = { layer };
 }
 
 function resetSimulation(p) {
-    if (!state.simulation) {
+    if (!state.simulation?.layer) {
         createLayer(p);
     }
 
-    state.simulation.x = 0;
-    state.simulation.y = 0;
-    state.simulation.plotted = 0;
-    state.simulation.counts = [0, 0, 0, 0];
-    state.simulation.paletteIndex = 0;
-    state.simulation.lastCycleMillis = p.millis();
-    state.simulation.layer.clear();
+    const fernType = getCurrentFernType();
+    const layer = state.simulation.layer;
+    layer.clear();
+    const geometry = getFernGeometry(state.params.fernTypeIndex, fernType);
 
-    state.paused = false;
-    state.complete = false;
+    state.simulation = {
+        layer,
+        x: 0,
+        y: 0,
+        plotted: 0,
+        startedAt: p.millis(),
+        totalPoints: getTargetPointCount(fernType),
+        targetDuration: getTargetDurationMs(fernType),
+        bounds: geometry.bounds,
+        guidePoints: geometry.guidePoints,
+        cumulativeWeights: buildCumulativeWeights(fernType.transforms),
+    };
+
     state.resetRequested = false;
     setLayerStyle(p);
+    state.sketch?.loop();
 }
 
 function drawBackdrop(p) {
-    p.background(state.params.atmosphereHue, 28, 8);
-
-    for (let index = 0; index < 9; index += 1) {
-        const glowY = p.map(index, 0, 8, p.height * 0.1, p.height * 0.9);
-        const glowAlpha = p.map(index, 0, 8, 0.07, 0.015);
-        p.noStroke();
-        p.fill((state.params.accentHue + index * 3) % 360, 32, 24 + index * 5, glowAlpha);
-        p.ellipse(p.width * 0.5, glowY, p.width * 1.12, p.height * 0.16);
-    }
-
-    p.fill((state.params.accentHue + 24) % 360, 18, 94, 0.05);
-    p.circle(p.width * 0.18, p.height * 0.18, Math.min(p.width, p.height) * 0.16);
-
-    p.fill((state.params.atmosphereHue + 12) % 360, 26, 100, 0.04);
-    p.circle(p.width * 0.82, p.height * 0.22, Math.min(p.width, p.height) * 0.18);
+    p.background(0, 0, 0);
 }
 
-function advanceSimulation(p, iterations) {
-    if (!state.simulation?.layer) {
+function drawGuides(p) {
+    const simulation = state.simulation;
+    if (!simulation) {
         return;
     }
 
-    syncPaletteCycle(p);
-    const layer = state.simulation.layer;
+    const [hue] = getCurrentFernType().stroke;
+    const baseSize = Math.max(6, Math.min(p.width, p.height) * 0.008);
 
-    for (let index = 0; index < iterations; index += 1) {
-        if (state.simulation.plotted >= state.params.maxPoints) {
-            state.complete = true;
+    p.noStroke();
+    simulation.guidePoints.forEach((guidePoint) => {
+        const { px, py } = projectPoint(p.width, p.height, guidePoint.x, guidePoint.y, simulation.bounds);
+        const isStem = guidePoint.role === "stem";
+        p.fill(hue, isStem ? 24 : 14, isStem ? 94 : 88, isStem ? 0.22 : 0.13);
+        p.circle(px, py, isStem ? baseSize * 1.15 : baseSize);
+    });
+}
+
+function advanceSimulation(p) {
+    const simulation = state.simulation;
+    if (!simulation?.layer || simulation.plotted >= simulation.totalPoints) {
+        return;
+    }
+
+    const elapsed = p.millis() - simulation.startedAt;
+    const progress = Math.min(1, elapsed / simulation.targetDuration);
+    const targetPoints = Math.floor(simulation.totalPoints * progress);
+    const remaining = simulation.totalPoints - simulation.plotted;
+    const maxBatch = isCompactViewport() ? 800 : 1500;
+    const minBatch = isCompactViewport() ? 110 : 220;
+    let batch = Math.min(remaining, Math.max(minBatch, targetPoints - simulation.plotted), maxBatch);
+
+    if (batch === 0 && progress < 1) {
+        batch = 1;
+    }
+
+    const ctx = simulation.layer.drawingContext;
+    const pointSize = isCompactViewport() ? 1.1 : 1.2;
+
+    for (let index = 0; index < batch; index += 1) {
+        const transform = pickTransform(simulation.cumulativeWeights, Math.random());
+        const nextPoint = applyTransform(transform, simulation.x, simulation.y);
+        simulation.x = nextPoint.x;
+        simulation.y = nextPoint.y;
+
+        const { px, py } = projectPoint(simulation.layer.width, simulation.layer.height, simulation.x, simulation.y, simulation.bounds);
+        ctx.fillRect(px | 0, py | 0, pointSize, pointSize);
+        simulation.plotted += 1;
+
+        if (simulation.plotted >= simulation.totalPoints) {
             break;
         }
-
-        const transformId = iterateFernStep(p);
-        const { px, py } = projectPoint(p, state.simulation.x, state.simulation.y);
-        layer.point(px, py);
-        state.simulation.counts[transformId] += 1;
-        state.simulation.plotted += 1;
-    }
-}
-
-function iterateFernStep(p) {
-    const r = p.random(1);
-    let nextX;
-    let nextY;
-    let transformId;
-
-    if (r < 0.01) {
-        nextX = 0;
-        nextY = 0.16 * state.simulation.y;
-        transformId = 0;
-    } else if (r < 0.86) {
-        nextX = 0.85 * state.simulation.x + 0.04 * state.simulation.y;
-        nextY = -0.04 * state.simulation.x + 0.85 * state.simulation.y + 1.6;
-        transformId = 1;
-    } else if (r < 0.93) {
-        nextX = 0.2 * state.simulation.x - 0.26 * state.simulation.y;
-        nextY = 0.23 * state.simulation.x + 0.22 * state.simulation.y + 1.6;
-        transformId = 2;
-    } else {
-        nextX = -0.15 * state.simulation.x + 0.28 * state.simulation.y;
-        nextY = 0.26 * state.simulation.x + 0.24 * state.simulation.y + 0.44;
-        transformId = 3;
     }
 
-    state.simulation.x = nextX;
-    state.simulation.y = nextY;
-    return transformId;
-}
-
-function projectPoint(p, x, y) {
-    const xRange = X_MAX - X_MIN;
-    const yRange = Y_MAX - Y_MIN;
-    const usableWidth = p.width * (1 - state.params.margin * 2);
-    const usableHeight = p.height * (1 - state.params.margin * 2);
-    const fitScale = Math.min(usableWidth / xRange, usableHeight / yRange) * state.params.scale;
-    const centerX = (X_MIN + X_MAX) / 2;
-    const px = p.width / 2 + (x - centerX) * fitScale;
-    const py = p.height * (1 - state.params.margin) - (y - Y_MIN) * fitScale;
-    return { px, py };
-}
-
-function syncPaletteCycle(p) {
-    if (!state.params.autoCycle || state.params.cycleSeconds <= 0 || !state.simulation) {
-        return;
+    if (simulation.plotted >= simulation.totalPoints) {
+        state.sketch?.noLoop();
     }
-
-    const cycleMs = state.params.cycleSeconds * 1000;
-    const elapsed = p.millis() - state.simulation.lastCycleMillis;
-    if (elapsed < cycleMs) {
-        return;
-    }
-
-    const steps = Math.floor(elapsed / cycleMs);
-    state.simulation.paletteIndex = (state.simulation.paletteIndex + steps) % state.params.palette.length;
-    state.simulation.lastCycleMillis += steps * cycleMs;
-    setLayerStyle(p);
 }
 
 function setLayerStyle(p) {
@@ -437,41 +294,211 @@ function setLayerStyle(p) {
         return;
     }
 
-    const layer = state.simulation.layer;
-    const [hue, saturation, brightness] = state.params.palette[state.simulation.paletteIndex];
-    const strokeColor = p.color(hue, saturation, brightness, 0.84);
-
-    layer.stroke(strokeColor);
-    layer.strokeWeight(state.params.pointWeight);
-    layer.drawingContext.shadowBlur = state.params.glow * 34;
-    layer.drawingContext.shadowColor = strokeColor.toString();
+    const [hue, saturation, brightness] = getCurrentFernType().stroke;
+    state.simulation.layer.drawingContext.fillStyle = hsbToRgbaString(hue, saturation, brightness, 0.82);
 }
 
-function updateStats() {
-    const plotted = state.simulation?.plotted || 0;
-    const counts = state.simulation?.counts || [0, 0, 0, 0];
-    const stemShare = plotted ? (counts[0] / plotted) * 100 : 0;
-    const frondShare = plotted ? (counts[1] / plotted) * 100 : 0;
+function getTargetPointCount(fernType) {
+    const baseCount = isCompactViewport() ? fernType.totalPointsMobile : fernType.totalPointsDesktop;
+    return Math.round(baseCount * POINT_COUNT_SCALE);
+}
 
-    let status = "Growing";
-    if (state.complete) {
-        status = "Complete";
-    } else if (state.paused) {
-        status = "Paused";
-    } else if (!state.params.autoCycle) {
-        status = "Static color";
+function getTargetDurationMs(fernType) {
+    const baseDuration = isCompactViewport() ? fernType.durationMobile : fernType.durationDesktop;
+    return Math.round(baseDuration * DURATION_SCALE);
+}
+
+function estimateBounds(fernType) {
+    let x = 0;
+    let y = 0;
+    let minX = Number.POSITIVE_INFINITY;
+    let maxX = Number.NEGATIVE_INFINITY;
+    let minY = Number.POSITIVE_INFINITY;
+    let maxY = Number.NEGATIVE_INFINITY;
+    const cumulativeWeights = buildCumulativeWeights(fernType.transforms);
+
+    for (let index = 0; index < 6000; index += 1) {
+        const transform = pickTransform(cumulativeWeights, Math.random());
+        const nextPoint = applyTransform(transform, x, y);
+        x = nextPoint.x;
+        y = nextPoint.y;
+
+        if (index < 48) {
+            continue;
+        }
+
+        minX = Math.min(minX, x);
+        maxX = Math.max(maxX, x);
+        minY = Math.min(minY, y);
+        maxY = Math.max(maxY, y);
     }
 
-    state.stats = {
-        points: plotted,
-        stemShare,
-        frondShare,
-        status,
+    const xPad = (maxX - minX || 1) * 0.07;
+    const yPad = (maxY - minY || 1) * 0.07;
+
+    return {
+        minX: minX - xPad,
+        maxX: maxX + xPad,
+        minY: Math.min(0, minY - yPad * 0.25),
+        maxY: maxY + yPad,
+    };
+}
+
+function getGuidePoints(fernType) {
+    const guides = fernType.transforms
+        .map((transform) => {
+            const fixedPoint = solveFixedPoint(transform);
+            if (!fixedPoint) {
+                return null;
+            }
+
+            return {
+                x: fixedPoint.x,
+                y: fixedPoint.y,
+                role: transform.role,
+            };
+        })
+        .filter(Boolean);
+
+    guides.sort((left, right) => {
+        if (left.role === "stem") {
+            return 1;
+        }
+
+        if (right.role === "stem") {
+            return -1;
+        }
+
+        return right.y - left.y;
+    });
+
+    return guides;
+}
+
+function solveFixedPoint(transform) {
+    const denominator = (1 - transform.a) * (1 - transform.d) - transform.b * transform.c;
+    if (Math.abs(denominator) < 1e-8) {
+        return null;
+    }
+
+    return {
+        x: (transform.e * (1 - transform.d) + transform.b * transform.f) / denominator,
+        y: ((1 - transform.a) * transform.f + transform.c * transform.e) / denominator,
+    };
+}
+
+function projectPoint(width, height, x, y, bounds) {
+    const margin = 0.11;
+    const xRange = bounds.maxX - bounds.minX;
+    const yRange = bounds.maxY - bounds.minY;
+    const usableWidth = width * (1 - margin * 2);
+    const usableHeight = height * (1 - margin * 2);
+    const fitScale = Math.min(usableWidth / xRange, usableHeight / yRange);
+    const centerX = (bounds.minX + bounds.maxX) / 2;
+    const px = width / 2 + (x - centerX) * fitScale;
+    const py = height * (1 - margin) - (y - bounds.minY) * fitScale;
+    return { px, py };
+}
+
+function buildCumulativeWeights(transforms) {
+    let total = 0;
+    return transforms.map((transform) => {
+        total += transform.weight;
+        return {
+            limit: total,
+            transform,
+        };
+    });
+}
+
+function pickTransform(cumulativeWeights, randomValue) {
+    for (let index = 0; index < cumulativeWeights.length; index += 1) {
+        if (randomValue < cumulativeWeights[index].limit) {
+            return cumulativeWeights[index].transform;
+        }
+    }
+
+    return cumulativeWeights[cumulativeWeights.length - 1].transform;
+}
+
+function applyTransform(transform, x, y) {
+    return {
+        x: transform.a * x + transform.b * y + transform.e,
+        y: transform.c * x + transform.d * y + transform.f,
     };
 }
 
 function getStageSize(host) {
     const width = Math.max(320, Math.floor(host.clientWidth));
-    const height = window.innerWidth < 720 ? Math.max(430, Math.floor(width * 1.18)) : Math.max(620, Math.floor(width * 0.9));
+    const headerHeight = document.querySelector(".site-header")?.getBoundingClientRect().height
+        ?? (window.innerWidth < 720 ? 108 : 69);
+    const footerHeight = document.querySelector(".site-footer")?.getBoundingClientRect().height
+        ?? (window.innerWidth < 720 ? 124 : 76);
+    const main = host.closest(".fern-main");
+    const mainStyles = main ? window.getComputedStyle(main) : null;
+    const verticalPadding = mainStyles
+        ? parseFloat(mainStyles.paddingTop || "0") + parseFloat(mainStyles.paddingBottom || "0")
+        : 0;
+    const availableHeight = Math.floor(window.innerHeight - headerHeight - footerHeight - verticalPadding - 6);
+    const fallbackHeight = window.innerWidth < 960
+        ? Math.max(430, Math.floor(width * 1.04))
+        : Math.max(420, availableHeight);
+    const height = Math.max(360, Math.floor(host.clientHeight || fallbackHeight));
     return { width, height };
+}
+
+function getFernGeometry(key, fernType) {
+    if (!GEOMETRY_CACHE.has(key)) {
+        GEOMETRY_CACHE.set(key, {
+            bounds: estimateBounds(fernType),
+            guidePoints: getGuidePoints(fernType),
+        });
+    }
+
+    return GEOMETRY_CACHE.get(key);
+}
+
+function isCompactViewport() {
+    return window.innerWidth < 960;
+}
+
+function getFernRenderScale() {
+    return isCompactViewport() ? 0.62 : 0.74;
+}
+
+function hsbToRgbaString(hue, saturation, brightness, alpha) {
+    const s = saturation / 100;
+    const v = brightness / 100;
+    const chroma = v * s;
+    const hueSection = ((hue % 360) + 360) % 360 / 60;
+    const x = chroma * (1 - Math.abs((hueSection % 2) - 1));
+    let red = 0;
+    let green = 0;
+    let blue = 0;
+
+    if (hueSection < 1) {
+        red = chroma;
+        green = x;
+    } else if (hueSection < 2) {
+        red = x;
+        green = chroma;
+    } else if (hueSection < 3) {
+        green = chroma;
+        blue = x;
+    } else if (hueSection < 4) {
+        green = x;
+        blue = chroma;
+    } else if (hueSection < 5) {
+        red = x;
+        blue = chroma;
+    } else {
+        red = chroma;
+        blue = x;
+    }
+
+    const match = v - chroma;
+    const r = Math.round((red + match) * 255);
+    const g = Math.round((green + match) * 255);
+    const b = Math.round((blue + match) * 255);
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }

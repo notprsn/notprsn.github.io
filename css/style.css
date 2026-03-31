@@ -117,6 +117,33 @@ input {
   padding: 0.55rem 0;
 }
 
+.site-nav-shell--project {
+  justify-content: space-between;
+}
+
+.site-brand-lockup {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 0 0 auto;
+  margin-right: auto;
+}
+
+.site-brand-lockup .site-brand {
+  flex: 0 0 auto;
+}
+
+.site-brand-separator {
+  width: 1px;
+  height: 1.45rem;
+  background: var(--line);
+}
+
+.site-nav-shell--project .site-nav {
+  justify-content: flex-end;
+  margin-left: 1rem;
+}
+
 .site-brand,
 .eyebrow,
 .panel-label,
@@ -179,6 +206,15 @@ input {
   border-color: rgba(255, 255, 255, 0.12);
   background: rgba(255, 255, 255, 0.04);
   color: rgba(245, 243, 236, 0.82);
+}
+
+.page-dark .site-header:not(.site-header--transparent) {
+  background: rgba(11, 15, 26, 0.78);
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+.page-dark .site-brand-separator {
+  background: rgba(255, 255, 255, 0.14);
 }
 
 .page-dark .site-nav a[aria-current="page"],
@@ -1190,6 +1226,15 @@ body.page-paper {
     align-items: flex-start;
     min-height: var(--site-header-height-mobile);
     padding: 0.7rem 0;
+  }
+
+  .site-brand-lockup {
+    gap: 0;
+    margin-right: 0;
+  }
+
+  .site-brand-separator {
+    display: none;
   }
 
   .site-nav {
