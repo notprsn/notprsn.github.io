@@ -17,7 +17,8 @@ Structure principles
 - New experiments or essays should be added as subdirectories inside their parent section.
 - Shared page chrome and reusable layout primitives live in `css/style.css`.
 - Top-level page-family styles live in `css/pages/`.
-- Mini-project styles under `fun/projects/<slug>/` stay local to that project.
+- The finished math mini-project shell lives in `css/pages/fun-projects.css`.
+- Mini-project styles under `fun/projects/<slug>/` stay local to that project for theme variables and project-specific visuals.
 - Contributor workflows live in `docs/section-workflows.md`.
 
 Current page-family CSS
@@ -28,6 +29,7 @@ Current page-family CSS
 - `/love-letters/` uses `css/pages/love.css`.
 - `/about/` uses `css/pages/about.css`.
 - `/fun/` uses `css/pages/fun.css`.
+- The four finished math mini-projects share `css/pages/fun-projects.css` plus their local project styles.
 - `/puzzles/` uses `css/pages/puzzles.css`.
 
 Patterns

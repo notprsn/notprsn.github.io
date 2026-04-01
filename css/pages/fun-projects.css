@@ -1,0 +1,239 @@
+.fun-project-main {
+  width: min(var(--fun-project-shell-max-width, 1320px), calc(100vw - 2rem));
+  margin: 0 auto;
+  flex: 1 0 auto;
+  display: flex;
+  min-height: 0;
+  padding: 0.75rem 0 0.9rem;
+}
+
+.fun-project-layout {
+  flex: 1 1 auto;
+  display: grid;
+  grid-template-columns: minmax(0, var(--fun-project-sidebar-width, 320px)) minmax(0, 1fr);
+  gap: var(--fun-project-gap, 0.85rem);
+  min-height: 0;
+  height: 100%;
+  align-items: stretch;
+}
+
+.fun-project-sidebar {
+  display: grid;
+  grid-template-rows: auto auto;
+  gap: 1rem;
+  min-width: 0;
+  min-height: 0;
+}
+
+.fun-project-copy-card,
+.fun-project-controls-card,
+.fun-project-display-card {
+  border: 1px solid var(--fun-project-card-border, rgba(255, 255, 255, 0.1));
+  border-radius: 28px;
+  background: var(--fun-project-card-bg, linear-gradient(180deg, rgba(10, 16, 24, 0.96) 0%, rgba(15, 22, 33, 0.94) 100%));
+  box-shadow: 0 32px 90px rgba(0, 0, 0, 0.34);
+}
+
+.fun-project-copy-card {
+  padding: 1.15rem 1.2rem 1.25rem;
+}
+
+.fun-project-copy-card h1 {
+  margin: 0.4rem 0 0;
+  font-family: var(--font-display);
+  font-size: clamp(2.85rem, 6.6vw, 5rem);
+  font-weight: 500;
+  line-height: 0.92;
+  text-wrap: balance;
+}
+
+.fun-project-copy-card p {
+  margin: 1rem 0 0;
+  max-width: 52rem;
+  color: var(--fun-project-copy-text, rgba(245, 243, 236, 0.82));
+  font-size: 1.08rem;
+  line-height: 1.7;
+  text-wrap: pretty;
+}
+
+.fun-project-text-link {
+  color: var(--fun-project-link-color, #ffffff);
+  border-bottom: 1px solid var(--fun-project-link-border, rgba(255, 255, 255, 0.34));
+  transition: border-color 180ms ease, color 180ms ease;
+}
+
+.fun-project-text-link:hover,
+.fun-project-text-link:focus-visible {
+  border-color: var(--fun-project-link-border-hover, rgba(255, 255, 255, 0.76));
+  color: var(--fun-project-link-color, #ffffff);
+}
+
+.fun-project-controls-card {
+  padding: 1rem 1.05rem;
+  align-self: start;
+}
+
+.fun-project-control-row {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.fun-project-control-row + .fun-project-control-row {
+  margin-top: 1rem;
+}
+
+.fun-project-control-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.fun-project-control-row span,
+.fun-project-control-row output {
+  font-family: var(--font-mono);
+}
+
+.fun-project-control-row span {
+  font-size: 0.74rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fun-project-control-label, rgba(245, 243, 236, 0.7));
+}
+
+.fun-project-control-row output {
+  color: var(--fun-project-output, #ffffff);
+  font-size: 0.9rem;
+}
+
+.fun-project-control-row input[type="range"] {
+  width: 100%;
+  accent-color: var(--fun-project-accent, #ffffff);
+}
+
+.fun-project-button {
+  width: 100%;
+  margin-top: 1rem;
+  min-height: 2.8rem;
+  border: 1px solid var(--fun-project-button-border, rgba(255, 255, 255, 0.14));
+  border-radius: 16px;
+  background: var(--fun-project-button-bg, rgba(18, 26, 39, 0.94));
+  color: var(--fun-project-button-text, inherit);
+  cursor: pointer;
+  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+}
+
+.fun-project-button:hover,
+.fun-project-button:focus-visible {
+  transform: translateY(-1px);
+  border-color: var(--fun-project-button-border-hover, rgba(255, 255, 255, 0.28));
+  background: var(--fun-project-button-hover-bg, rgba(24, 35, 49, 0.96));
+}
+
+.fun-project-stage {
+  display: flex;
+  min-width: 0;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.fun-project-display-card {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 100%;
+  min-height: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.fun-project-display-host {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  border-radius: 28px;
+  background: var(--fun-project-display-bg, #000);
+  overflow: hidden;
+}
+
+.fun-project-display-host canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 28px;
+}
+
+.fun-project-display-host .canvas-fallback {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  transform: translate(-50%, -50%);
+  width: min(28rem, calc(100% - 2rem));
+  padding: 1.25rem 1.4rem;
+  border: 1px solid var(--fun-project-fallback-border, rgba(255, 255, 255, 0.14));
+  border-radius: 18px;
+  background: var(--fun-project-fallback-bg, rgba(12, 16, 24, 0.84));
+  color: var(--fun-project-fallback-text, rgba(245, 243, 236, 0.88));
+  font-size: 0.98rem;
+  line-height: 1.6;
+  text-align: center;
+}
+
+@media (min-width: 961px) {
+  .fun-project-main {
+    height: calc(100dvh - var(--site-header-height) - 5.35rem);
+    max-height: calc(100dvh - var(--site-header-height) - 5.35rem);
+  }
+}
+
+@media (max-width: 960px) {
+  .fun-project-layout {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+
+  .fun-project-sidebar {
+    gap: 0.85rem;
+  }
+
+  .fun-project-controls-card {
+    width: auto;
+  }
+
+  .fun-project-display-card {
+    height: auto;
+    padding: 0;
+  }
+
+  .fun-project-display-host {
+    height: min(68dvh, 36rem);
+    min-height: 520px;
+  }
+}
+
+@media (max-width: 640px) {
+  .fun-project-main {
+    padding-bottom: 1.2rem;
+    display: block;
+  }
+
+  .fun-project-copy-card {
+    padding: 1rem 1rem 1.05rem;
+  }
+
+  .fun-project-controls-card {
+    padding: 0.95rem;
+  }
+
+  .fun-project-display-card {
+    padding: 0;
+  }
+
+  .fun-project-display-host {
+    height: min(58dvh, 29rem);
+    min-height: 430px;
+  }
+}

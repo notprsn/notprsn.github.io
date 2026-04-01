@@ -113,6 +113,36 @@ function updateControlOutput(name) {
 function createSketch() {
     const sketch = (p) => {
         let host;
+        let resizeObserver;
+        let syncQueued = false;
+
+        const syncStageSize = () => {
+            if (!host) {
+                return;
+            }
+
+            const { width, height } = getStageSize(host);
+            if (width === p.width && height === p.height) {
+                return;
+            }
+
+            p.resizeCanvas(width, height);
+            state.displaySize = { width, height };
+            initializeGraphics(p, width, height);
+            resetSimulation();
+        };
+
+        const queueSyncStageSize = () => {
+            if (syncQueued) {
+                return;
+            }
+
+            syncQueued = true;
+            window.requestAnimationFrame(() => {
+                syncQueued = false;
+                syncStageSize();
+            });
+        };
 
         p.setup = () => {
             host = elements.stage;
@@ -126,6 +156,15 @@ function createSketch() {
             state.displaySize = { width, height };
             initializeGraphics(p, width, height);
             resetSimulation();
+
+            if ("ResizeObserver" in window) {
+                resizeObserver = new ResizeObserver(() => {
+                    queueSyncStageSize();
+                });
+                resizeObserver.observe(host);
+            }
+
+            queueSyncStageSize();
         };
 
         p.draw = () => {
@@ -137,16 +176,8 @@ function createSketch() {
         };
 
         p.windowResized = () => {
-            if (!host) {
-                return;
-            }
-
             updateControlUI();
-            const { width, height } = getStageSize(host);
-            p.resizeCanvas(width, height);
-            state.displaySize = { width, height };
-            initializeGraphics(p, width, height);
-            resetSimulation();
+            queueSyncStageSize();
         };
     };
 
@@ -339,12 +370,13 @@ function getTargetDurationMs() {
 }
 
 function getStageSize(host) {
-    const width = Math.max(320, Math.floor(host.clientWidth));
+    const rect = host.getBoundingClientRect();
+    const width = Math.max(320, Math.floor(rect.width || host.clientWidth));
     const headerHeight = document.querySelector(".site-header")?.getBoundingClientRect().height
         ?? (window.innerWidth < 720 ? 108 : 69);
     const footerHeight = document.querySelector(".site-footer")?.getBoundingClientRect().height
         ?? (window.innerWidth < 720 ? 124 : 76);
-    const main = host.closest(".chaos-main");
+    const main = host.closest(".fun-project-main");
     const mainStyles = main ? window.getComputedStyle(main) : null;
     const verticalPadding = mainStyles
         ? parseFloat(mainStyles.paddingTop || "0") + parseFloat(mainStyles.paddingBottom || "0")
@@ -353,7 +385,8 @@ function getStageSize(host) {
     const fallbackHeight = window.innerWidth < 960
         ? Math.max(430, Math.floor(width * 1.04))
         : Math.max(420, availableHeight);
-    const height = Math.max(360, Math.floor(host.clientHeight || fallbackHeight));
+    const measuredHeight = Math.floor(rect.height || host.clientHeight || 0);
+    const height = Math.max(360, measuredHeight || fallbackHeight);
     return { width, height };
 }
 

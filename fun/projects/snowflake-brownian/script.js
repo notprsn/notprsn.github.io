@@ -1,92 +1,34 @@
-const PRESETS = {
-    classic: {
-        arms: 6,
-        spawnRadius: 248,
-        particleRadius: 3,
-        stickiness: 2,
-        maxParticles: 960,
-        stepsPerFrame: 18,
-        inwardDrift: 1,
-        jitter: 3,
-        rotationSpeed: 0.03,
-        hueShift: 196,
-        bloom: 0.18,
-        showWalker: true,
-    },
-    halo: {
-        arms: 8,
-        spawnRadius: 236,
-        particleRadius: 2.5,
-        stickiness: 1.85,
-        maxParticles: 1320,
-        stepsPerFrame: 26,
-        inwardDrift: 1.05,
-        jitter: 2.5,
-        rotationSpeed: 0.05,
-        hueShift: 212,
-        bloom: 0.24,
-        showWalker: true,
-    },
-    blizzard: {
-        arms: 7,
-        spawnRadius: 270,
-        particleRadius: 2.2,
-        stickiness: 1.75,
-        maxParticles: 1800,
-        stepsPerFrame: 34,
-        inwardDrift: 1.18,
-        jitter: 4.2,
-        rotationSpeed: 0.07,
-        hueShift: 204,
-        bloom: 0.3,
-        showWalker: true,
-    },
-    ember: {
-        arms: 5,
-        spawnRadius: 224,
-        particleRadius: 3.4,
-        stickiness: 2.15,
-        maxParticles: 820,
-        stepsPerFrame: 14,
-        inwardDrift: 0.82,
-        jitter: 2.2,
-        rotationSpeed: 0.02,
-        hueShift: 18,
-        bloom: 0.22,
-        showWalker: true,
-    },
+const TAU = Math.PI * 2;
+const FIXED_SPAWN_RADIUS = 248;
+const TARGET_FRONTIER_RADIUS = 212;
+const FIXED_ROTATION_SPEED = 0.6;
+const FIXED_BLOOM = 0.2;
+
+const DEFAULT_PARAMS = {
+    arms: 6,
+    particleRadius: 3.0,
+    stickiness: 2.0,
+    inwardDrift: 1.2,
+    jitter: 3.0,
 };
 
-const RESET_KEYS = new Set(["arms", "spawnRadius", "particleRadius", "stickiness", "inwardDrift", "jitter"]);
-const isMobileViewport = window.matchMedia("(max-width: 720px)").matches;
-const DEFAULT_STATE = withResponsiveLimits({
-    preset: "classic",
-    ...PRESETS.classic,
-});
-
 const state = {
-    params: { ...DEFAULT_STATE },
-    controlsOpen: false,
+    params: { ...DEFAULT_PARAMS },
     particles: [],
     current: null,
+    palette: createPalette(),
+    frontier: 0,
     complete: false,
-    paused: false,
-    stats: {
-        frontier: 0,
-    },
+    spatialIndex: new Map(),
+    cellSize: 8,
+    sceneScale: 1,
+    sketch: null,
+    layer: null,
+    resizeObserver: null,
 };
 
 const elements = {
     stage: document.getElementById("brownian-stage"),
-    particleCount: document.getElementById("particle-count"),
-    frontierCount: document.getElementById("frontier-count"),
-    armCount: document.getElementById("arm-count"),
-    statusReadout: document.getElementById("status-readout"),
-    hudPreset: document.getElementById("hud-preset"),
-    hudStatus: document.getElementById("hud-status"),
-    controlsShell: document.querySelector("[data-controls-shell]"),
-    controlsToggle: document.querySelector("[data-controls-toggle]"),
-    runToggle: document.querySelector("[data-run-toggle]"),
     resetButton: document.querySelector("[data-reset-sim]"),
 };
 
@@ -95,91 +37,26 @@ const outputNodes = new Map(
 );
 
 const controlNodes = new Map(
-    Array.from(document.querySelectorAll("input[name], select[name]")).map((node) => [node.name, node])
+    Array.from(document.querySelectorAll("input[name]")).map((node) => [node.name, node])
 );
 
 function bindControls() {
     controlNodes.forEach((node, name) => {
-        const eventName = node.tagName === "SELECT" || node.type === "checkbox" ? "change" : "input";
-        node.addEventListener(eventName, () => {
-            const value = readControlValue(node);
-            if (name === "preset") {
-                applyPreset(value);
-                return;
-            }
-
-            state.params[name] = value;
+        node.addEventListener("input", () => {
+            state.params[name] = Number(node.value);
             updateControlOutput(name);
-
-            if (RESET_KEYS.has(name)) {
-                resetSimulation();
-            }
-
-            updateReadout();
+            resetSimulation();
         });
-    });
-
-    elements.controlsToggle?.addEventListener("click", () => {
-        state.controlsOpen = !state.controlsOpen;
-        elements.controlsShell?.classList.toggle("controls-open", state.controlsOpen);
-        elements.controlsToggle.textContent = state.controlsOpen ? "Close controls" : "Open controls";
-    });
-
-    elements.runToggle?.addEventListener("click", () => {
-        if (state.complete) {
-            return;
-        }
-
-        state.paused = !state.paused;
-        updateReadout();
     });
 
     elements.resetButton?.addEventListener("click", () => {
         resetSimulation();
-        updateReadout();
     });
-}
-
-function applyPreset(presetName) {
-    const preset = PRESETS[presetName] || PRESETS.classic;
-    state.params = withResponsiveLimits({
-        preset: presetName,
-        ...preset,
-    });
-    updateControlUI();
-    resetSimulation();
-    updateReadout();
-}
-
-function resetSimulation() {
-    state.params = withResponsiveLimits(state.params);
-    state.particles = [];
-    state.current = new Walker(state.params.spawnRadius, 0, state.params.particleRadius);
-    state.complete = false;
-    state.paused = false;
-    state.stats.frontier = 0;
-}
-
-function readControlValue(node) {
-    if (node.type === "checkbox") {
-        return node.checked;
-    }
-
-    if (node.tagName === "SELECT") {
-        return node.value;
-    }
-
-    return Number(node.value);
 }
 
 function updateControlUI() {
     controlNodes.forEach((node, name) => {
-        const value = state.params[name];
-        if (node.type === "checkbox") {
-            node.checked = Boolean(value);
-        } else {
-            node.value = `${value}`;
-        }
+        node.value = `${state.params[name]}`;
         updateControlOutput(name);
     });
 }
@@ -192,39 +69,61 @@ function updateControlOutput(name) {
 
     const value = state.params[name];
     switch (name) {
-        case "particleRadius":
-        case "jitter":
-            output.textContent = Number(value).toFixed(1);
-            break;
-        case "stickiness":
-        case "inwardDrift":
-        case "rotationSpeed":
-        case "bloom":
-            output.textContent = Number(value).toFixed(2);
+        case "arms":
+            output.textContent = `${Math.round(value)}`;
             break;
         default:
-            output.textContent = `${value}`;
+            output.textContent = Number(value).toFixed(1);
             break;
     }
 }
 
-function updateReadout() {
-    elements.particleCount.textContent = `${state.particles.length}`;
-    elements.frontierCount.textContent = state.stats.frontier.toFixed(1);
-    elements.armCount.textContent = `${state.params.arms}`;
-    elements.statusReadout.textContent = getStatusLabel();
-    elements.hudPreset.textContent = state.params.preset;
-    elements.hudStatus.textContent = getStatusLabel().toLowerCase();
+function resetSimulation() {
+    state.palette = createPalette();
+    state.particles = [];
+    state.frontier = 0;
+    state.complete = false;
+    state.cellSize = Math.max(6, state.params.particleRadius * state.params.stickiness * 1.6);
+    state.spatialIndex = new Map();
 
-    if (elements.runToggle) {
-        elements.runToggle.textContent = state.complete ? "Growth complete" : state.paused ? "Resume growth" : "Pause growth";
-        elements.runToggle.disabled = state.complete;
-    }
+    const seed = createSettledParticle(0, 0, state.params.particleRadius);
+    addSettledParticle(seed);
+    state.current = createWalker();
+
+    clearLayer();
+    redrawClusterLayer();
 }
 
 function createSketch() {
     const sketch = (p) => {
         let host;
+        let syncQueued = false;
+
+        const syncStageSize = () => {
+            if (!host) {
+                return;
+            }
+
+            const { width, height } = getStageSize(host);
+            if (width === p.width && height === p.height) {
+                return;
+            }
+
+            p.resizeCanvas(width, height);
+            initializeLayer(p, width, height);
+            redrawClusterLayer();
+        };
+
+        const queueSyncStageSize = () => {
+            if (syncQueued) {
+                return;
+            }
+            syncQueued = true;
+            window.requestAnimationFrame(() => {
+                syncQueued = false;
+                syncStageSize();
+            });
+        };
 
         p.setup = () => {
             host = elements.stage;
@@ -233,187 +132,262 @@ function createSketch() {
             canvas.parent(host);
             p.pixelDensity(1);
             p.colorMode(p.HSB, 360, 100, 100, 1);
-            p.frameRate(36);
+            p.frameRate(isCompactViewport() ? 42 : 50);
             p.strokeCap(p.ROUND);
+            state.sketch = p;
+            initializeLayer(p, width, height);
+
+            if ("ResizeObserver" in window) {
+                state.resizeObserver?.disconnect();
+                state.resizeObserver = new ResizeObserver(() => {
+                    queueSyncStageSize();
+                });
+                state.resizeObserver.observe(host);
+            }
+
+            queueSyncStageSize();
         };
 
         p.draw = () => {
             advanceSimulation();
-            drawBackdrop(p);
+            p.background(0);
             p.push();
-            p.translate(p.width / 2, p.height / 2);
-            p.rotate(p.frameCount * state.params.rotationSpeed * 0.01);
-            drawGuides(p);
-            drawCluster(p);
-            if (state.params.showWalker && state.current && !state.complete) {
+            p.translate(p.width * 0.5, p.height * 0.5);
+            p.rotate(p.frameCount * FIXED_ROTATION_SPEED * 0.01);
+            p.imageMode(p.CENTER);
+            if (state.layer) {
+                p.image(state.layer, 0, 0, p.width, p.height);
+            }
+            if (state.current && !state.complete) {
                 drawWalker(p);
             }
             p.pop();
-            updateReadout();
         };
 
         p.windowResized = () => {
-            if (!host) {
-                return;
-            }
-            const { width, height } = getStageSize(host);
-            p.resizeCanvas(width, height);
+            queueSyncStageSize();
         };
     };
 
     new p5(sketch);
 }
 
-function advanceSimulation() {
-    if (!state.current || state.complete || state.paused) {
+function initializeLayer(p, width, height) {
+    state.sceneScale = Math.min(width, height) * (isCompactViewport() ? 0.35 : 0.38) / TARGET_FRONTIER_RADIUS;
+
+    if (state.layer) {
+        state.layer.remove();
+    }
+
+    state.layer = p.createGraphics(width, height);
+    state.layer.pixelDensity(1);
+    state.layer.clear();
+    state.layer.colorMode(p.HSB, 360, 100, 100, 1);
+    state.layer.strokeCap(p.ROUND);
+    state.layer.noFill();
+}
+
+function clearLayer() {
+    state.layer?.clear();
+}
+
+function redrawClusterLayer() {
+    if (!state.layer) {
         return;
     }
 
-    for (let step = 0; step < state.params.stepsPerFrame; step += 1) {
-        if (state.particles.length > 0 && state.current.intersects(state.particles, state.params)) {
-            state.complete = true;
-            return;
-        }
+    state.layer.clear();
+    for (const particle of state.particles) {
+        drawParticleSet(state.layer, particle, false, true);
+    }
+}
 
+function advanceSimulation() {
+    if (state.complete || !state.current) {
+        return;
+    }
+
+    const startTime = performance.now();
+    const timeBudget = isCompactViewport() ? 4.5 : 7.5;
+    const maxSteps = isCompactViewport() ? 1600 : 2800;
+    let steps = 0;
+
+    while (!state.complete && steps < maxSteps && (performance.now() - startTime) < timeBudget) {
         state.current.update(state.params);
 
-        if (state.current.finished() || state.current.intersects(state.particles, state.params)) {
-            attachCurrentParticle();
+        if (walkerIntersectsCluster(state.current)) {
+            addSettledParticle(state.current.freeze());
+            drawParticleSet(state.layer, state.particles[state.particles.length - 1], false, true);
 
-            if (state.particles.length >= state.params.maxParticles) {
+            if (state.frontier >= TARGET_FRONTIER_RADIUS || state.particles.length >= getHiddenParticleLimit()) {
                 state.complete = true;
-                return;
+                state.current = null;
+                break;
             }
 
-            state.current = new Walker(state.params.spawnRadius, 0, state.params.particleRadius);
+            state.current = createWalker();
+        } else if (state.current.isExpired()) {
+            state.current = createWalker();
+        }
+
+        steps += 1;
+    }
+}
+
+function addSettledParticle(particle) {
+    state.particles.push(particle);
+    insertParticle(particle);
+    state.frontier = Math.max(state.frontier, magnitude(particle.pos));
+}
+
+function walkerIntersectsCluster(walker) {
+    const threshold = state.params.particleRadius * state.params.stickiness;
+    const nearby = getNearbyParticles(walker.pos);
+
+    for (const particle of nearby) {
+        if (distance(walker.pos, particle.pos) <= threshold) {
+            return true;
         }
     }
+
+    return false;
 }
 
-function attachCurrentParticle() {
-    const settled = state.current.freeze();
-    state.particles.push(settled);
-    state.stats.frontier = Math.max(state.stats.frontier, magnitude(settled.pos));
-}
-
-function drawBackdrop(p) {
-    p.background(224, 44, 8);
-
-    for (let index = 0; index < 10; index += 1) {
-        const glowY = p.map(index, 0, 9, p.height * 0.12, p.height * 0.92);
-        const glowAlpha = p.map(index, 0, 9, 0.08, 0.02);
-        p.noStroke();
-        p.fill(208 + index * 2, 34, 18 + index * 4, glowAlpha);
-        p.ellipse(p.width * 0.5, glowY, p.width * 1.18, p.height * 0.2);
+function insertParticle(particle) {
+    const key = getGridKey(particle.pos.x, particle.pos.y);
+    const bucket = state.spatialIndex.get(key);
+    if (bucket) {
+        bucket.push(particle);
+        return;
     }
 
-    p.fill((state.params.hueShift + 24) % 360, 22, 98, 0.08);
-    p.circle(p.width * 0.17, p.height * 0.18, Math.min(p.width, p.height) * 0.16);
-    p.fill((state.params.hueShift + 180) % 360, 18, 92, 0.08);
-    p.circle(p.width * 0.84, p.height * 0.22, Math.min(p.width, p.height) * 0.14);
+    state.spatialIndex.set(key, [particle]);
 }
 
-function drawGuides(p) {
-    const wedgeAngle = Math.PI / state.params.arms;
-    const guideHue = (state.params.hueShift + 28) % 360;
+function getNearbyParticles(position) {
+    const cellX = Math.floor(position.x / state.cellSize);
+    const cellY = Math.floor(position.y / state.cellSize);
+    const result = [];
 
-    p.noFill();
-    p.stroke(guideHue, 18, 54, 0.18);
-    p.strokeWeight(1);
-    p.circle(0, 0, state.params.spawnRadius * 2);
-
-    if (state.stats.frontier > 0) {
-        p.stroke(guideHue, 24, 74, 0.14);
-        p.circle(0, 0, state.stats.frontier * 2);
+    for (let offsetY = -1; offsetY <= 1; offsetY += 1) {
+        for (let offsetX = -1; offsetX <= 1; offsetX += 1) {
+            const bucket = state.spatialIndex.get(`${cellX + offsetX}:${cellY + offsetY}`);
+            if (bucket) {
+                result.push(...bucket);
+            }
+        }
     }
 
-    p.stroke(guideHue, 20, 78, 0.18);
-    p.line(0, 0, state.params.spawnRadius, 0);
-    p.push();
-    p.rotate(wedgeAngle);
-    p.line(0, 0, state.params.spawnRadius, 0);
-    p.pop();
+    return result;
 }
 
-function drawCluster(p) {
-    const rotationStep = (Math.PI * 2) / state.params.arms;
-    const particleCount = Math.max(1, state.particles.length);
+function getGridKey(x, y) {
+    return `${Math.floor(x / state.cellSize)}:${Math.floor(y / state.cellSize)}`;
+}
 
+function createWalker() {
+    return new Walker(FIXED_SPAWN_RADIUS, Math.PI / state.params.arms, state.params.particleRadius);
+}
+
+function createSettledParticle(x, y, radius) {
+    return {
+        pos: { x, y },
+        r: radius,
+    };
+}
+
+function drawParticleSet(target, particle, isWalker, useAbsoluteCenter = false) {
+    if (!target) {
+        return;
+    }
+
+    const scaled = scalePoint(particle.pos);
+    const ratio = clamp(magnitude(particle.pos) / TARGET_FRONTIER_RADIUS, 0, 1);
+    const isSeed = Math.abs(particle.pos.x) < 0.0001 && Math.abs(particle.pos.y) < 0.0001;
+
+    if (isSeed) {
+        drawParticlePoint(target, scaled.x, scaled.y, particle.r, ratio, isWalker, useAbsoluteCenter);
+        return;
+    }
+
+    const rotationStep = TAU / state.params.arms;
     for (let arm = 0; arm < state.params.arms; arm += 1) {
-        const armOffset = arm * rotationStep;
-        p.push();
-        p.rotate(armOffset);
-        drawWedgePoints(p, particleCount, false);
-        p.scale(1, -1);
-        drawWedgePoints(p, particleCount, false);
-        p.pop();
+        const rotated = rotatePoint(scaled, arm * rotationStep);
+        drawParticlePoint(target, rotated.x, rotated.y, particle.r, ratio, isWalker, useAbsoluteCenter);
+        drawParticlePoint(target, rotated.x, -rotated.y, particle.r, ratio, isWalker, useAbsoluteCenter);
     }
 }
 
-function drawWedgePoints(p, particleCount) {
-    for (let index = 0; index < state.particles.length; index += 1) {
-        const particle = state.particles[index];
-        const ratio = magnitude(particle.pos) / Math.max(1, state.params.spawnRadius);
-        const hue = (state.params.hueShift + ratio * 64 + index * 0.06) % 360;
+function drawParticlePoint(target, x, y, radius, ratio, isWalker, useAbsoluteCenter) {
+    const hue = (state.palette.baseHue + ratio * 28) % 360;
+    const glowHue = (state.palette.glowHue + ratio * 16) % 360;
+    const scaledRadius = radius * state.sceneScale;
 
-        p.stroke(hue, 34 + ratio * 22, 100, state.params.bloom * 0.36);
-        p.strokeWeight(particle.r * 4.4);
-        p.point(particle.pos.x, particle.pos.y);
-
-        p.stroke(hue, 52 + ratio * 18, 96 - ratio * 10, 0.96);
-        p.strokeWeight(Math.max(1, particle.r * 1.65));
-        p.point(particle.pos.x, particle.pos.y);
+    target.push();
+    if (useAbsoluteCenter) {
+        target.translate(target.width * 0.5, target.height * 0.5);
     }
+    target.stroke(glowHue, 36 + ratio * 18, 100, isWalker ? 0.16 : FIXED_BLOOM * 0.42);
+    target.strokeWeight(Math.max(1.2, scaledRadius * (isWalker ? 2.15 : 2.45)));
+    target.point(x, y);
+
+    target.stroke(hue, 48 + ratio * 18, isWalker ? 100 : 94 - ratio * 8, isWalker ? 0.78 : 0.96);
+    target.strokeWeight(Math.max(1.2, scaledRadius * (isWalker ? 1.15 : 1.3)));
+    target.point(x, y);
+    target.pop();
 }
 
 function drawWalker(p) {
-    const rotationStep = (Math.PI * 2) / state.params.arms;
-    const walkerHue = (state.params.hueShift + 92) % 360;
-
-    for (let arm = 0; arm < state.params.arms; arm += 1) {
-        p.push();
-        p.rotate(arm * rotationStep);
-        drawWalkerPoint(p, walkerHue);
-        p.scale(1, -1);
-        drawWalkerPoint(p, walkerHue);
-        p.pop();
-    }
+    drawParticleSet(p, state.current.freeze(), true, false);
 }
 
-function drawWalkerPoint(p, walkerHue) {
-    p.stroke(walkerHue, 44, 100, 0.24);
-    p.strokeWeight(state.current.r * 5.6);
-    p.point(state.current.pos.x, state.current.pos.y);
-    p.stroke(walkerHue, 26, 100, 1);
-    p.strokeWeight(Math.max(1.4, state.current.r * 2.3));
-    p.point(state.current.pos.x, state.current.pos.y);
+function scalePoint(point) {
+    return {
+        x: point.x * state.sceneScale,
+        y: point.y * state.sceneScale,
+    };
 }
 
-function getStatusLabel() {
-    if (state.complete) {
-        return "Complete";
-    }
-
-    if (state.paused) {
-        return "Paused";
-    }
-
-    return "Growing";
+function rotatePoint(point, angle) {
+    const cosine = Math.cos(angle);
+    const sine = Math.sin(angle);
+    return {
+        x: point.x * cosine - point.y * sine,
+        y: point.x * sine + point.y * cosine,
+    };
 }
 
-function withResponsiveLimits(params) {
-    const next = { ...params };
-    if (isMobileViewport) {
-        next.spawnRadius = Math.min(next.spawnRadius, 214);
-        next.maxParticles = Math.min(next.maxParticles, 1000);
-        next.stepsPerFrame = Math.min(next.stepsPerFrame, 24);
-    }
-    return next;
+function getHiddenParticleLimit() {
+    return isCompactViewport() ? 3200 : 5200;
+}
+
+function createPalette() {
+    const baseHue = randomBetween(0, 360);
+    const accentOffset = randomBetween(24, 60);
+    return {
+        baseHue,
+        glowHue: (baseHue + accentOffset) % 360,
+    };
 }
 
 function getStageSize(host) {
-    const width = Math.max(320, Math.floor(host.clientWidth));
-    const height = window.innerWidth < 720 ? Math.max(430, Math.floor(width * 1.06)) : Math.max(620, Math.floor(width * 0.84));
+    const rect = host.getBoundingClientRect();
+    const width = Math.max(320, Math.floor(rect.width || host.clientWidth));
+    const headerHeight = document.querySelector(".site-header")?.getBoundingClientRect().height
+        ?? (window.innerWidth < 720 ? 108 : 69);
+    const footerHeight = document.querySelector(".site-footer")?.getBoundingClientRect().height
+        ?? (window.innerWidth < 720 ? 124 : 76);
+    const main = host.closest(".fun-project-main");
+    const mainStyles = main ? window.getComputedStyle(main) : null;
+    const verticalPadding = mainStyles
+        ? parseFloat(mainStyles.paddingTop || "0") + parseFloat(mainStyles.paddingBottom || "0")
+        : 0;
+    const availableHeight = Math.floor(window.innerHeight - headerHeight - footerHeight - verticalPadding - 6);
+    const fallbackHeight = window.innerWidth < 960
+        ? Math.max(430, Math.floor(width * 1.04))
+        : Math.max(420, availableHeight);
+    const measuredHeight = Math.floor(rect.height || host.clientHeight || 0);
+    const height = Math.max(360, measuredHeight || fallbackHeight);
     return { width, height };
 }
 
@@ -421,77 +395,62 @@ function magnitude(vector) {
     return Math.hypot(vector.x, vector.y);
 }
 
-class Walker {
-    constructor(radius, angle, particleRadius) {
-        this.pos = vectorFromAngle(angle, radius);
-        this.r = particleRadius;
-    }
-
-    update(params) {
-        this.pos.x -= params.inwardDrift;
-        this.pos.y += randomBetween(-params.jitter, params.jitter);
-
-        const angle = clamp(Math.atan2(this.pos.y, this.pos.x), 0, Math.PI / params.arms);
-        const mag = magnitude(this.pos);
-        this.pos = vectorFromAngle(angle, mag);
-    }
-
-    intersects(cluster, params) {
-        if (!cluster.length) {
-            return false;
-        }
-
-        for (const settled of cluster) {
-            const threshold = ((this.r + settled.r) * params.stickiness) / 2;
-            if (distance(this.pos, settled.pos) < threshold) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    finished() {
-        return this.pos.x < Math.max(1, this.r * 0.8);
-    }
-
-    freeze() {
-        return {
-            pos: { x: this.pos.x, y: this.pos.y },
-            r: this.r,
-        };
-    }
-}
-
-function vectorFromAngle(angle, radius) {
-    return {
-        x: Math.cos(angle) * radius,
-        y: Math.sin(angle) * radius,
-    };
-}
-
 function distance(a, b) {
     return Math.hypot(b.x - a.x, b.y - a.y);
-}
-
-function clamp(value, min, max) {
-    return Math.min(max, Math.max(min, value));
 }
 
 function randomBetween(min, max) {
     return min + Math.random() * (max - min);
 }
 
+function clamp(value, min, max) {
+    return Math.min(max, Math.max(min, value));
+}
+
+function isCompactViewport() {
+    return window.innerWidth < 960;
+}
+
+class Walker {
+    constructor(spawnRadius, wedgeAngle, particleRadius) {
+        this.radius = spawnRadius;
+        this.angle = randomBetween(0, wedgeAngle);
+        this.r = particleRadius;
+        this.updatePosition();
+    }
+
+    update(params) {
+        const wedgeAngle = Math.PI / params.arms;
+        this.radius -= params.inwardDrift;
+        this.angle = clamp(
+            this.angle + (randomBetween(-params.jitter, params.jitter) / Math.max(this.radius, this.r, 1)),
+            0,
+            wedgeAngle
+        );
+        this.updatePosition();
+    }
+
+    isExpired() {
+        return this.radius <= this.r * 0.75;
+    }
+
+    freeze() {
+        return createSettledParticle(this.pos.x, this.pos.y, this.r);
+    }
+
+    updatePosition() {
+        this.pos = {
+            x: Math.cos(this.angle) * this.radius,
+            y: Math.sin(this.angle) * this.radius,
+        };
+    }
+}
+
 bindControls();
 updateControlUI();
 resetSimulation();
-updateReadout();
 createSketch();
+
 window.addEventListener("pageshow", () => {
-    if (!state.params.preset || !PRESETS[state.params.preset]) {
-        state.params = { ...DEFAULT_STATE };
-        resetSimulation();
-    }
     updateControlUI();
-    updateReadout();
 });
