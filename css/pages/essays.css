@@ -1,35 +1,41 @@
-body.page-essays {
+body.page-essays:not(.page-paper) {
   background:
     radial-gradient(circle at 10% 12%, rgba(217, 230, 216, 0.62), transparent 24%),
     radial-gradient(circle at 95% 8%, rgba(238, 230, 217, 0.84), transparent 26%),
     linear-gradient(180deg, #fcfaf6 0%, #f0eadf 100%);
 }
 
-.essay-hero {
+.theme-grid--essay-index {
+  margin-top: 0;
+}
+
+.theme-grid--essay-index .theme-card {
+  grid-column: span 6;
   display: grid;
-  grid-template-columns: minmax(0, 1.18fr) minmax(280px, 0.82fr);
-  gap: 1rem;
-  align-items: start;
+  gap: 1.4rem;
+  align-content: space-between;
+  min-height: 15rem;
 }
 
-.essay-hero h1 {
-  font-size: clamp(3rem, 8vw, 5.3rem);
-  margin-top: 0.35rem;
-  max-width: 12ch;
+.theme-card--essay-index h2 {
+  font-size: clamp(2.8rem, 6vw, 4rem);
+  margin-top: 0;
+  max-width: 10ch;
 }
 
-.page-paper .essay-hero h1 {
-  color: var(--paper-tone-text);
+.theme-card--essay-index .entry-links {
+  margin-top: auto;
 }
 
 @media (max-width: 940px) {
-  .essay-hero {
-    grid-template-columns: 1fr;
+  .theme-grid--essay-index .theme-card {
+    grid-column: span 12;
+    min-height: 0;
   }
 }
 
 @media (max-width: 720px) {
-  .essay-hero h1 {
+  .theme-card--essay-index h2 {
     max-width: none;
   }
 }

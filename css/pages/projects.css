@@ -956,12 +956,12 @@ body.page-paper.page-project-cloudscript {
 
   .project-shelf-card--cloudscript:hover .cloudscript-card__word--cloud,
   .project-shelf-card--cloudscript:focus-within .cloudscript-card__word--cloud {
-    animation: cloudscript-orbit-cloud 5.8s linear infinite;
+    animation: cloudscript-orbit-cloud 2.9s linear infinite;
   }
 
   .project-shelf-card--cloudscript:hover .cloudscript-card__word--script,
   .project-shelf-card--cloudscript:focus-within .cloudscript-card__word--script {
-    animation: cloudscript-orbit-script 6.9s linear infinite;
+    animation: cloudscript-orbit-script 3.45s linear infinite;
   }
 }
 
