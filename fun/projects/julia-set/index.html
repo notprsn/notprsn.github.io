@@ -8,14 +8,15 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta name="description" content="Interactive Julia set with an ellipse-path phase control, pan, and zoom.">
     <meta name="author" content="Prasann Iyer">
-    <meta name="site-version" content="20260331222217187">
+    <meta name="site-version" content="20260401083658812">
     <title>Julia Set | Prasann Iyer</title>
     <link href="../../../img/favicon.ico" rel="icon" type="image/x-icon">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
-    <link href="../../../css/style.css?v=20260331222217187" rel="stylesheet">
-    <link href="style.css?v=20260331222217187" rel="stylesheet">
+    <link href="../../../css/style.css?v=20260401083658812" rel="stylesheet">
+    <link href="../../../css/pages/fun-projects.css?v=20260401083658812" rel="stylesheet">
+    <link href="style.css?v=20260401083658812" rel="stylesheet">
 </head>
 <body class="julia-page page-dark">
     <header class="site-header site-header--transparent">
@@ -33,45 +34,45 @@
         </div>
     </header>
 
-    <main class="julia-main">
-        <section class="julia-layout">
-            <aside class="julia-sidebar">
-                <section class="julia-copy">
+    <main class="fun-project-main">
+        <section class="fun-project-layout">
+            <aside class="fun-project-sidebar">
+                <section class="fun-project-copy-card">
                     <h1>Julia Set</h1>
                     <p>
                         A Julia set renderer with an intentionally small control surface.
                     </p>
                 </section>
 
-                <div class="julia-panel">
-                    <label class="control-row">
-                        <div class="control-head">
+                <div class="fun-project-controls-card">
+                    <label class="fun-project-control-row">
+                        <div class="fun-project-control-head">
                             <span>Phase</span>
                             <output data-output-for="phase">0.29π</output>
                         </div>
                         <input name="phase" type="range" min="0" max="3.14159" step="0.001" value="0.925">
                     </label>
-                    <label class="control-row">
-                        <div class="control-head">
+                    <label class="fun-project-control-row">
+                        <div class="fun-project-control-head">
                             <span>Real Radius</span>
                             <output data-output-for="radiusX">0.789</output>
                         </div>
                         <input name="radiusX" type="range" min="0.1" max="1.1" step="0.005" value="0.7885">
                     </label>
-                    <label class="control-row">
-                        <div class="control-head">
+                    <label class="fun-project-control-row">
+                        <div class="fun-project-control-head">
                             <span>Imag Radius</span>
                             <output data-output-for="radiusY">1.000</output>
                         </div>
                         <input name="radiusY" type="range" min="0.1" max="1.1" step="0.005" value="1.0">
                     </label>
-                    <button class="julia-button" type="button" data-reset-view>Reset View</button>
+                    <button class="fun-project-button" type="button" data-reset-view>Reset View</button>
                 </div>
             </aside>
 
-            <section class="julia-stage">
-                <div class="canvas-card">
-                    <div id="julia-stage" class="canvas-host" aria-label="Interactive Julia set viewer"></div>
+            <section class="fun-project-stage">
+                <div class="fun-project-display-card">
+                    <div id="julia-stage" class="fun-project-display-host" aria-label="Interactive Julia set viewer"></div>
                 </div>
             </section>
         </section>
@@ -89,7 +90,7 @@
             <span>&copy; <span data-current-year>2026</span> Prasann Iyer</span>
         </div>
     </footer>
-    <script src="../../../js/scripts.js?v=20260331222217187"></script>
-    <script src="script.js?v=20260331222217187"></script>
+    <script src="../../../js/scripts.js?v=20260401083658812"></script>
+    <script src="script.js?v=20260401083658812"></script>
 </body>
 </html>
