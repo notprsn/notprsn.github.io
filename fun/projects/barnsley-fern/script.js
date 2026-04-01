@@ -1,71 +1,36 @@
-const FERN_TYPES = [
-    {
-        label: "Classic",
-        totalPointsDesktop: 140000,
-        totalPointsMobile: 84000,
-        durationDesktop: 4400,
-        durationMobile: 5000,
-        stroke: [120, 52, 96],
-        transforms: [
-            { role: "stem", weight: 0.01, a: 0, b: 0, c: 0, d: 0.16, e: 0, f: 0 },
-            { role: "apex", weight: 0.85, a: 0.85, b: 0.04, c: -0.04, d: 0.85, e: 0, f: 1.6 },
-            { role: "left", weight: 0.07, a: 0.2, b: -0.26, c: 0.23, d: 0.22, e: 0, f: 1.6 },
-            { role: "right", weight: 0.07, a: -0.15, b: 0.28, c: 0.26, d: 0.24, e: 0, f: 0.44 },
-        ],
-    },
-    {
-        label: "Bushy",
-        totalPointsDesktop: 148000,
-        totalPointsMobile: 90000,
-        durationDesktop: 4500,
-        durationMobile: 5100,
-        stroke: [118, 50, 96],
-        transforms: [
-            { role: "stem", weight: 0.02, a: 0, b: 0, c: 0, d: 0.18, e: 0, f: 0 },
-            { role: "apex", weight: 0.8, a: 0.82, b: 0.02, c: -0.02, d: 0.87, e: 0, f: 1.62 },
-            { role: "left", weight: 0.09, a: 0.28, b: -0.3, c: 0.24, d: 0.24, e: 0, f: 1.54 },
-            { role: "right", weight: 0.09, a: -0.22, b: 0.31, c: 0.24, d: 0.24, e: 0, f: 0.58 },
-        ],
-    },
-    {
-        label: "Tall",
-        totalPointsDesktop: 132000,
-        totalPointsMobile: 80000,
-        durationDesktop: 4300,
-        durationMobile: 4900,
-        stroke: [122, 48, 95],
-        transforms: [
-            { role: "stem", weight: 0.02, a: 0, b: 0, c: 0, d: 0.18, e: 0, f: 0 },
-            { role: "apex", weight: 0.82, a: 0.88, b: 0.01, c: -0.01, d: 0.88, e: 0, f: 1.74 },
-            { role: "left", weight: 0.08, a: 0.18, b: -0.22, c: 0.18, d: 0.19, e: 0, f: 1.54 },
-            { role: "right", weight: 0.08, a: -0.14, b: 0.24, c: 0.18, d: 0.2, e: 0, f: 0.42 },
-        ],
-    },
-    {
-        label: "Wide",
-        totalPointsDesktop: 144000,
-        totalPointsMobile: 86000,
-        durationDesktop: 4500,
-        durationMobile: 5100,
-        stroke: [124, 50, 96],
-        transforms: [
-            { role: "stem", weight: 0.01, a: 0, b: 0, c: 0, d: 0.16, e: 0, f: 0 },
-            { role: "apex", weight: 0.83, a: 0.84, b: 0.06, c: -0.02, d: 0.84, e: 0, f: 1.56 },
-            { role: "left", weight: 0.08, a: 0.24, b: -0.26, c: 0.26, d: 0.22, e: -0.18, f: 1.5 },
-            { role: "right", weight: 0.08, a: -0.14, b: 0.3, c: 0.24, d: 0.22, e: 0.22, f: 0.5 },
-        ],
-    },
+const BASE_ANCHOR_POINT = { x: 0, y: 10 };
+const STEM_TRANSFORM = { role: "stem", weight: 0.01, a: 0, b: 0, c: 0, d: 0.16, e: 0, f: 0 };
+const BASE_TRANSFORMS = [
+    { role: "apex", weight: 0.85, a: 0.85, b: 0.04, c: -0.04, d: 0.85, e: 0, f: 1.6 },
+    { role: "left", weight: 0.07, a: 0.2, b: -0.26, c: 0.23, d: 0.22, e: 0, f: 1.6 },
+    { role: "right", weight: 0.07, a: -0.15, b: 0.28, c: 0.26, d: 0.24, e: 0, f: 0.44 },
 ];
-
-const DEFAULT_STATE = {
-    fernTypeIndex: 0,
+const ROLE_ORDER = ["left", "apex", "right"];
+const SCALE_LIMITS = {
+    apex: { min: 0.78, max: 1.08 },
+    left: { min: 0.65, max: 1.35 },
+    right: { min: 0.65, max: 1.35 },
 };
-const GEOMETRY_CACHE = new Map();
-const POINT_COUNT_SCALE = 0.38;
-const DURATION_SCALE = 0.7;
+const DEFAULT_STATE = {
+    hue: 132,
+};
+const TOTAL_POINTS = {
+    desktop: 105000,
+    mobile: 68000,
+};
+const TARGET_DURATION_MS = {
+    desktop: 3000,
+    mobile: 3400,
+};
+
+const DEFAULT_CONTROLS = Object.fromEntries(
+    BASE_TRANSFORMS.map((transform) => [transform.role, applyTransform(transform, BASE_ANCHOR_POINT.x, BASE_ANCHOR_POINT.y)])
+);
 
 const state = {
     params: { ...DEFAULT_STATE },
+    controls: cloneControls(DEFAULT_CONTROLS),
+    dragRole: null,
     resetRequested: false,
     simulation: null,
     sketch: null,
@@ -120,16 +85,12 @@ function updateControlOutput(name) {
         return;
     }
 
-    if (name === "fernTypeIndex") {
-        output.textContent = getCurrentFernType().label;
+    if (name === "hue") {
+        output.textContent = `${state.params.hue}\u00b0`;
         return;
     }
 
     output.textContent = `${state.params[name]}`;
-}
-
-function getCurrentFernType() {
-    return FERN_TYPES[state.params.fernTypeIndex] || FERN_TYPES[0];
 }
 
 function requestReset() {
@@ -201,12 +162,35 @@ function createSketch() {
             }
 
             drawBackdrop(p);
-            drawGuides(p);
             advanceSimulation(p);
-
             if (state.simulation?.layer) {
                 p.image(state.simulation.layer, 0, 0, p.width, p.height);
             }
+            drawGuides(p);
+        };
+
+        p.mousePressed = () => {
+            const metrics = getModelViewport(p.width, p.height);
+            state.dragRole = getHandleAtPointer(metrics, p.mouseX, p.mouseY);
+            if (state.dragRole) {
+                requestReset();
+            }
+        };
+
+        p.mouseDragged = () => {
+            if (!state.dragRole) {
+                return;
+            }
+
+            const metrics = getModelViewport(p.width, p.height);
+            const nextPoint = screenToModel(metrics, p.mouseX, p.mouseY);
+            state.controls[state.dragRole] = nextPoint;
+            state.controls = sanitizeControls(state.controls);
+            requestReset();
+        };
+
+        p.mouseReleased = () => {
+            state.dragRole = null;
         };
 
         p.windowResized = () => {
@@ -234,10 +218,9 @@ function resetSimulation(p) {
         createLayer(p);
     }
 
-    const fernType = getCurrentFernType();
+    state.controls = sanitizeControls(state.controls);
     const layer = state.simulation.layer;
     layer.clear();
-    const geometry = getFernGeometry(state.params.fernTypeIndex, fernType);
 
     state.simulation = {
         layer,
@@ -245,15 +228,14 @@ function resetSimulation(p) {
         y: 0,
         plotted: 0,
         startedAt: p.millis(),
-        totalPoints: getTargetPointCount(fernType),
-        targetDuration: getTargetDurationMs(fernType),
-        bounds: geometry.bounds,
-        guidePoints: geometry.guidePoints,
-        cumulativeWeights: buildCumulativeWeights(fernType.transforms),
+        totalPoints: isCompactViewport() ? TOTAL_POINTS.mobile : TOTAL_POINTS.desktop,
+        targetDuration: isCompactViewport() ? TARGET_DURATION_MS.mobile : TARGET_DURATION_MS.desktop,
+        metrics: getModelViewport(layer.width, layer.height),
+        cumulativeWeights: buildCumulativeWeights(buildFernTransforms(state.controls)),
     };
 
+    setLayerStyle();
     state.resetRequested = false;
-    setLayerStyle(p);
     state.sketch?.loop();
 }
 
@@ -262,21 +244,48 @@ function drawBackdrop(p) {
 }
 
 function drawGuides(p) {
-    const simulation = state.simulation;
-    if (!simulation) {
-        return;
-    }
+    const metrics = getModelViewport(p.width, p.height);
+    const root = modelToScreen(metrics, { x: 0, y: 0 });
+    const left = modelToScreen(metrics, state.controls.left);
+    const apex = modelToScreen(metrics, state.controls.apex);
+    const right = modelToScreen(metrics, state.controls.right);
+    const hue = state.params.hue;
 
-    const [hue] = getCurrentFernType().stroke;
-    const baseSize = Math.max(6, Math.min(p.width, p.height) * 0.008);
+    p.push();
+    p.stroke(hue, 22, 98, 0.16);
+    p.strokeWeight(1.15);
+    p.noFill();
+    p.beginShape();
+    p.vertex(root.x, root.y);
+    p.vertex(left.x, left.y);
+    p.vertex(apex.x, apex.y);
+    p.endShape();
+    p.beginShape();
+    p.vertex(root.x, root.y);
+    p.vertex(right.x, right.y);
+    p.vertex(apex.x, apex.y);
+    p.endShape();
+
+    p.stroke(hue, 16, 90, 0.22);
+    p.line(root.x, root.y, apex.x, apex.y);
+
+    drawHandle(p, root.x, root.y, false, true, hue);
+    ROLE_ORDER.forEach((role) => {
+        const point = modelToScreen(metrics, state.controls[role]);
+        drawHandle(p, point.x, point.y, state.dragRole === role, false, hue);
+    });
+    p.pop();
+}
+
+function drawHandle(p, x, y, active, fixed, hue) {
+    const outerSize = fixed ? 10 : active ? 15 : 13;
+    const innerSize = fixed ? 4.5 : active ? 6.5 : 5.5;
 
     p.noStroke();
-    simulation.guidePoints.forEach((guidePoint) => {
-        const { px, py } = projectPoint(p.width, p.height, guidePoint.x, guidePoint.y, simulation.bounds);
-        const isStem = guidePoint.role === "stem";
-        p.fill(hue, isStem ? 24 : 14, isStem ? 94 : 88, isStem ? 0.22 : 0.13);
-        p.circle(px, py, isStem ? baseSize * 1.15 : baseSize);
-    });
+    p.fill(hue, fixed ? 12 : 30, 96, fixed ? 0.28 : 0.18);
+    p.circle(x, y, outerSize);
+    p.fill(hue, fixed ? 18 : 56, 100, 0.98);
+    p.circle(x, y, innerSize);
 }
 
 function advanceSimulation(p) {
@@ -289,8 +298,8 @@ function advanceSimulation(p) {
     const progress = Math.min(1, elapsed / simulation.targetDuration);
     const targetPoints = Math.floor(simulation.totalPoints * progress);
     const remaining = simulation.totalPoints - simulation.plotted;
-    const maxBatch = isCompactViewport() ? 800 : 1500;
-    const minBatch = isCompactViewport() ? 110 : 220;
+    const maxBatch = isCompactViewport() ? 760 : 1400;
+    const minBatch = isCompactViewport() ? 90 : 220;
     let batch = Math.min(remaining, Math.max(minBatch, targetPoints - simulation.plotted), maxBatch);
 
     if (batch === 0 && progress < 1) {
@@ -298,7 +307,7 @@ function advanceSimulation(p) {
     }
 
     const ctx = simulation.layer.drawingContext;
-    const pointSize = isCompactViewport() ? 1.1 : 1.2;
+    const pointSize = isCompactViewport() ? 1.05 : 1.15;
 
     for (let index = 0; index < batch; index += 1) {
         const transform = pickTransform(simulation.cumulativeWeights, Math.random());
@@ -306,8 +315,15 @@ function advanceSimulation(p) {
         simulation.x = nextPoint.x;
         simulation.y = nextPoint.y;
 
-        const { px, py } = projectPoint(simulation.layer.width, simulation.layer.height, simulation.x, simulation.y, simulation.bounds);
-        ctx.fillRect(px | 0, py | 0, pointSize, pointSize);
+        const screenPoint = modelToScreen(simulation.metrics, nextPoint);
+        if (
+            screenPoint.x >= 0
+            && screenPoint.x < simulation.layer.width
+            && screenPoint.y >= 0
+            && screenPoint.y < simulation.layer.height
+        ) {
+            ctx.fillRect(screenPoint.x | 0, screenPoint.y | 0, pointSize, pointSize);
+        }
         simulation.plotted += 1;
 
         if (simulation.plotted >= simulation.totalPoints) {
@@ -320,115 +336,102 @@ function advanceSimulation(p) {
     }
 }
 
-function setLayerStyle(p) {
-    if (!state.simulation?.layer) {
-        return;
-    }
-
-    const [hue, saturation, brightness] = getCurrentFernType().stroke;
-    state.simulation.layer.drawingContext.fillStyle = hsbToRgbaString(hue, saturation, brightness, 0.82);
-}
-
-function getTargetPointCount(fernType) {
-    const baseCount = isCompactViewport() ? fernType.totalPointsMobile : fernType.totalPointsDesktop;
-    return Math.round(baseCount * POINT_COUNT_SCALE);
-}
-
-function getTargetDurationMs(fernType) {
-    const baseDuration = isCompactViewport() ? fernType.durationMobile : fernType.durationDesktop;
-    return Math.round(baseDuration * DURATION_SCALE);
-}
-
-function estimateBounds(fernType) {
-    let x = 0;
-    let y = 0;
-    let minX = Number.POSITIVE_INFINITY;
-    let maxX = Number.NEGATIVE_INFINITY;
-    let minY = Number.POSITIVE_INFINITY;
-    let maxY = Number.NEGATIVE_INFINITY;
-    const cumulativeWeights = buildCumulativeWeights(fernType.transforms);
-
-    for (let index = 0; index < 6000; index += 1) {
-        const transform = pickTransform(cumulativeWeights, Math.random());
-        const nextPoint = applyTransform(transform, x, y);
-        x = nextPoint.x;
-        y = nextPoint.y;
-
-        if (index < 48) {
-            continue;
-        }
-
-        minX = Math.min(minX, x);
-        maxX = Math.max(maxX, x);
-        minY = Math.min(minY, y);
-        maxY = Math.max(maxY, y);
-    }
-
-    const xPad = (maxX - minX || 1) * 0.07;
-    const yPad = (maxY - minY || 1) * 0.07;
-
-    return {
-        minX: minX - xPad,
-        maxX: maxX + xPad,
-        minY: Math.min(0, minY - yPad * 0.25),
-        maxY: maxY + yPad,
-    };
-}
-
-function getGuidePoints(fernType) {
-    const guides = fernType.transforms
-        .map((transform) => {
-            const fixedPoint = solveFixedPoint(transform);
-            if (!fixedPoint) {
-                return null;
-            }
+function buildFernTransforms(controls) {
+    return [
+        STEM_TRANSFORM,
+        ...BASE_TRANSFORMS.map((baseTransform) => {
+            const currentHandle = controls[baseTransform.role];
+            const referenceHandle = DEFAULT_CONTROLS[baseTransform.role];
+            const transformedMatrix = deriveRoleMatrix(baseTransform, referenceHandle, currentHandle);
+            const anchorPoint = applyLinear(transformedMatrix, BASE_ANCHOR_POINT);
 
             return {
-                x: fixedPoint.x,
-                y: fixedPoint.y,
-                role: transform.role,
+                role: baseTransform.role,
+                weight: baseTransform.weight,
+                ...transformedMatrix,
+                e: currentHandle.x - anchorPoint.x,
+                f: currentHandle.y - anchorPoint.y,
             };
-        })
-        .filter(Boolean);
-
-    guides.sort((left, right) => {
-        if (left.role === "stem") {
-            return 1;
-        }
-
-        if (right.role === "stem") {
-            return -1;
-        }
-
-        return right.y - left.y;
-    });
-
-    return guides;
+        }),
+    ];
 }
 
-function solveFixedPoint(transform) {
-    const denominator = (1 - transform.a) * (1 - transform.d) - transform.b * transform.c;
-    if (Math.abs(denominator) < 1e-8) {
-        return null;
-    }
+function deriveRoleMatrix(baseTransform, referenceHandle, currentHandle) {
+    const referenceAngle = Math.atan2(referenceHandle.y, referenceHandle.x);
+    const currentAngle = Math.atan2(currentHandle.y, currentHandle.x);
+    const deltaAngle = currentAngle - referenceAngle;
+    const referenceLength = Math.hypot(referenceHandle.x, referenceHandle.y);
+    const currentLength = Math.hypot(currentHandle.x, currentHandle.y);
+    const limits = SCALE_LIMITS[baseTransform.role];
+    const scale = clamp(currentLength / referenceLength, limits.min, limits.max);
+    const cosAngle = Math.cos(deltaAngle);
+    const sinAngle = Math.sin(deltaAngle);
 
     return {
-        x: (transform.e * (1 - transform.d) + transform.b * transform.f) / denominator,
-        y: ((1 - transform.a) * transform.f + transform.c * transform.e) / denominator,
+        a: scale * (cosAngle * baseTransform.a - sinAngle * baseTransform.c),
+        b: scale * (cosAngle * baseTransform.b - sinAngle * baseTransform.d),
+        c: scale * (sinAngle * baseTransform.a + cosAngle * baseTransform.c),
+        d: scale * (sinAngle * baseTransform.b + cosAngle * baseTransform.d),
     };
 }
 
-function projectPoint(width, height, x, y, bounds) {
-    const margin = isCompactViewport() ? 0.15 : 0.16;
-    const xRange = bounds.maxX - bounds.minX;
-    const yRange = bounds.maxY - bounds.minY;
-    const usableWidth = width * (1 - margin * 2);
-    const usableHeight = height * (1 - margin * 2);
-    const fitScale = Math.min(usableWidth / xRange, usableHeight / yRange);
-    const centerX = (bounds.minX + bounds.maxX) / 2;
-    const px = width / 2 + (x - centerX) * fitScale;
-    const py = height * (1 - margin) - (y - bounds.minY) * fitScale;
-    return { px, py };
+function applyLinear(transform, point) {
+    return {
+        x: transform.a * point.x + transform.b * point.y,
+        y: transform.c * point.x + transform.d * point.y,
+    };
+}
+
+function sanitizeControls(controls) {
+    const nextControls = cloneControls(controls);
+
+    nextControls.apex.x = clamp(nextControls.apex.x, -1.85, 1.85);
+    nextControls.apex.y = clamp(nextControls.apex.y, 8.4, 12.6);
+
+    const leftMaxX = Math.min(-0.8, nextControls.apex.x - 0.9);
+    nextControls.left.x = clamp(nextControls.left.x, -5.3, leftMaxX);
+    nextControls.left.y = clamp(nextControls.left.y, 2.2, nextControls.apex.y - 1.3);
+
+    const rightMinX = Math.max(0.8, nextControls.apex.x + 0.9);
+    nextControls.right.x = clamp(nextControls.right.x, rightMinX, 5.4);
+    nextControls.right.y = clamp(nextControls.right.y, 1.4, nextControls.apex.y - 1.5);
+
+    return nextControls;
+}
+
+function getHandleAtPointer(metrics, mouseX, mouseY) {
+    const hitRadius = isCompactViewport() ? 20 : 18;
+
+    for (const role of ROLE_ORDER) {
+        const point = modelToScreen(metrics, state.controls[role]);
+        if (Math.hypot(mouseX - point.x, mouseY - point.y) <= hitRadius) {
+            return role;
+        }
+    }
+
+    return null;
+}
+
+function getModelViewport(width, height) {
+    return {
+        rootX: width * 0.5,
+        rootY: height * (isCompactViewport() ? 0.92 : 0.94),
+        unitScale: Math.min(width * 0.09, height * 0.074),
+    };
+}
+
+function modelToScreen(metrics, point) {
+    return {
+        x: metrics.rootX + point.x * metrics.unitScale,
+        y: metrics.rootY - point.y * metrics.unitScale,
+    };
+}
+
+function screenToModel(metrics, screenX, screenY) {
+    return {
+        x: (screenX - metrics.rootX) / metrics.unitScale,
+        y: (metrics.rootY - screenY) / metrics.unitScale,
+    };
 }
 
 function buildCumulativeWeights(transforms) {
@@ -459,6 +462,18 @@ function applyTransform(transform, x, y) {
     };
 }
 
+function setLayerStyle() {
+    if (!state.simulation?.layer) {
+        return;
+    }
+
+    const { hue } = state.params;
+    const context = state.simulation.layer.drawingContext;
+    context.fillStyle = hsbToRgbaString(hue, 70, 100, 0.78);
+    context.shadowColor = hsbToRgbaString(hue, 82, 100, 0.34);
+    context.shadowBlur = isCompactViewport() ? 5 : 7;
+}
+
 function getStageSize(host) {
     const rect = host.getBoundingClientRect();
     const width = Math.max(320, Math.floor(rect.width || host.clientWidth));
@@ -480,23 +495,24 @@ function getStageSize(host) {
     return { width, height };
 }
 
-function getFernGeometry(key, fernType) {
-    if (!GEOMETRY_CACHE.has(key)) {
-        GEOMETRY_CACHE.set(key, {
-            bounds: estimateBounds(fernType),
-            guidePoints: getGuidePoints(fernType),
-        });
-    }
-
-    return GEOMETRY_CACHE.get(key);
+function getFernRenderScale() {
+    return isCompactViewport() ? 0.62 : 0.74;
 }
 
 function isCompactViewport() {
     return window.innerWidth < 960;
 }
 
-function getFernRenderScale() {
-    return isCompactViewport() ? 0.62 : 0.74;
+function cloneControls(controls) {
+    return {
+        apex: { ...controls.apex },
+        left: { ...controls.left },
+        right: { ...controls.right },
+    };
+}
+
+function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, value));
 }
 
 function hsbToRgbaString(hue, saturation, brightness, alpha) {
