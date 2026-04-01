@@ -6,16 +6,17 @@
     <meta http-equiv="Expires" content="0">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta name="description" content="Interactive Mandelbulb point cloud in p5.js with realtime controls and orbiting.">
+    <meta name="description" content="Interactive 3D Mandelbulb with lightweight iridescent ray-marched shading.">
     <meta name="author" content="Prasann Iyer">
-    <meta name="site-version" content="20260401083658812">
+    <meta name="site-version" content="20260401103258824">
     <title>Mandelbulb | Prasann Iyer</title>
     <link href="../../../img/favicon.ico" rel="icon" type="image/x-icon">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
-    <link href="../../../css/style.css?v=20260401083658812" rel="stylesheet">
-    <link href="style.css?v=20260401083658812" rel="stylesheet">
+    <link href="../../../css/style.css?v=20260401103258824" rel="stylesheet">
+    <link href="../../../css/pages/fun-projects.css?v=20260401103258824" rel="stylesheet">
+    <link href="style.css?v=20260401103258824" rel="stylesheet">
 </head>
 <body class="mandelbulb-page page-dark">
     <header class="site-header site-header--transparent">
@@ -33,136 +34,29 @@
         </div>
     </header>
 
-    <main class="mandelbulb-main">
-        <section class="mandelbulb-intro">
-            <div class="intro-copy">
-                <h1>Mandelbulb</h1>
-                <p>
-                    A point-cloud Mandelbulb, ported into p5 <span class="mono">WEBGL</span> with live controls,
-                    orbiting, and a coarse-then-refine rebuild path so it stays playful while you poke at it.
-                </p>
-            </div>
-            <div class="intro-actions">
-                <p class="hint-card">
-                    Based on the Coding Train Processing challenge, but rebuilt here as a self-contained browser sketch.
-                </p>
-                <button class="controls-toggle" type="button" data-controls-toggle>Open controls</button>
-            </div>
-        </section>
+    <main class="fun-project-main">
+        <section class="fun-project-layout">
+            <aside class="fun-project-sidebar">
+                <section class="fun-project-copy-card">
+                    <h1>Mandelbulb</h1>
+                </section>
 
-        <section class="mandelbulb-layout" data-controls-shell>
-            <aside class="mandelbulb-panel" data-control-panel>
-                <div class="panel-section">
-                    <p class="panel-label">Fractal</p>
-                    <label class="control-row">
-                        <span>Power</span>
-                        <input name="power" type="range" min="2" max="12" step="0.25" value="8">
-                        <output data-output-for="power">8.00</output>
-                    </label>
-                    <label class="control-row">
-                        <span>Max iterations</span>
-                        <input name="maxIterations" type="range" min="5" max="18" step="1" value="12">
-                        <output data-output-for="maxIterations">12</output>
-                    </label>
-                    <label class="control-row">
-                        <span>Bounds</span>
-                        <input name="bounds" type="range" min="0.9" max="1.6" step="0.01" value="1.18">
-                        <output data-output-for="bounds">1.18</output>
-                    </label>
-                    <label class="control-row">
-                        <span>Escape radius</span>
-                        <input name="escapeRadius" type="range" min="2" max="8" step="0.1" value="4">
-                        <output data-output-for="escapeRadius">4.0</output>
-                    </label>
-                </div>
-
-                <div class="panel-section">
-                    <p class="panel-label">Density</p>
-                    <label class="control-row">
-                        <span>Grid resolution</span>
-                        <input name="gridResolution" type="range" min="20" max="60" step="1" value="44">
-                        <output data-output-for="gridResolution">44</output>
-                    </label>
-                    <label class="control-row select-row">
-                        <span>Quality preset</span>
-                        <select name="qualityPreset">
-                            <option value="fast">Fast</option>
-                            <option value="balanced" selected>Balanced</option>
-                            <option value="crisp">Crisp</option>
-                        </select>
-                    </label>
-                    <label class="toggle-row">
-                        <input name="surfaceOnly" type="checkbox" checked>
-                        <span>Surface shell only</span>
-                    </label>
-                    <label class="control-row">
-                        <span>Point size</span>
-                        <input name="pointSize" type="range" min="1" max="5.5" step="0.1" value="2.8">
-                        <output data-output-for="pointSize">2.8</output>
-                    </label>
-                </div>
-
-                <div class="panel-section">
-                    <p class="panel-label">Motion + color</p>
-                    <label class="control-row">
-                        <span>Hue shift</span>
-                        <input name="hueShift" type="range" min="0" max="360" step="1" value="146">
-                        <output data-output-for="hueShift">146</output>
-                    </label>
-                    <label class="toggle-row">
-                        <input name="autoRotate" type="checkbox" checked>
-                        <span>Auto rotate</span>
-                    </label>
-                    <label class="control-row">
-                        <span>Auto rotate speed</span>
-                        <input name="autoRotateSpeed" type="range" min="0" max="1.5" step="0.01" value="0.28">
-                        <output data-output-for="autoRotateSpeed">0.28</output>
-                    </label>
-                    <button class="reset-button" type="button" data-reset-controls>Reset defaults</button>
-                </div>
-
-                <div class="panel-section stats-panel">
-                    <p class="panel-label">Readout</p>
-                    <dl class="stats-grid">
-                        <div>
-                            <dt>Status</dt>
-                            <dd id="render-status">Preparing first build</dd>
+                <div class="fun-project-controls-card">
+                    <label class="fun-project-control-row">
+                        <div class="fun-project-control-head">
+                            <span>Reference Colours</span>
+                            <output data-output-for="referenceCount">6</output>
                         </div>
-                        <div>
-                            <dt>Progress</dt>
-                            <dd id="render-progress">0%</dd>
-                        </div>
-                        <div>
-                            <dt>Mode</dt>
-                            <dd id="render-mode">surface shell</dd>
-                        </div>
-                        <div>
-                            <dt>Points</dt>
-                            <dd id="point-count">-</dd>
-                        </div>
-                        <div>
-                            <dt>Resolution</dt>
-                            <dd id="resolution-readout">-</dd>
-                        </div>
-                        <div>
-                            <dt>Last pass</dt>
-                            <dd id="quality-readout">-</dd>
-                        </div>
-                    </dl>
+                        <input name="referenceCount" type="range" min="1" max="6" step="1" value="6">
+                    </label>
+                    <button class="fun-project-button" type="button" data-reset-view>Reset View</button>
                 </div>
             </aside>
 
-            <section class="mandelbulb-stage">
-                <div class="canvas-card">
-                    <div id="mandelbulb-stage" class="canvas-host" aria-label="Interactive 3D Mandelbulb viewer"></div>
-                    <div class="stage-hud" aria-live="polite">
-                        <span class="hud-pill" id="hud-status">warming up</span>
-                        <span class="hud-pill" id="hud-progress">0%</span>
-                    </div>
+            <section class="fun-project-stage">
+                <div class="fun-project-display-card">
+                    <div id="mandelbulb-stage" class="fun-project-display-host" aria-label="Interactive 3D Mandelbulb viewer"></div>
                 </div>
-                <p class="stage-note">
-                    Drag to orbit. Scroll or pinch to zoom. Right-drag or two-finger drag to pan.
-                </p>
             </section>
         </section>
     </main>
@@ -179,8 +73,7 @@
             <span>&copy; <span data-current-year>2026</span> Prasann Iyer</span>
         </div>
     </footer>
-    <script src="../../../js/scripts.js?v=20260401083658812"></script>
-    <script src="p5.min.js?v=20260401083658812"></script>
-    <script src="script.js?v=20260401083658812"></script>
+    <script src="../../../js/scripts.js?v=20260401103258824"></script>
+    <script src="script.js?v=20260401103258824"></script>
 </body>
 </html>

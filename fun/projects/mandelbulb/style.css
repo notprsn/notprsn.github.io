@@ -1,343 +1,50 @@
 body.mandelbulb-page {
   margin: 0;
   min-height: 100vh;
+  min-height: 100dvh;
   font-family: "Source Sans 3", sans-serif;
   color: #edf4f6;
   background:
     radial-gradient(circle at 12% 12%, rgba(108, 255, 194, 0.12), transparent 24%),
     radial-gradient(circle at 88% 18%, rgba(80, 146, 255, 0.11), transparent 22%),
     linear-gradient(180deg, #060b11 0%, #0d141d 48%, #04070c 100%);
+  --fun-project-shell-max-width: 1360px;
+  --fun-project-sidebar-width: 352px;
+  --fun-project-page-text: #edf4f6;
+  --fun-project-copy-text: rgba(237, 244, 246, 0.82);
+  --fun-project-card-border: rgba(237, 244, 246, 0.1);
+  --fun-project-card-bg: linear-gradient(180deg, rgba(16, 23, 32, 0.96) 0%, rgba(8, 14, 20, 0.92) 100%);
+  --fun-project-control-label: rgba(237, 244, 246, 0.72);
+  --fun-project-output: #d2ffda;
+  --fun-project-accent: #88ece3;
+  --fun-project-button-border: rgba(237, 244, 246, 0.14);
+  --fun-project-button-border-hover: rgba(237, 244, 246, 0.28);
+  --fun-project-button-bg: rgba(14, 23, 32, 0.92);
+  --fun-project-button-hover-bg: rgba(18, 30, 41, 0.96);
+  --fun-project-display-bg: #000;
+  --fun-project-fallback-border: rgba(237, 244, 246, 0.14);
+  --fun-project-fallback-bg: rgba(10, 16, 24, 0.84);
+  --fun-project-fallback-text: rgba(237, 244, 246, 0.88);
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+#mandelbulb-stage {
+  touch-action: none;
+  cursor: grab;
+  user-select: none;
 }
 
-.lab-header,
-.mandelbulb-main {
-  width: min(1320px, calc(100vw - 2rem));
-  margin: 0 auto;
+.mandelbulb-page .fun-project-copy-card {
+  padding: 0.95rem 1.1rem 0.9rem;
+  min-height: 0;
 }
 
-.lab-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
-  padding: 1rem 0;
-}
-
-.lab-back,
-.lab-nav a,
-.controls-toggle,
-.reset-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 2.6rem;
-  padding: 0.58rem 0.95rem;
-  border-radius: 999px;
-  border: 1px solid rgba(237, 244, 246, 0.14);
-  color: inherit;
-  background: rgba(14, 23, 32, 0.76);
-  backdrop-filter: blur(12px);
-}
-
-.lab-nav {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.6rem;
-}
-
-.mandelbulb-main {
-  padding: 1rem 0 3rem;
-}
-
-.mandelbulb-intro {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-  align-items: end;
-}
-
-.intro-copy {
-  max-width: 780px;
-}
-
-.lab-eyebrow,
-.panel-label,
-.control-row span,
-.stats-grid dt,
-.stage-note,
-.mono {
-  font-family: "IBM Plex Mono", monospace;
-}
-
-.lab-eyebrow,
-.panel-label {
+.mandelbulb-page .fun-project-copy-card h1 {
   margin: 0;
-  font-size: 0.76rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: #8fc8bc;
+  font-size: clamp(2.45rem, 4vw, 3.9rem);
+  line-height: 0.92;
+  white-space: nowrap;
 }
 
-.mandelbulb-intro h1 {
-  margin: 0.4rem 0 0;
-  font-family: "Cormorant Garamond", serif;
-  font-size: clamp(3.4rem, 8vw, 6rem);
-  font-weight: 500;
-  line-height: 0.9;
-}
-
-.mandelbulb-intro p,
-.hint-card {
-  color: rgba(237, 244, 246, 0.78);
-  font-size: 1.08rem;
-  line-height: 1.6;
-}
-
-.intro-actions {
-  width: min(340px, 100%);
-  display: grid;
-  gap: 0.75rem;
-}
-
-.hint-card,
-.mandelbulb-panel,
-.canvas-card {
-  border: 1px solid rgba(237, 244, 246, 0.1);
-  border-radius: 28px;
-  background:
-    linear-gradient(180deg, rgba(16, 23, 32, 0.96) 0%, rgba(8, 14, 20, 0.92) 100%);
-  box-shadow: 0 32px 90px rgba(0, 0, 0, 0.34);
-}
-
-.hint-card {
-  margin: 0;
-  padding: 1rem 1.1rem;
-}
-
-.controls-toggle {
-  border-radius: 16px;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.mandelbulb-layout {
-  display: grid;
-  grid-template-columns: minmax(300px, 360px) minmax(0, 1fr);
-  gap: 1rem;
-  margin-top: 1.4rem;
-}
-
-.mandelbulb-panel {
-  padding: 1.05rem;
-  align-self: start;
-}
-
-.panel-section + .panel-section {
-  margin-top: 1rem;
-  padding-top: 1rem;
-  border-top: 1px solid rgba(237, 244, 246, 0.08);
-}
-
-.control-row,
-.toggle-row,
-.select-row {
-  display: grid;
-  gap: 0.45rem;
-}
-
-.control-row + .control-row,
-.control-row + .toggle-row,
-.toggle-row + .control-row,
-.toggle-row + .toggle-row,
-.select-row + .control-row,
-.select-row + .toggle-row {
-  margin-top: 0.8rem;
-}
-
-.control-row span,
-.toggle-row span,
-.stats-grid dt {
-  font-size: 0.74rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: rgba(237, 244, 246, 0.7);
-}
-
-.control-row input[type="range"],
-.control-row select {
-  width: 100%;
-}
-
-.control-row output {
-  color: #d2ffda;
-  font-size: 0.95rem;
-}
-
-.control-row select {
-  min-height: 2.6rem;
-  padding: 0.55rem 0.75rem;
-  border-radius: 14px;
-  border: 1px solid rgba(237, 244, 246, 0.14);
-  color: #edf4f6;
-  background: rgba(7, 12, 18, 0.82);
-}
-
-.toggle-row {
-  grid-template-columns: auto 1fr;
-  align-items: center;
-  column-gap: 0.65rem;
-}
-
-.toggle-row input {
-  inline-size: 1.05rem;
-  block-size: 1.05rem;
-}
-
-.reset-button {
-  width: 100%;
-  margin-top: 0.95rem;
-  border-radius: 16px;
-  cursor: pointer;
-}
-
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.85rem 0.75rem;
-  margin: 0.8rem 0 0;
-}
-
-.stats-grid div {
-  padding: 0.75rem 0.8rem;
-  border-radius: 18px;
-  background: rgba(6, 12, 17, 0.68);
-}
-
-.stats-grid dt {
-  margin: 0;
-}
-
-.stats-grid dd {
-  margin: 0.35rem 0 0;
-  font-size: 0.98rem;
-  color: #ffffff;
-}
-
-.canvas-card {
-  position: relative;
-  padding: 1rem;
-  overflow: hidden;
-}
-
-.canvas-host {
-  min-height: 680px;
-  border-radius: 22px;
-  background:
-    radial-gradient(circle at top, rgba(0, 255, 166, 0.08), transparent 28%),
-    linear-gradient(180deg, rgba(4, 9, 14, 1) 0%, rgba(9, 14, 19, 1) 100%);
-}
-
-.canvas-host canvas {
-  display: block;
-  width: 100%;
-  height: 100%;
-  border-radius: 22px;
-}
-
-.stage-hud {
-  position: absolute;
-  inset: 1.75rem 1.75rem auto auto;
-  display: flex;
-  gap: 0.5rem;
-}
-
-.hud-pill {
-  padding: 0.45rem 0.75rem;
-  border-radius: 999px;
-  border: 1px solid rgba(237, 244, 246, 0.12);
-  background: rgba(8, 14, 20, 0.84);
-  color: #d9f7f1;
-  font-size: 0.82rem;
-  backdrop-filter: blur(10px);
-}
-
-.stage-note {
-  margin: 0.85rem 0 0;
-  font-size: 0.78rem;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: rgba(237, 244, 246, 0.6);
-}
-
-@media (max-width: 1080px) {
-  .mandelbulb-layout {
-    grid-template-columns: 1fr;
-  }
-
-  .mandelbulb-panel {
-    order: 2;
-  }
-
-  .mandelbulb-stage {
-    order: 1;
-  }
-}
-
-@media (max-width: 960px) {
-  .lab-header,
-  .mandelbulb-intro {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .intro-actions {
-    width: 100%;
-  }
-
-  .controls-toggle {
-    display: inline-flex;
-  }
-
-  .mandelbulb-panel {
-    display: none;
-  }
-
-  .mandelbulb-layout.controls-open .mandelbulb-panel {
-    display: block;
-  }
-
-  .canvas-host {
-    min-height: 520px;
-  }
-}
-
-@media (min-width: 961px) {
-  .controls-toggle {
-    display: none;
-  }
-}
-
-@media (max-width: 640px) {
-  .stats-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .canvas-card {
-    padding: 0.7rem;
-  }
-
-  .canvas-host {
-    min-height: 420px;
-  }
-
-  .stage-hud {
-    inset: 1.1rem 1.1rem auto auto;
-    flex-direction: column;
-    align-items: flex-end;
-  }
+#mandelbulb-stage.is-dragging {
+  cursor: grabbing;
 }
