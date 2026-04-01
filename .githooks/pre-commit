@@ -2,5 +2,10 @@
 set -euo pipefail
 
 node scripts/sync-site.mjs
-git add data/writings-manifest.json data/site-meta.json
-git add $(find . -type f -name '*.html' -not -path './.git/*')
+
+# Stage tracked data outputs, including deletions for removed generated files.
+git add -A -- data
+
+# Stage tracked HTML updates and deletions, then add any newly generated HTML files.
+git ls-files -z -- '*.html' | xargs -0 git add -u --
+find . -type f -name '*.html' -not -path './.git/*' -print0 | xargs -0 git add --

@@ -4,7 +4,7 @@ import { access, mkdtemp, readdir, rm, writeFile } from "node:fs/promises";
 import { constants } from "node:fs";
 import { spawnSync } from "node:child_process";
 import { tmpdir } from "node:os";
-import { basename, dirname, join, resolve } from "node:path";
+import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -21,7 +21,7 @@ Examples:
   node scripts/diff-writing-against-ref.mjs --ref origin/main work-story:qicap
 
 Notes:
-  - Writings slugs look for the current file in writings/final/ first, then writings/pending/.
+  - Essay and project slugs resolve to section-owned content files.
   - Work stories use work-story:<slug> and resolve to work/stories/<slug>/story.md.
   - Looks for the previous file at the given ref in the same path family as the current file.
   - Uses a regular unified diff, so it works even when the current file is untracked.
@@ -139,32 +139,6 @@ function parseArgs(args) {
     return { ref, compareWork, slugs };
 }
 
-async function collectCurrentSlugs(prefix) {
-    const buckets = ["writings/final", "writings/pending"];
-    const found = new Set();
-
-    for (const bucket of buckets) {
-        const directory = resolve(repoRoot, bucket);
-        let entries = [];
-
-        try {
-            entries = await readdir(directory, { withFileTypes: true });
-        } catch {
-            continue;
-        }
-
-        for (const entry of entries) {
-            if (!entry.isFile() || !entry.name.startsWith(prefix) || !entry.name.endsWith(".md")) {
-                continue;
-            }
-
-            found.add(basename(entry.name, ".md"));
-        }
-    }
-
-    return Array.from(found).sort();
-}
-
 async function collectCurrentWorkStorySlugs() {
     const storiesRoot = resolve(repoRoot, "work", "stories");
     let entries = [];
@@ -236,7 +210,22 @@ function resolveCandidates(slug) {
         return [`work/stories/${workSlug}/story.md`];
     }
 
-    return [`writings/final/${slug}.md`, `writings/pending/${slug}.md`];
+    if (slug.startsWith("projects-")) {
+        const projectSlug = slug.replace(/^projects-/, "");
+        return [`projects/${projectSlug}/content.md`];
+    }
+
+    if (slug.startsWith("essays-travel-")) {
+        const essaySlug = slug.replace(/^essays-travel-/, "");
+        return [`essays/travel/${essaySlug}/content.md`];
+    }
+
+    if (slug.startsWith("essays-miscellaneous-")) {
+        const essaySlug = slug.replace(/^essays-miscellaneous-/, "");
+        return [`essays/miscellaneous/${essaySlug}/content.md`];
+    }
+
+    return [];
 }
 
 function gitStdout(args) {

@@ -42,7 +42,7 @@ This file records the external style briefs and code references used to translat
 - Shelf card implemented on [`projects/index.html`](/Users/prasanniyer/notprsn.github.io/projects/index.html)
 - Shelf and project-detail implementation styles live in [`css/pages/projects.css`](/Users/prasanniyer/notprsn.github.io/css/pages/projects.css)
 - Shared primitives still come from [`css/style.css`](/Users/prasanniyer/notprsn.github.io/css/style.css)
-- Future story hook wired via `data-writing-slot="projects-cloudscript"`
+- Long-form note lives at [`projects/cloudscript/content.md`](/Users/prasanniyer/notprsn.github.io/projects/cloudscript/content.md)
 
 ### Design read
 - Soft, playful, mobile-first art-tool feel
@@ -170,7 +170,7 @@ This file records the external style briefs and code references used to translat
 - Shelf card implemented on [`projects/index.html`](/Users/prasanniyer/notprsn.github.io/projects/index.html)
 - Shelf implementation styles live in [`css/pages/projects.css`](/Users/prasanniyer/notprsn.github.io/css/pages/projects.css)
 - Shared primitives still come from [`css/style.css`](/Users/prasanniyer/notprsn.github.io/css/style.css)
-- Future story hook wired via `data-writing-slot="projects-polymarket-quant-desk"`
+- Unpublished draft lives at [`projects/polymarket-quant-desk/content.md`](/Users/prasanniyer/notprsn.github.io/projects/polymarket-quant-desk/content.md)
 - Live-derived sample data preserved in [`docs/project-data/polymarket-quant-desk-sample.json`](/Users/prasanniyer/notprsn.github.io/docs/project-data/polymarket-quant-desk-sample.json)
 
 ### Design read
