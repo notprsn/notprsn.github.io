@@ -12,6 +12,7 @@
   display: grid;
   grid-template-columns: minmax(0, var(--fun-project-sidebar-width, 320px)) minmax(0, 1fr);
   gap: var(--fun-project-gap, 0.85rem);
+  width: 100%;
   min-height: 0;
   height: 100%;
   align-items: stretch;
@@ -106,6 +107,37 @@
   font-size: 0.9rem;
 }
 
+.fun-project-toggle-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.7rem;
+  margin-top: 1rem;
+}
+
+.fun-project-toggle-row input[type="checkbox"] {
+  inline-size: 1.05rem;
+  block-size: 1.05rem;
+  accent-color: var(--fun-project-accent, #ffffff);
+}
+
+.fun-project-toggle-row span,
+.fun-project-toggle-row output {
+  font-family: var(--font-mono);
+}
+
+.fun-project-toggle-row span {
+  font-size: 0.74rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fun-project-control-label, rgba(245, 243, 236, 0.7));
+}
+
+.fun-project-toggle-row output {
+  color: var(--fun-project-output, #ffffff);
+  font-size: 0.9rem;
+}
+
 .fun-project-control-row input[type="range"] {
   width: 100%;
   accent-color: var(--fun-project-accent, #ffffff);
@@ -132,6 +164,7 @@
 
 .fun-project-stage {
   display: flex;
+  width: 100%;
   min-width: 0;
   height: 100%;
   min-height: 0;
@@ -140,6 +173,7 @@
 
 .fun-project-display-card {
   flex: 1 1 auto;
+  width: 100%;
   min-width: 0;
   height: 100%;
   min-height: 0;

@@ -29,7 +29,7 @@ Current page-family CSS
 - `/love-letters/` uses `css/pages/love.css`.
 - `/about/` uses `css/pages/about.css`.
 - `/fun/` uses `css/pages/fun.css`.
-- The four finished math mini-projects share `css/pages/fun-projects.css` plus their local project styles.
+- The cleaned-up math mini-projects share `css/pages/fun-projects.css` plus their local project styles.
 - `/puzzles/` uses `css/pages/puzzles.css`.
 
 Patterns
