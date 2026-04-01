@@ -3,11 +3,16 @@ const TAU = Math.PI * 2;
 const AUTO_DRIFT_SPEED = 0.18;
 const PHASE_UI_UPDATE_INTERVAL = 4;
 const PALETTE_SIZE = 512;
+const STANDARD_POINT = {
+    x: -0.5125,
+    y: 0.5213,
+};
+const STANDARD_PHASE = (5 * Math.PI) / 8;
 
 const DEFAULT_PARAMS = {
-    phase: 0.925,
-    radiusX: 0.7885,
-    radiusY: 1.0,
+    phase: STANDARD_PHASE,
+    radiusX: Math.abs(STANDARD_POINT.x) * Math.SQRT2,
+    radiusY: Math.abs(STANDARD_POINT.y) * Math.SQRT2,
 };
 
 const DEFAULT_VIEW = {
@@ -31,13 +36,18 @@ const state = {
     frameCount: 0,
     needsRender: true,
     dragActive: false,
+    activePointers: new Map(),
+    pinchActive: false,
+    lastPinchDistance: 0,
+    lastPinchMidpoint: null,
     displaySize: { width: 0, height: 0 },
     renderSize: { width: 0, height: 0 },
     host: null,
     canvas: null,
     context: null,
     imageData: null,
-    palette: buildPalette(PALETTE_SIZE),
+    paletteHue: 32,
+    palette: buildPalette(PALETTE_SIZE, 32),
     resizeObserver: null,
     rafId: 0,
     lastTick: 0,
@@ -105,7 +115,6 @@ function bindControls() {
     });
     window.addEventListener("pointerup", () => {
         state.phaseScrubbing = false;
-        state.dragActive = false;
     });
 
     elements.resetButton?.addEventListener("click", () => {
@@ -190,14 +199,52 @@ function bindCanvasInteractions(canvas) {
             return;
         }
 
-        state.dragActive = true;
+        state.activePointers.set(event.pointerId, {
+            x: event.clientX,
+            y: event.clientY,
+        });
+        state.dragActive = state.activePointers.size === 1;
+        state.pinchActive = state.activePointers.size >= 2;
         state.lastPointerX = event.clientX;
         state.lastPointerY = event.clientY;
+
+        if (state.pinchActive) {
+            const gesture = getPinchGesture();
+            state.lastPinchDistance = gesture.distance;
+            state.lastPinchMidpoint = gesture.midpoint;
+        }
+
         canvas.setPointerCapture?.(event.pointerId);
         event.preventDefault();
     });
 
     canvas.addEventListener("pointermove", (event) => {
+        if (!state.activePointers.has(event.pointerId)) {
+            return;
+        }
+
+        state.activePointers.set(event.pointerId, {
+            x: event.clientX,
+            y: event.clientY,
+        });
+
+        if (state.activePointers.size >= 2) {
+            const gesture = getPinchGesture();
+            if (gesture && state.lastPinchDistance > 0 && state.lastPinchMidpoint) {
+                const zoomFactor = gesture.distance / state.lastPinchDistance;
+                state.view.zoom = clamp(state.view.zoom * zoomFactor, ZOOM_LIMITS.min, ZOOM_LIMITS.max);
+
+                const dx = gesture.midpoint.x - state.lastPinchMidpoint.x;
+                const dy = gesture.midpoint.y - state.lastPinchMidpoint.y;
+                applyPanDelta(dx, dy);
+                state.lastPinchDistance = gesture.distance;
+                state.lastPinchMidpoint = gesture.midpoint;
+                state.needsRender = true;
+            }
+            event.preventDefault();
+            return;
+        }
+
         if (!state.dragActive) {
             return;
         }
@@ -207,20 +254,39 @@ function bindCanvasInteractions(canvas) {
         state.lastPointerX = event.clientX;
         state.lastPointerY = event.clientY;
 
-        const aspect = state.displaySize.width / Math.max(state.displaySize.height, 1);
-        state.view.center.x -= (dx / Math.max(state.displaySize.width, 1)) * (2 / state.view.zoom) * aspect;
-        state.view.center.y += (dy / Math.max(state.displaySize.height, 1)) * (2 / state.view.zoom);
+        applyPanDelta(dx, dy);
         state.needsRender = true;
         event.preventDefault();
     });
 
-    canvas.addEventListener("pointerup", () => {
-        state.dragActive = false;
-    });
+    const releasePointer = (event) => {
+        state.activePointers.delete(event.pointerId);
+        state.pinchActive = state.activePointers.size >= 2;
+        state.dragActive = state.activePointers.size === 1;
 
-    canvas.addEventListener("pointercancel", () => {
+        if (state.pinchActive) {
+            const gesture = getPinchGesture();
+            state.lastPinchDistance = gesture.distance;
+            state.lastPinchMidpoint = gesture.midpoint;
+            return;
+        }
+
+        state.lastPinchDistance = 0;
+        state.lastPinchMidpoint = null;
+
+        const remaining = [...state.activePointers.values()][0];
+        if (remaining) {
+            state.lastPointerX = remaining.x;
+            state.lastPointerY = remaining.y;
+            return;
+        }
+
         state.dragActive = false;
-    });
+    };
+
+    canvas.addEventListener("pointerup", releasePointer);
+    canvas.addEventListener("pointercancel", releasePointer);
+    canvas.addEventListener("lostpointercapture", releasePointer);
 
     canvas.addEventListener("wheel", (event) => {
         event.preventDefault();
@@ -369,13 +435,20 @@ function getAdaptiveIterations(zoom) {
 
 function advancePhase(value, delta) {
     let nextValue = value + delta * state.phaseDirection;
+    let bounced = false;
 
     if (nextValue >= PHASE_PERIOD) {
         nextValue = PHASE_PERIOD - (nextValue - PHASE_PERIOD);
         state.phaseDirection = -1;
+        bounced = true;
     } else if (nextValue <= 0) {
         nextValue = Math.abs(nextValue);
         state.phaseDirection = 1;
+        bounced = true;
+    }
+
+    if (bounced) {
+        setPaletteHue(randomNeonHue());
     }
 
     return clamp(nextValue, 0, PHASE_PERIOD);
@@ -418,27 +491,96 @@ function getRenderSize(displayWidth, displayHeight) {
     return { width, height };
 }
 
-function buildPalette(size) {
+function buildPalette(size, baseHue) {
     const palette = new Uint8ClampedArray(size * 4);
-    const a = [0.06, 0.07, 0.10];
-    const b = [0.64, 0.42, 0.28];
-    const c = [1.0, 0.85, 0.68];
-    const d = [0.12, 0.18, 0.24];
 
     for (let index = 0; index < size; index += 1) {
         const t = index / Math.max(size - 1, 1);
         const offset = index * 4;
-        palette[offset] = toByte(a[0] + b[0] * Math.cos(TAU * (c[0] * t + d[0])));
-        palette[offset + 1] = toByte(a[1] + b[1] * Math.cos(TAU * (c[1] * t + d[1])));
-        palette[offset + 2] = toByte(a[2] + b[2] * Math.cos(TAU * (c[2] * t + d[2])));
+        const hue = (baseHue + 62 * t + 26 * Math.sin(TAU * (t + 0.12))) % 360;
+        const saturation = clamp(0.72 + 0.22 * Math.sin(Math.PI * t), 0, 1);
+        const value = clamp(0.14 + 0.96 * Math.pow(t, 0.72), 0, 1);
+        const rgb = hsvToRgb(hue, saturation, value);
+        palette[offset] = rgb.r;
+        palette[offset + 1] = rgb.g;
+        palette[offset + 2] = rgb.b;
         palette[offset + 3] = 255;
     }
 
     return palette;
 }
 
+function setPaletteHue(hue) {
+    state.paletteHue = hue;
+    state.palette = buildPalette(PALETTE_SIZE, hue);
+    state.needsRender = true;
+}
+
 function toByte(value) {
     return Math.round(clamp(value, 0, 1) * 255);
+}
+
+function hsvToRgb(hue, saturation, value) {
+    const chroma = value * saturation;
+    const hueSection = (((hue % 360) + 360) % 360) / 60;
+    const x = chroma * (1 - Math.abs((hueSection % 2) - 1));
+    let red = 0;
+    let green = 0;
+    let blue = 0;
+
+    if (hueSection < 1) {
+        red = chroma;
+        green = x;
+    } else if (hueSection < 2) {
+        red = x;
+        green = chroma;
+    } else if (hueSection < 3) {
+        green = chroma;
+        blue = x;
+    } else if (hueSection < 4) {
+        green = x;
+        blue = chroma;
+    } else if (hueSection < 5) {
+        red = x;
+        blue = chroma;
+    } else {
+        red = chroma;
+        blue = x;
+    }
+
+    const match = value - chroma;
+    return {
+        r: toByte(red + match),
+        g: toByte(green + match),
+        b: toByte(blue + match),
+    };
+}
+
+function randomNeonHue() {
+    return Math.floor(Math.random() * 360);
+}
+
+function applyPanDelta(dx, dy) {
+    const aspect = state.displaySize.width / Math.max(state.displaySize.height, 1);
+    state.view.center.x -= (dx / Math.max(state.displaySize.width, 1)) * (2 / state.view.zoom) * aspect;
+    state.view.center.y += (dy / Math.max(state.displaySize.height, 1)) * (2 / state.view.zoom);
+}
+
+function getPinchGesture() {
+    const pointers = [...state.activePointers.values()];
+    if (pointers.length < 2) {
+        return null;
+    }
+
+    const first = pointers[0];
+    const second = pointers[1];
+    return {
+        distance: Math.hypot(second.x - first.x, second.y - first.y),
+        midpoint: {
+            x: (first.x + second.x) * 0.5,
+            y: (first.y + second.y) * 0.5,
+        },
+    };
 }
 
 function renderFallbackMessage(host) {

@@ -1,13 +1,37 @@
-const RATIO_OPTIONS = [
-    { label: "1/3", value: 1 / 3 },
-    { label: "3/8", value: 3 / 8 },
-    { label: "2/5", value: 2 / 5 },
-    { label: "3/7", value: 3 / 7 },
-    { label: "1/2", value: 1 / 2 },
-    { label: "4/7", value: 4 / 7 },
-    { label: "3/5", value: 3 / 5 },
-    { label: "5/8", value: 5 / 8 },
-    { label: "2/3", value: 2 / 3 },
+const OPTIMAL_RATIO_OPTIONS = Array.from({ length: 8 }, (_, index) => {
+    const vertices = index + 3;
+    const value = getOptimalJumpRatio(vertices);
+    return {
+        vertices,
+        value,
+        label: value.toFixed(3),
+    };
+});
+
+const RULE_OPTIONS = [
+    { label: "Unrestricted", allows: () => true },
+    { label: "No Repeat", allows: (candidate, { previous }) => previous == null || candidate !== previous },
+    {
+        label: "No Counterclockwise Neighbor",
+        allows: (candidate, { previous, vertexCount }) =>
+            previous == null || candidate !== mod(previous - 1, vertexCount),
+    },
+    {
+        label: "No Two Away",
+        allows: (candidate, { previous, vertexCount }) =>
+            previous == null
+            || (candidate !== mod(previous - 2, vertexCount) && candidate !== mod(previous + 2, vertexCount)),
+    },
+    {
+        label: "Repeat Lock: No Neighbors",
+        allows: (candidate, { previous, twoBack, vertexCount }) => {
+            if (previous == null || twoBack == null || previous !== twoBack) {
+                return true;
+            }
+
+            return !isNeighbor(candidate, previous, vertexCount);
+        },
+    },
 ];
 
 const PALETTE_FAMILIES = [
@@ -34,10 +58,10 @@ const PALETTE_FAMILIES = [
     },
 ];
 
-const defaultRatio = RATIO_OPTIONS.find((option) => option.label === "1/2");
 const DEFAULT_STATE = {
     vertices: 3,
-    ratioIndex: defaultRatio ? RATIO_OPTIONS.indexOf(defaultRatio) : 4,
+    ratioIndex: 0,
+    ruleIndex: 0,
 };
 
 const state = {
@@ -53,15 +77,14 @@ const state = {
     startedAt: 0,
     displaySize: { width: 0, height: 0 },
     sketch: null,
+    targetHistory: [],
 };
 
 const elements = {
     stage: document.getElementById("chaos-stage"),
 };
 
-const controlNodes = new Map(
-    Array.from(document.querySelectorAll("input[name]")).map((node) => [node.name, node])
-);
+const controlNodes = new Map(Array.from(document.querySelectorAll("input[name], select[name]")).map((node) => [node.name, node]));
 
 const outputNodes = new Map(
     Array.from(document.querySelectorAll("[data-output-for]")).map((node) => [node.dataset.outputFor, node])
@@ -77,7 +100,8 @@ window.addEventListener("pageshow", () => {
 
 function bindControls() {
     controlNodes.forEach((node, name) => {
-        node.addEventListener("input", () => {
+        const eventName = node.tagName === "SELECT" ? "change" : "input";
+        node.addEventListener(eventName, () => {
             state.params[name] = readControlValue(node);
             updateControlOutput(name);
             resetSimulation();
@@ -102,8 +126,8 @@ function updateControlOutput(name) {
         return;
     }
 
-    if (name === "ratioIndex") {
-        output.textContent = getSelectedRatioLabel();
+    if (name === "ruleIndex") {
+        output.textContent = getSelectedRule().label;
         return;
     }
 
@@ -208,6 +232,7 @@ function resetSimulation() {
     state.palette = buildPalette(state.params.vertices);
     state.currentPoint = randomStartPoint(state.graphics.width, state.graphics.height);
     state.startedAt = performance.now();
+    state.targetHistory = [];
     state.sketch?.loop();
 }
 
@@ -239,6 +264,10 @@ function advanceSimulation(p) {
         state.currentPoint.y += (target.y - state.currentPoint.y) * jumpRatio;
         plotPoint(ctx, targetIndex, pointSize);
         state.plottedPoints += 1;
+        state.targetHistory.push(targetIndex);
+        if (state.targetHistory.length > 2) {
+            state.targetHistory.shift();
+        }
     }
 
     if (state.plottedPoints >= state.maxPoints) {
@@ -300,8 +329,8 @@ function drawCurrentPoint(p) {
 
 function buildPolygonVertices(width, height, count) {
     const centerX = width * 0.5;
-    const centerY = height * 0.54;
-    const radius = Math.min(width, height) * (window.innerWidth < 720 ? 0.34 : 0.39);
+    const centerY = height * 0.5;
+    const radius = Math.min(width, height) * (window.innerWidth < 720 ? 0.33 : 0.38);
     const rotationOffset = -Math.PI / 2;
     const vertices = [];
 
@@ -342,19 +371,55 @@ function randomStartPoint(width, height) {
 }
 
 function getSelectedRatio() {
-    return RATIO_OPTIONS[state.params.ratioIndex] || defaultRatio || RATIO_OPTIONS[4];
-}
-
-function getSelectedRatioLabel() {
-    return getSelectedRatio().label;
+    return OPTIMAL_RATIO_OPTIONS[state.params.ratioIndex] || OPTIMAL_RATIO_OPTIONS[0];
 }
 
 function getSelectedRatioValue() {
     return getSelectedRatio().value;
 }
 
+function getSelectedRule() {
+    return RULE_OPTIONS[state.params.ruleIndex] || RULE_OPTIONS[0];
+}
+
 function pickTargetIndex() {
-    return Math.floor(Math.random() * state.vertices.length);
+    const vertexCount = state.vertices.length;
+    const previous = state.targetHistory[state.targetHistory.length - 1] ?? null;
+    const twoBack = state.targetHistory[state.targetHistory.length - 2] ?? null;
+    const rule = getSelectedRule();
+    const candidates = [];
+
+    for (let index = 0; index < vertexCount; index += 1) {
+        if (rule.allows(index, { previous, twoBack, vertexCount })) {
+            candidates.push(index);
+        }
+    }
+
+    if (!candidates.length) {
+        return Math.floor(Math.random() * vertexCount);
+    }
+
+    return candidates[Math.floor(Math.random() * candidates.length)];
+}
+
+function getOptimalJumpRatio(vertices) {
+    if (vertices % 4 === 0) {
+        return 1 / (1 + Math.tan(Math.PI / vertices));
+    }
+
+    if (vertices % 2 === 0) {
+        return 1 / (1 + Math.sin(Math.PI / vertices));
+    }
+
+    return 1 / (1 + 2 * Math.sin(Math.PI / (2 * vertices)));
+}
+
+function mod(value, divisor) {
+    return ((value % divisor) + divisor) % divisor;
+}
+
+function isNeighbor(candidate, anchor, vertexCount) {
+    return candidate === mod(anchor - 1, vertexCount) || candidate === mod(anchor + 1, vertexCount);
 }
 
 function getPointBudget(vertices) {

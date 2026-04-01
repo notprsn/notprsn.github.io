@@ -8,8 +8,9 @@ body.julia-page {
     radial-gradient(circle at 18% 12%, rgba(232, 181, 77, 0.12), transparent 24%),
     radial-gradient(circle at 84% 20%, rgba(101, 193, 216, 0.11), transparent 22%),
     linear-gradient(180deg, #090b11 0%, #111624 46%, #1a2132 100%);
-  --fun-project-shell-max-width: 1340px;
-  --fun-project-sidebar-width: 324px;
+  --fun-project-shell-max-width: 1400px;
+  --fun-project-sidebar-width: 286px;
+  --fun-project-gap: 0.7rem;
   --fun-project-page-text: #f8f4ef;
   --fun-project-copy-text: rgba(248, 244, 239, 0.82);
   --fun-project-card-border: rgba(248, 244, 239, 0.1);
@@ -24,4 +25,50 @@ body.julia-page {
   --fun-project-fallback-border: rgba(248, 244, 239, 0.14);
   --fun-project-fallback-bg: rgba(15, 19, 31, 0.84);
   --fun-project-fallback-text: rgba(248, 244, 239, 0.88);
+}
+
+.julia-page .fun-project-copy-card {
+  padding: 1rem 1rem 1.05rem;
+}
+
+.julia-page .fun-project-copy-card h1 {
+  font-size: clamp(3rem, 5.2vw, 4.2rem);
+}
+
+.julia-page .fun-project-copy-card p {
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.julia-page .fun-project-controls-card {
+  padding: 0.9rem 0.95rem;
+}
+
+.julia-page .fun-project-display-card {
+  border-radius: 32px;
+}
+
+.julia-page .fun-project-display-host,
+.julia-page .fun-project-display-host canvas {
+  border-radius: 32px;
+}
+
+.julia-page .fun-project-display-host canvas {
+  touch-action: none;
+  cursor: grab;
+}
+
+.julia-page .fun-project-display-host canvas:active {
+  cursor: grabbing;
+}
+
+@media (max-width: 960px) {
+  body.julia-page {
+    --fun-project-sidebar-width: 100%;
+  }
+
+  .julia-page .fun-project-display-host {
+    height: min(72dvh, 40rem);
+    min-height: 540px;
+  }
 }
