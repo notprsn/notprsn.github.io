@@ -1,6 +1,6 @@
 # Finalization Checklist
 
-Use this when a draft is close to done and may be moved from `writings/pending/` to `writings/final/`, or when a work story in `work/stories/*/story.md` is being tightened for publication.
+Use this when an essay or project draft is close to done in its section-owned `content.md` file, or when a work story in `work/stories/*/story.md` is being tightened for publication.
 
 ## Content checks
 
@@ -18,16 +18,15 @@ Use this when a draft is close to done and may be moved from `writings/pending/`
 ## Repo checks
 
 - The slug matches the existing file name.
-- The same slug does not exist in both `writings/pending/` and `writings/final/`.
-- If finalizing, move the file instead of copying it.
 - Keep section boundaries intact:
   - work stories stay under `work/stories/`
-  - `projects-*` stays project-related
-  - essays stay in the correct theme family
+  - project write-ups stay under `projects/<slug>/content.md`
+  - essays stay in the correct theme family under `essays/<theme>/<slug>/content.md`
 
 ## Site checks
 
-- Non-work markdown renders cleanly in the generic writings page.
+- Essay markdown renders cleanly in its generated essay page.
+- Project markdown renders cleanly in its project detail page.
 - Work stories render cleanly in the dedicated `work/stories/*` page shell.
 - Lists, headers, and links are intentional.
 - The piece does not depend on unpublished local context to make sense.
@@ -40,4 +39,4 @@ Run:
 node scripts/sync-site.mjs
 ```
 
-That refreshes the writings manifest and catches duplicate pending/final slugs.
+That refreshes site metadata, rewires essay queue cards, and regenerates publishable essay pages.

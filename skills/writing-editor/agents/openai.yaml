@@ -1,7 +1,7 @@
 interface:
   display_name: "Writing Editor"
   short_description: "Edit and finalize pending writing."
-  default_prompt: "Use $writing-editor to refine a draft in writings/pending/ and prepare it for writings/final/."
+  default_prompt: "Use $writing-editor to refine a draft in an essay or project content.md file and prepare it for publication."
 
 policy:
   allow_implicit_invocation: true

@@ -17,6 +17,7 @@ Structure principles
 - New experiments or essays should be added as subdirectories inside their parent section.
 - Shared page chrome and reusable layout primitives live in `css/style.css`.
 - Top-level page-family styles live in `css/pages/`.
+- Shared JS lives in `js/site.js`, and page-owned entrypoints live in `js/pages/`.
 - The finished math mini-project shell lives in `css/pages/fun-projects.css`.
 - Mini-project styles under `fun/projects/<slug>/` stay local to that project for theme variables and project-specific visuals.
 - Contributor workflows live in `docs/section-workflows.md`.
@@ -25,7 +26,7 @@ Current page-family CSS
 - `/` uses `css/pages/home.css`.
 - `/work/` and `/work/stories/*` use `css/pages/work.css`.
 - `/projects/` and `projects/*` use `css/pages/projects.css`.
-- `/essays/`, essay theme pages, and `/writings/` use `css/pages/essays.css`.
+- `/essays/`, essay theme pages, and generated essay detail pages use `css/pages/essays.css`.
 - `/love-letters/` uses `css/pages/love.css`.
 - `/about/` uses `css/pages/about.css`.
 - `/fun/` uses `css/pages/fun.css`.
@@ -36,7 +37,7 @@ Patterns
 - Work: resume-backed, factual, low-interpretation.
 - Projects: current build shelf only.
 - Fun: hub page plus self-contained project directories.
-- Essays: theme hubs first, essay pages later.
+- Essays: theme hubs plus theme-local `content.md` files that publish when they have prose.
 - Gallery and glossary: placeholders now, fuller structures later.
 - Shared style language: see `docs/style-language.md`.
 
@@ -44,3 +45,4 @@ Current self-contained directories
 - `fun/projects/<slug>/`
 - `essays/travel/`
 - `essays/miscellaneous/`
+- `projects/<slug>/`

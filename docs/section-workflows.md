@@ -29,12 +29,17 @@ Add a new essay page later
 2. Keep supporting images or media with the essay if they are theme-specific.
 3. Cross-link from the theme hub and only then from elsewhere.
 
-Finalize a writing
-1. Write raw text in `writings/pending/<slug>.md`.
-2. Polish it into markdown headers, structure, and links.
-3. Move the file into `writings/final/<slug>.md`.
-4. Commit normally. The pre-commit hook will refresh the manifest and cache-bust site assets.
-5. Do not leave a copy behind in `writings/pending/`.
+Publish an essay
+1. Create or edit `essays/<theme>/<slug>/content.md`.
+2. Keep the first `#` heading as the published essay title.
+3. Leave the file empty if the theme card should stay queue-only for now.
+4. Run `node scripts/sync-site.mjs` to generate or remove the essay detail page and wire the theme-card link state.
+5. Do not hand-author a placeholder essay `index.html`; the sync step owns that file.
+
+Update a project note
+1. Edit `projects/<slug>/content.md`.
+2. Keep the project page shell in `projects/<slug>/index.html` and let the page module render the markdown.
+3. Run `node scripts/sync-site.mjs` so shared asset versions and HTML cleanup stay current.
 
 Restyle an existing section
 1. Reuse shared primitives from `css/style.css` first, especially nav, footer, typography, and landing/page shells.

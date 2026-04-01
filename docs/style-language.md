@@ -46,7 +46,7 @@ That keeps nav sizing, footer spacing, display typography, and body copy scale a
 - If a visual treatment is reused by a second page, promote it into `css/style.css`.
 - Keep top-level page-family CSS under `css/pages/`, for example `css/pages/home.css`, `css/pages/work.css`, `css/pages/projects.css`, `css/pages/about.css`, and `css/pages/fun.css`.
 - Keep mini-project CSS inside `fun/projects/<slug>/style.css`.
-- Shared JS in `js/scripts.js` should stay generic. Section-only effects should not be added there unless they become shared behavior.
+- Shared JS in `js/site.js` should stay generic. Page-owned behavior should live in `js/pages/*.js`.
 
 ## Current examples
 

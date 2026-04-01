@@ -1,6 +1,6 @@
-document.addEventListener("DOMContentLoaded", () => {
-    initFunStarfield();
-});
+const onReady = window.Site?.onReady ?? ((callback) => callback());
+
+onReady(initFunStarfield);
 
 function initFunStarfield() {
     const canvas = document.querySelector("[data-fun-starfield-canvas]");
@@ -8,7 +8,10 @@ function initFunStarfield() {
         return;
     }
 
-    const context = canvas.getContext("2d");
+    const context =
+        canvas.getContext("2d", { alpha: false, desynchronized: true }) ||
+        canvas.getContext("2d", { alpha: false }) ||
+        canvas.getContext("2d");
     if (!context) {
         return;
     }
@@ -29,12 +32,13 @@ function initFunStarfield() {
     let edgeRadius = 1;
     let stars = [];
     let lastFrame = 0;
+    let frameId = 0;
     let pointerX = 0;
     let pointerY = 0;
     let currentSpeed = 0;
-    const targetInterval = 1000 / 30;
+    const targetInterval = 1000 / (hasCoarsePointer ? 24 : 30);
     const maxSpeed = 110;
-    const densityScale = 0.245;
+    const densityScale = hasCoarsePointer ? 0.18 : 0.245;
 
     class Star {
         constructor(initial = false) {
@@ -112,7 +116,7 @@ function initFunStarfield() {
     }
 
     function resize() {
-        dpr = Math.max(window.devicePixelRatio || 1, 1);
+        dpr = Math.min(Math.max(window.devicePixelRatio || 1, 1), hasCoarsePointer ? 1.25 : 1.5);
         width = window.innerWidth;
         height = window.innerHeight;
         edgeRadius = Math.hypot(width * 0.5, height * 0.5);
@@ -164,7 +168,25 @@ function initFunStarfield() {
             drawFrame();
             lastFrame = timestamp;
         }
-        window.requestAnimationFrame(tick);
+        frameId = window.requestAnimationFrame(tick);
+    }
+
+    function stop() {
+        if (!frameId) {
+            return;
+        }
+
+        window.cancelAnimationFrame(frameId);
+        frameId = 0;
+    }
+
+    function start() {
+        if (prefersReducedMotion || document.hidden || frameId) {
+            return;
+        }
+
+        lastFrame = performance.now();
+        frameId = window.requestAnimationFrame(tick);
     }
 
     function getPointerSpeed() {
@@ -198,10 +220,31 @@ function initFunStarfield() {
     }
 
     resize();
-    window.addEventListener("resize", resize);
-    window.addEventListener("pointermove", (event) => {
-        pointerX = event.clientX;
-        pointerY = event.clientY;
+    window.addEventListener(
+        "resize",
+        () => {
+            resize();
+            if (prefersReducedMotion) {
+                drawReducedFrame();
+            }
+        },
+        { passive: true }
+    );
+    window.addEventListener(
+        "pointermove",
+        (event) => {
+            pointerX = event.clientX;
+            pointerY = event.clientY;
+        },
+        { passive: true }
+    );
+    document.addEventListener("visibilitychange", () => {
+        if (document.hidden) {
+            stop();
+            return;
+        }
+
+        start();
     });
 
     if (prefersReducedMotion) {
@@ -209,5 +252,5 @@ function initFunStarfield() {
         return;
     }
 
-    window.requestAnimationFrame(tick);
+    start();
 }

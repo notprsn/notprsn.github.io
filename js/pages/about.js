@@ -1,6 +1,6 @@
-document.addEventListener("DOMContentLoaded", () => {
-    initAboutRain();
-});
+const onReady = window.Site?.onReady ?? ((callback) => callback());
+
+onReady(initAboutRain);
 
 function initAboutRain() {
     const canvas = document.querySelector("[data-about-rain-canvas]");
@@ -8,7 +8,10 @@ function initAboutRain() {
         return;
     }
 
-    const context = canvas.getContext("2d", { alpha: false });
+    const context =
+        canvas.getContext("2d", { alpha: false, desynchronized: true }) ||
+        canvas.getContext("2d", { alpha: false }) ||
+        canvas.getContext("2d");
     if (!context) {
         return;
     }
@@ -20,7 +23,7 @@ function initAboutRain() {
         blue: [93, 169, 255],
         purple: [106, 92, 255],
         pink: [255, 46, 136],
-        magenta: [212, 20, 90]
+        magenta: [212, 20, 90],
     };
 
     const state = {
@@ -30,7 +33,7 @@ function initAboutRain() {
         time: 0,
         streaks: [],
         lastFrame: 0,
-        frameId: 0
+        frameId: 0,
     };
     const targetInterval = 1000 / 24;
 
@@ -53,7 +56,7 @@ function initAboutRain() {
             sway: lerp(0.2, 0.9, Math.random()),
             drift: lerp(0.04, 0.14, Math.random()),
             tintShift: Math.random(),
-            phase: Math.random() * Math.PI * 2
+            phase: Math.random() * Math.PI * 2,
         };
     }
 
@@ -169,12 +172,16 @@ function initAboutRain() {
     }
 
     resize();
-    window.addEventListener("resize", () => {
-        resize();
-        if (prefersReducedMotion) {
-            drawStaticFrame();
-        }
-    }, { passive: true });
+    window.addEventListener(
+        "resize",
+        () => {
+            resize();
+            if (prefersReducedMotion) {
+                drawStaticFrame();
+            }
+        },
+        { passive: true }
+    );
     document.addEventListener("visibilitychange", () => {
         if (document.hidden) {
             stop();
