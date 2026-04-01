@@ -8,7 +8,7 @@ const DEFAULT_PARAMS = {
     arms: 6,
     particleRadius: 3.0,
     stickiness: 2.0,
-    inwardDrift: 1.2,
+    inwardDrift: 1.0,
     jitter: 3.0,
 };
 
@@ -286,7 +286,7 @@ function getGridKey(x, y) {
 }
 
 function createWalker() {
-    return new Walker(FIXED_SPAWN_RADIUS, Math.PI / state.params.arms, state.params.particleRadius);
+    return new Walker(FIXED_SPAWN_RADIUS, 0, state.params.particleRadius);
 }
 
 function createSettledParticle(x, y, radius) {
@@ -414,19 +414,19 @@ function isCompactViewport() {
 class Walker {
     constructor(spawnRadius, wedgeAngle, particleRadius) {
         this.radius = spawnRadius;
-        this.angle = randomBetween(0, wedgeAngle);
+        this.angle = wedgeAngle;
         this.r = particleRadius;
         this.updatePosition();
     }
 
     update(params) {
         const wedgeAngle = Math.PI / params.arms;
-        this.radius -= params.inwardDrift;
-        this.angle = clamp(
-            this.angle + (randomBetween(-params.jitter, params.jitter) / Math.max(this.radius, this.r, 1)),
-            0,
-            wedgeAngle
-        );
+        this.pos.x -= params.inwardDrift;
+        this.pos.y += randomBetween(-params.jitter, params.jitter);
+
+        const clampedAngle = clamp(Math.atan2(this.pos.y, this.pos.x), 0, wedgeAngle);
+        this.radius = magnitude(this.pos);
+        this.angle = clampedAngle;
         this.updatePosition();
     }
 
