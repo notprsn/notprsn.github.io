@@ -30,38 +30,55 @@ function initAboutRain() {
         width: 0,
         height: 0,
         dpr: 1,
+        renderScale: 1,
         time: 0,
         streaks: [],
         lastFrame: 0,
         frameId: 0,
     };
-    const targetInterval = 1000 / 24;
+    const targetInterval = 1000 / 18;
 
     const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
     const lerp = (start, end, amount) => start + (end - start) * amount;
     const mixColor = (from, to, amount) => from.map((channel, index) => Math.round(lerp(channel, to[index], amount)));
     const rgba = (rgb, alpha) => `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${alpha})`;
 
+    function getRenderScale(width) {
+        if (prefersReducedMotion) {
+            return 1;
+        }
+
+        if (width >= 1280) {
+            return 0.68;
+        }
+
+        if (width >= 820) {
+            return 0.78;
+        }
+
+        return 0.9;
+    }
+
     function createStreak(initial = false) {
         const width = state.width || window.innerWidth;
         const height = state.height || window.innerHeight;
-        const length = lerp(88, 220, Math.random());
+        const length = lerp(72, 180, Math.random());
 
         return {
             x: Math.random() * width,
             y: initial ? Math.random() * height : -length - Math.random() * height * 0.3,
             length,
-            speed: lerp(220, 560, Math.random()),
-            width: lerp(0.9, 2.1, Math.random()),
-            sway: lerp(0.2, 0.9, Math.random()),
-            drift: lerp(0.04, 0.14, Math.random()),
+            speed: lerp(180, 420, Math.random()),
+            width: lerp(0.75, 1.65, Math.random()),
+            sway: lerp(0.15, 0.65, Math.random()),
+            drift: lerp(0.03, 0.09, Math.random()),
             tintShift: Math.random(),
             phase: Math.random() * Math.PI * 2,
         };
     }
 
     function buildStreaks() {
-        const count = clamp(Math.floor(state.width / 28), 28, 54);
+        const count = clamp(Math.floor(state.width / 42), 16, 30);
         state.streaks = Array.from({ length: count }, () => createStreak(true));
     }
 
@@ -69,11 +86,12 @@ function initAboutRain() {
         state.dpr = 1;
         state.width = window.innerWidth;
         state.height = window.innerHeight;
-        canvas.width = Math.round(state.width * state.dpr);
-        canvas.height = Math.round(state.height * state.dpr);
+        state.renderScale = getRenderScale(state.width);
+        canvas.width = Math.round(state.width * state.renderScale);
+        canvas.height = Math.round(state.height * state.renderScale);
         canvas.style.width = `${state.width}px`;
         canvas.style.height = `${state.height}px`;
-        context.setTransform(state.dpr, 0, 0, state.dpr, 0, 0);
+        context.setTransform(state.renderScale, 0, 0, state.renderScale, 0, 0);
         context.fillStyle = `rgb(${palette.deepBg.join(",")})`;
         context.fillRect(0, 0, state.width, state.height);
         buildStreaks();
@@ -89,17 +107,16 @@ function initAboutRain() {
         const y2 = streak.y;
 
         context.beginPath();
-        context.strokeStyle = rgba(mid, 0.1);
-        context.lineWidth = streak.width * 2.4;
+        context.strokeStyle = rgba(mid, 0.06);
+        context.lineWidth = streak.width * 1.8;
         context.moveTo(x, y1 - streak.length * 0.1);
         context.lineTo(x, y2 + streak.length * 0.05);
         context.stroke();
 
         const gradient = context.createLinearGradient(x, y1, x, y2);
         gradient.addColorStop(0, rgba(cool, 0));
-        gradient.addColorStop(0.22, rgba(cool, 0.16));
-        gradient.addColorStop(0.72, rgba(mid, 0.48));
-        gradient.addColorStop(1, rgba(warm, 0.86));
+        gradient.addColorStop(0.3, rgba(cool, 0.12));
+        gradient.addColorStop(1, rgba(warm, 0.74));
 
         context.beginPath();
         context.strokeStyle = gradient;
@@ -108,9 +125,9 @@ function initAboutRain() {
         context.lineTo(x, y2);
         context.stroke();
 
-        context.fillStyle = rgba(warm, 0.82);
+        context.fillStyle = rgba(warm, 0.76);
         context.beginPath();
-        context.arc(x, y2, streak.width, 0, Math.PI * 2);
+        context.arc(x, y2, streak.width * 0.72, 0, Math.PI * 2);
         context.fill();
     }
 

@@ -68,7 +68,7 @@
   border-radius: 40px;
   background:
     radial-gradient(circle at 30% 42%, rgba(11, 15, 26, 0.72) 0%, rgba(11, 15, 26, 0.52) 42%, rgba(11, 15, 26, 0.16) 72%, transparent 100%);
-  filter: blur(18px);
+  filter: blur(12px);
   pointer-events: none;
 }
 
@@ -111,14 +111,16 @@
   .about-figure {
     width: min(320px, 26vw);
     height: auto;
-    opacity: 0.74;
+    opacity: 0.68;
     overflow: visible;
-    filter: drop-shadow(0 0 18px rgba(255, 46, 136, 0.18)) drop-shadow(0 0 30px rgba(93, 169, 255, 0.18));
+    filter: drop-shadow(0 0 12px rgba(93, 169, 255, 0.16));
+    shape-rendering: optimizeSpeed;
   }
 
   .about-figure-dancer {
     transform-origin: 50% 82%;
-    animation: about-figure-sway 7.2s ease-in-out infinite;
+    animation: about-figure-sway 8.6s ease-in-out infinite;
+    will-change: transform;
   }
 
   .about-figure-hair {
@@ -164,16 +166,6 @@
     stroke-linecap: round;
     stroke-linejoin: round;
   }
-
-  .about-figure-arm--left {
-    transform-origin: 160px 204px;
-    animation: about-figure-arm-wave 5.6s ease-in-out infinite;
-  }
-
-  .about-figure-arm--right {
-    transform-origin: 160px 210px;
-    animation: about-figure-arm-drift 6.4s ease-in-out infinite;
-  }
 }
 
 @keyframes about-figure-sway {
@@ -184,28 +176,6 @@
 
   50% {
     transform: translateY(-6px) rotate(2deg);
-  }
-}
-
-@keyframes about-figure-arm-wave {
-  0%,
-  100% {
-    transform: rotate(-2deg) translateY(0);
-  }
-
-  50% {
-    transform: rotate(6deg) translateY(-4px);
-  }
-}
-
-@keyframes about-figure-arm-drift {
-  0%,
-  100% {
-    transform: rotate(1deg);
-  }
-
-  50% {
-    transform: rotate(-4deg) translateX(-3px);
   }
 }
 

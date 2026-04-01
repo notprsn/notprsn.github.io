@@ -5,62 +5,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Essay themes and writing queues for Prasann Iyer.">
     <meta name="author" content="Prasann Iyer">
-    <meta name="site-version" content="20260401141154717">
+    <meta name="site-version" content="20260401190743601">
     <title>Essays | Prasann Iyer</title>
     <link href="../img/favicon.png" rel="icon" type="image/png" sizes="128x128">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
-    <link href="../css/style.css?v=20260401141154717" rel="stylesheet">
-    <link href="../css/pages/essays.css?v=20260401141154717" rel="stylesheet">
+    <link href="../css/style.css?v=20260401190743601" rel="stylesheet">
+    <link href="../css/pages/essays.css?v=20260401190743601" rel="stylesheet">
 </head>
 <body class="page-essays page-paper">
     <header class="site-header">
         <div class="site-nav-shell">
             <a class="site-brand" href="/">Prasann Iyer</a>
-            <nav class="site-nav" aria-label="Primary">
-                <a href="/work/">Work</a>
-                <a href="/projects/">Projects</a>
-                <a href="/fun/">Fun Stuff</a>
-                <a href="/essays/" aria-current="page">Essays</a>
-            </nav>
+            <div class="site-nav-tools">
+                <nav class="site-nav" aria-label="Primary">
+                    <a href="/work/">Work</a>
+                    <a href="/projects/">Projects</a>
+                    <a href="/fun/">Fun Stuff</a>
+                    <a href="/essays/" aria-current="page">Essays</a>
+                </nav>
+            </div>
         </div>
     </header>
 
-    <main class="page-main">
-        <section class="essay-hero">
+    <main class="page-main page-main--paper">
+        <section class="paper-hero paper-hero--work">
             <div>
                 <p class="eyebrow">Essays</p>
-                <h1>Themes first, essays second.</h1>
-                <p class="page-lede">
-                    This section now starts with themes instead of individual pieces.
-                    Travel and Miscellaneous are the first two rooms; each gets its own subdirectory and writing queue.
-                </p>
+                <h1 class="paper-hero__title">I Like Words</h1>
             </div>
-            <aside class="page-aside">
-                <p class="panel-label">Structure rule</p>
-                <p>Keep each theme self-contained. Theme index pages can hyperlink across the site, but drafts and assets should live with the theme itself.</p>
-            </aside>
+            <div class="paper-hero__rule" aria-hidden="true"></div>
         </section>
 
-        <section class="theme-grid">
-            <article class="theme-card">
-                <p class="panel-label">Theme 01</p>
-                <h2><a href="/essays/travel/">Travel</a></h2>
-                <p>Trip-based writing queue derived from the notes moved into the references directory.</p>
-                <div class="entry-links">
-                    <a class="inline-link" href="/essays/travel/">Open theme</a>
-                </div>
-            </article>
+        <section class="paper-section">
+            <div class="theme-grid theme-grid--essay-index">
+                <article class="theme-card theme-card--essay-index">
+                    <h2><a href="/essays/travel/">Travel Stories</a></h2>
+                    <div class="entry-links">
+                        <a class="inline-link" href="/essays/travel/">Open</a>
+                    </div>
+                </article>
 
-            <article class="theme-card">
-                <p class="panel-label">Theme 02</p>
-                <h2><a href="/essays/miscellaneous/">Miscellaneous</a></h2>
-                <p>Loose essays around puzzles, painting, guitar, and other topics that do not belong anywhere else.</p>
-                <div class="entry-links">
-                    <a class="inline-link" href="/essays/miscellaneous/">Open theme</a>
-                </div>
-            </article>
+                <article class="theme-card theme-card--essay-index">
+                    <h2><a href="/essays/miscellaneous/">Randoms</a></h2>
+                    <div class="entry-links">
+                        <a class="inline-link" href="/essays/miscellaneous/">Open</a>
+                    </div>
+                </article>
+            </div>
         </section>
     </main>
 
@@ -77,6 +70,6 @@
         </div>
     </footer>
 
-    <script type="module" src="../js/site.js?v=20260401141154717"></script>
+    <script type="module" src="../js/site.js?v=20260401190743601"></script>
 </body>
 </html>
