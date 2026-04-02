@@ -2,12 +2,15 @@
 
 This file records the external style briefs and code references used to translate individual projects into the `projects/` shelf cards on this site.
 
+It is a design-translation log, not a promise that every corresponding public project write-up is complete.
+
 ## Bollywoodle
 
 ### Status
 - Shelf card implemented on [`projects/index.html`](/Users/prasanniyer/notprsn.github.io/projects/index.html)
 - Shelf and project-detail implementation styles live in [`css/pages/projects.css`](/Users/prasanniyer/notprsn.github.io/css/pages/projects.css)
 - Shared primitives still come from [`css/style.css`](/Users/prasanniyer/notprsn.github.io/css/style.css)
+- Public detail pages live at [`projects/bollywoodle/story/index.html`](/Users/prasanniyer/notprsn.github.io/projects/bollywoodle/story/index.html) and [`projects/bollywoodle/humming/index.html`](/Users/prasanniyer/notprsn.github.io/projects/bollywoodle/humming/index.html)
 
 ### Design read
 - Low-light, warm-metallic, filmic
@@ -42,7 +45,8 @@ This file records the external style briefs and code references used to translat
 - Shelf card implemented on [`projects/index.html`](/Users/prasanniyer/notprsn.github.io/projects/index.html)
 - Shelf and project-detail implementation styles live in [`css/pages/projects.css`](/Users/prasanniyer/notprsn.github.io/css/pages/projects.css)
 - Shared primitives still come from [`css/style.css`](/Users/prasanniyer/notprsn.github.io/css/style.css)
-- Long-form note lives at [`projects/cloudscript/content.md`](/Users/prasanniyer/notprsn.github.io/projects/cloudscript/content.md)
+- Public page shell lives at [`projects/cloudscript/index.html`](/Users/prasanniyer/notprsn.github.io/projects/cloudscript/index.html)
+- The current markdown note at [`projects/cloudscript/content.md`](/Users/prasanniyer/notprsn.github.io/projects/cloudscript/content.md) is intentionally the public-facing content for now
 
 ### Design read
 - Soft, playful, mobile-first art-tool feel
@@ -164,13 +168,14 @@ This file records the external style briefs and code references used to translat
   - a frosted rounded pill surface
 - Full app-shell elements like the prompt bar, export bar, ad gate, and control panels are intentionally omitted from the shelf card.
 
-## Polymarket Quant Desk
+## Polymarket Crypto Desk
 
 ### Status
 - Shelf card implemented on [`projects/index.html`](/Users/prasanniyer/notprsn.github.io/projects/index.html)
 - Shelf implementation styles live in [`css/pages/projects.css`](/Users/prasanniyer/notprsn.github.io/css/pages/projects.css)
 - Shared primitives still come from [`css/style.css`](/Users/prasanniyer/notprsn.github.io/css/style.css)
-- Unpublished draft lives at [`projects/polymarket-quant-desk/content.md`](/Users/prasanniyer/notprsn.github.io/projects/polymarket-quant-desk/content.md)
+- No public detail route is linked from the shelf yet
+- The local draft at [`projects/polymarket-quant-desk/content.md`](/Users/prasanniyer/notprsn.github.io/projects/polymarket-quant-desk/content.md) is currently empty
 - Live-derived sample data preserved in [`docs/project-data/polymarket-quant-desk-sample.json`](/Users/prasanniyer/notprsn.github.io/docs/project-data/polymarket-quant-desk-sample.json)
 
 ### Design read
