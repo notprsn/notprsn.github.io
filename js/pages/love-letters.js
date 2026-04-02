@@ -17,6 +17,9 @@ function initLoveLetters() {
     const archiveTitle = document.querySelector("[data-archive-title]");
     const archiveIntro = document.querySelector("[data-archive-intro]");
     const lettersList = document.querySelector("[data-letters-list]");
+    const modal = document.querySelector("[data-love-modal]");
+    const modalMessage = document.querySelector("[data-love-modal-message]");
+    const modalClose = document.querySelector("[data-love-modal-close]");
     const submitButton = form.querySelector('button[type="submit"]');
     let bundlePromise;
 
@@ -28,6 +31,40 @@ function initLoveLetters() {
         status.textContent = message;
         status.dataset.state = state;
     };
+
+    const showModal = (message) => {
+        if (!modal || !modalMessage) {
+            return;
+        }
+
+        modalMessage.textContent = message;
+        if (typeof modal.showModal === "function") {
+            modal.showModal();
+            return;
+        }
+
+        modal.setAttribute("open", "");
+    };
+
+    const closeModal = () => {
+        if (!modal) {
+            return;
+        }
+
+        if (typeof modal.close === "function") {
+            modal.close();
+            return;
+        }
+
+        modal.removeAttribute("open");
+    };
+
+    modalClose?.addEventListener("click", closeModal);
+    modal?.addEventListener("click", (event) => {
+        if (event.target === modal) {
+            closeModal();
+        }
+    });
 
     const getBundle = async () => {
         if (!bundlePromise) {
@@ -50,12 +87,12 @@ function initLoveLetters() {
 
         const passphrase = passwordInput.value.trim();
         if (!passphrase) {
-            setStatus("Enter the passphrase first.", "error");
+            setStatus("Enter the answer first.", "error");
             return;
         }
 
         submitButton.disabled = true;
-        setStatus("Deriving key and decrypting...", "pending");
+        setStatus("Checking...", "pending");
 
         try {
             const bundle = await getBundle();
@@ -71,10 +108,12 @@ function initLoveLetters() {
             output.hidden = false;
             form.reset();
             setStatus("Archive unlocked.", "success");
+            showModal("oh, you made it. i thought someone was indifferent");
         } catch (error) {
             console.error(error);
             output.hidden = true;
-            setStatus("Incorrect passphrase or unreadable archive.", "error");
+            setStatus("Locked.", "error");
+            showModal("nice try, kiddo. i guess you'ren't her");
         } finally {
             submitButton.disabled = false;
         }
@@ -125,6 +164,7 @@ function renderArchive(archive, targets) {
 
     archiveTitle.textContent = title;
     archiveIntro.textContent = intro;
+    archiveIntro.hidden = !intro.trim();
     lettersList.replaceChildren();
 
     letters.forEach((letter) => {

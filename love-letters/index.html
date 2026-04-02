@@ -1,19 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Client-side encrypted love letters archive.">
     <meta name="author" content="Prasann Iyer">
-    <meta name="site-version" content="20260401214735689">
+    <meta name="site-version" content="20260402113600147">
     <title>Love Letters | Prasann Iyer</title>
     <link href="../img/favicon.png" rel="icon" type="image/png" sizes="128x128">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
-    <link href="../css/style.css?v=20260401214735689" rel="stylesheet">
-    <link href="../css/pages/love.css?v=20260401214735689" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Source+Sans+3:wght@400;600;700&display=swap"
+        rel="stylesheet">
+    <link href="../css/style.css?v=20260402113600147" rel="stylesheet">
+    <link href="../css/pages/love.css?v=20260402113600147" rel="stylesheet">
 </head>
+
 <body class="page-love page-dark">
     <header class="site-header">
         <div class="site-nav-shell">
@@ -31,44 +35,30 @@
         <section class="page-intro">
             <div>
                 <p class="eyebrow">Love Letters</p>
-                <h1>An encrypted archive.</h1>
-                <p class="page-lede">
-                    This page ships ciphertext only. Decryption happens in your browser after you enter the passphrase.
-                    The key is not stored in the repository, and the plaintext never needs to be published.
-                </p>
+                <h1 class="love-title">What's 729 by 2?</h1>
             </div>
-            <aside class="page-aside">
-                <p class="panel-label">Security model</p>
-                <p>
-                    Public GitHub Pages cannot give perfect secrecy if a browser must eventually decrypt the content.
-                    The practical defense is strong encryption, no committed password, and a long passphrase shared off-platform.
-                </p>
-            </aside>
         </section>
 
-        <section class="lock-grid">
+        <section class="lock-grid lock-grid--single">
             <article class="lock-panel">
                 <form data-love-letters-form>
-                    <input class="sr-only" type="text" name="archive-name" value="love-letters" autocomplete="username" tabindex="-1" aria-hidden="true">
+                    <input class="sr-only" type="text" name="archive-name" value="love-letters" autocomplete="username"
+                        tabindex="-1" aria-hidden="true">
                     <div class="form-row">
-                        <label class="lock-label" for="love-letters-password">Passphrase</label>
-                        <input class="lock-input" id="love-letters-password" name="password" type="password" autocomplete="current-password" spellcheck="false" required>
+                        <label class="lock-label" for="love-letters-password">Answer</label>
+                        <div class="lock-answer-row">
+                            <input class="lock-input" id="love-letters-password" name="password" type="text"
+                                autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" required>
+                            <button class="lock-button lock-button--icon" type="submit" aria-label="Submit answer">
+                                <svg viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M4.75 12h12.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.7"/>
+                                    <path d="m12.5 5.75 6.75 6.25-6.75 6.25" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7"/>
+                                </svg>
+                            </button>
+                        </div>
                     </div>
-                    <button class="lock-button" type="submit">Unlock archive</button>
                 </form>
-                <p class="status-text" data-love-letters-status>
-                    The archive is locked. If the ciphertext bundle has not been initialized yet, this page will tell you.
-                </p>
-            </article>
-
-            <article class="lock-note-card">
-                <p class="panel-label">Public details</p>
-                <ul class="plain-list">
-                    <li>PBKDF2-SHA-256 for key derivation.</li>
-                    <li>AES-256-GCM for authenticated encryption.</li>
-                    <li>Random salt and IV for each generated bundle.</li>
-                    <li>Password never committed to the repository.</li>
-                </ul>
+                <p class="status-text" data-love-letters-status>Locked.</p>
             </article>
         </section>
 
@@ -81,6 +71,13 @@
             <div class="letters-list" data-letters-list></div>
         </section>
     </main>
+
+    <dialog class="love-modal" data-love-modal>
+        <div class="love-modal__body">
+            <p class="love-modal__message" data-love-modal-message></p>
+            <button class="lock-button love-modal__close" type="button" data-love-modal-close>Close</button>
+        </div>
+    </dialog>
 
     <footer class="site-footer site-footer--love">
         <div class="footer-shell">
@@ -95,7 +92,8 @@
         </div>
     </footer>
 
-    <script type="module" src="../js/site.js?v=20260401214735689"></script>
-    <script type="module" src="../js/pages/love-letters.js?v=20260401214735689"></script>
+    <script type="module" src="../js/site.js?v=20260402113600147"></script>
+    <script type="module" src="../js/pages/love-letters.js?v=20260402113600147"></script>
 </body>
+
 </html>

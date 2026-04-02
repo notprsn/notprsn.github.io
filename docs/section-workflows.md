@@ -35,11 +35,19 @@ Publish an essay
 3. Leave the file empty if the theme card should stay queue-only for now.
 4. Run `node scripts/sync-site.mjs` to generate or remove the essay detail page and wire the theme-card link state.
 5. Do not hand-author a placeholder essay `index.html`; the sync step owns that file.
+6. There are currently no published essay detail pages, so any first non-empty essay will become the first live one.
 
-Update a project note
+Update a single-note project page
 1. Edit `projects/<slug>/content.md`.
-2. Keep the project page shell in `projects/<slug>/index.html` and let the page module render the markdown.
+2. Keep the page shell in `projects/<slug>/index.html` and let `js/pages/content-entry.js` render the markdown.
 3. Run `node scripts/sync-site.mjs` so shared asset versions and HTML cleanup stay current.
+
+Update a multi-note project page
+1. Edit `projects/<slug>/<note>/content.md`.
+2. Keep the matching shell in `projects/<slug>/<note>/index.html`.
+3. Reuse `js/pages/content-entry.js` for markdown rendering unless the page genuinely needs custom behavior.
+4. Bollywoodle is the current example of this pattern.
+5. Run `node scripts/sync-site.mjs` after updating the content or shell.
 
 Restyle an existing section
 1. Reuse shared primitives from `css/style.css` first, especially nav, footer, typography, and landing/page shells.

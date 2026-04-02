@@ -1,9 +1,12 @@
 # Project Style Agent Prompts
 
+These are archival prompt templates used to extract style references for the project shelf cards.
+They are not a statement that the corresponding public project write-ups are complete.
+
 ## Bollywoodle
 
 ```md
-You are helping define the visual language of a completed project called Bollywoodle so it can be represented as a pill/card on a grayscale personal site.
+You are helping define the visual language of a project called Bollywoodle so it can be represented as a pill/card on a grayscale personal site.
 
 I need you to inspect the running project directly and return a detailed markdown brief that is concrete enough to implement the card styling without guessing.
 
@@ -73,7 +76,7 @@ Do not stay abstract. Prefer exact values, code, and concrete style recommendati
 ## CloudScript
 
 ```md
-You are helping define the visual language of a completed project called CloudScript so it can be represented as a pill/card on a grayscale personal site.
+You are helping define the visual language of a project called CloudScript so it can be represented as a pill/card on a grayscale personal site.
 
 I need you to inspect the running project directly and return a detailed markdown brief that is concrete enough to implement the card styling without guessing.
 
@@ -146,10 +149,10 @@ Format your answer in markdown with clear section headings.
 Do not stay abstract. Prefer exact values, code, path data, and concrete style recommendations over general design commentary.
 ```
 
-## Polymarket Quant Desk
+## Polymarket Crypto Desk
 
 ```md
-You are helping define the visual language of a completed project called Polymarket Quant Desk so it can be represented as a pill/card on a grayscale personal site.
+You are helping define the visual language of a project called Polymarket Crypto Desk so it can be represented as a pill/card on a grayscale personal site.
 
 I need you to inspect the running project directly and return a detailed markdown brief that is concrete enough to implement the card styling without guessing.
 
@@ -195,7 +198,7 @@ Please give me all of the following:
 - animation durations/easing if visible
 - blinking ticks, loading, sweep, pulse, or chart-draw effects if any
 
-7. Quant Desk-specific data request
+7. Desk-specific data request
 - provide one sample time-series dataset with exactly 100 data points
 - output it as copy-pasteable JSON
 - include fields that would be useful for a compact sparkline or mini chart, such as `t`, `price`, `probability`, `signal`, or a similarly sensible schema

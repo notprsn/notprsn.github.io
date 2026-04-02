@@ -1,5 +1,9 @@
 # Gallery And Media Plan
 
+Current status
+- `/gallery/` exists as a public placeholder route.
+- No album directories or public image variants have been committed yet.
+
 Goal
 - Keep image-heavy pages fast without overcomplicating the repo.
 

@@ -1,5 +1,17 @@
 {
   "version": 1,
-  "configured": false,
-  "message": "The encrypted archive has not been initialized yet. Generate it locally with scripts/encrypt-love-letters.mjs."
+  "configured": true,
+  "generatedAt": "2026-04-02T11:17:57.065Z",
+  "kdf": {
+    "name": "PBKDF2",
+    "hash": "SHA-256",
+    "iterations": 600000,
+    "salt": "OlVMwAw4nzfg7B9V7frncA=="
+  },
+  "cipher": {
+    "name": "AES-GCM",
+    "iv": "c9Lbo+5F4U1mO046",
+    "tagLength": 128
+  },
+  "ciphertext": "RcNmjnevLBDipWJfI+CwLA1fppsLYWztfYryFtBqTSewbInmDM+TznzYZN9UO1WDMDL1Uvv0g6/op8SIcg0xrZRyobuyQEDTASSYx7uOPtebLya1TfM5ibhLkURX2zqBdU0y7NmHbcvMtMP0JJ0cQprfPuvuJHOKFJgJfIu94/p2SvgFjn0Nb3xH4cDR+rqYh1HWnAP84fTCovA+4BcDGZ+J7vPU0VA/DgB/uD/UjUVqCY81a0RZSoJlEuC+qVuFGDQ8zKHQ/mVuOTHYbO41LgtFQdxnIRvE295cvmW3JzW6D3LxNmYMgVUWabrbmewypFJKTfpWMbaqXC5pDI/XuAF2QHM5xeXRjcTYHftjabzVIkZYRvjTC4/sWrrANYZYapeEuExE9T3BdY2MWHWC9Vu32RXYrq7hNZUrXExIXDQLsiQ6dVHBXBsr7j9RXQGE4aLOLUaNo3mxEf2zxoNsnRKpqsowI66iu+8j8jBXMj896Eg4/w/FQg=="
 }
