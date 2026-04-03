@@ -34,11 +34,53 @@ async function fetchVersionedResource(resourcePath, options = {}) {
     });
 }
 
+function getCanvas2DContext(canvas) {
+    if (!(canvas instanceof HTMLCanvasElement)) {
+        return null;
+    }
+
+    return (
+        canvas.getContext("2d", { alpha: false, desynchronized: true }) ||
+        canvas.getContext("2d", { alpha: false }) ||
+        canvas.getContext("2d")
+    );
+}
+
+function rafThrottle(callback) {
+    let frameId = 0;
+    let lastArgs = [];
+
+    const throttled = (...args) => {
+        lastArgs = args;
+        if (frameId) {
+            return;
+        }
+
+        frameId = window.requestAnimationFrame(() => {
+            frameId = 0;
+            callback(...lastArgs);
+        });
+    };
+
+    throttled.cancel = () => {
+        if (!frameId) {
+            return;
+        }
+
+        window.cancelAnimationFrame(frameId);
+        frameId = 0;
+    };
+
+    return throttled;
+}
+
 window.Site = Object.freeze({
     onReady,
     getSiteVersion,
     appendSiteVersion,
     fetchVersionedResource,
+    getCanvas2DContext,
+    rafThrottle,
 });
 
 onReady(setCurrentYear);

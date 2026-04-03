@@ -1,4 +1,4 @@
-const onReady = window.Site?.onReady ?? ((callback) => callback());
+const { onReady, getCanvas2DContext, rafThrottle } = window.Site;
 
 onReady(initAboutRain);
 
@@ -8,10 +8,7 @@ function initAboutRain() {
         return;
     }
 
-    const context =
-        canvas.getContext("2d", { alpha: false, desynchronized: true }) ||
-        canvas.getContext("2d", { alpha: false }) ||
-        canvas.getContext("2d");
+    const context = getCanvas2DContext(canvas);
     if (!context) {
         return;
     }
@@ -188,17 +185,15 @@ function initAboutRain() {
         state.frameId = window.requestAnimationFrame(drawFrame);
     }
 
+    const handleResize = rafThrottle(() => {
+        resize();
+        if (prefersReducedMotion) {
+            drawStaticFrame();
+        }
+    });
+
     resize();
-    window.addEventListener(
-        "resize",
-        () => {
-            resize();
-            if (prefersReducedMotion) {
-                drawStaticFrame();
-            }
-        },
-        { passive: true }
-    );
+    window.addEventListener("resize", handleResize, { passive: true });
     document.addEventListener("visibilitychange", () => {
         if (document.hidden) {
             stop();

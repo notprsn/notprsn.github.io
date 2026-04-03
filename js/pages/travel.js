@@ -1,4 +1,4 @@
-const onReady = window.Site?.onReady ?? ((callback) => callback());
+const { onReady, rafThrottle } = window.Site;
 
 const MAP_DIMENSIONS = {
     width: 1160,
@@ -823,8 +823,10 @@ function initTravelTimeline({ d3, timelineNode }) {
         });
     };
 
+    const scheduleRender = rafThrottle(render);
+
     render();
-    window.addEventListener("resize", render, { passive: true });
+    window.addEventListener("resize", scheduleRender, { passive: true });
 }
 
 function buildTimelineLayout(items, scale) {
