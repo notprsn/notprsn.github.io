@@ -6,17 +6,28 @@ const fetchVersionedResource =
 onReady(initContentEntries);
 
 function initContentEntries() {
-    initWorkStoryPage();
-    initProjectMarkdownPage();
+    initMarkdownPage({
+        rootSelector: "[data-work-story-page]",
+        proseSelector: "[data-work-story-prose]",
+        errorMessage: "Could not load work story.",
+        shouldStripTitle: () => true,
+    });
+    initMarkdownPage({
+        rootSelector: "[data-project-markdown-page]",
+        proseSelector: "[data-project-markdown-prose]",
+        errorMessage: "Could not load project writing.",
+        shouldStripTitle: (root) => root.hasAttribute("data-strip-leading-title"),
+        enhance: enhanceProjectMarkdown,
+    });
 }
 
-async function initWorkStoryPage() {
-    const root = document.querySelector("[data-work-story-page]");
+async function initMarkdownPage({ rootSelector, proseSelector, errorMessage, shouldStripTitle, enhance }) {
+    const root = document.querySelector(rootSelector);
     if (!root) {
         return;
     }
 
-    const proseTarget = root.querySelector("[data-work-story-prose]");
+    const proseTarget = root.querySelector(proseSelector);
     const storyFile = root.getAttribute("data-story-file");
 
     if (!proseTarget || !storyFile) {
@@ -26,43 +37,16 @@ async function initWorkStoryPage() {
     try {
         const response = await fetchVersionedResource(storyFile);
         if (!response.ok) {
-            throw new Error("Could not load work story markdown.");
+            throw new Error(errorMessage);
         }
 
         const markdown = await response.text();
-        proseTarget.innerHTML = renderMarkdown(stripLeadingTitle(markdown));
-    } catch (error) {
-        console.error(error);
-        proseTarget.innerHTML = `<p>${escapeHtml("Could not load work story.")}</p>`;
-    }
-}
-
-async function initProjectMarkdownPage() {
-    const root = document.querySelector("[data-project-markdown-page]");
-    if (!root) {
-        return;
-    }
-
-    const proseTarget = root.querySelector("[data-project-markdown-prose]");
-    const storyFile = root.getAttribute("data-story-file");
-    const stripTitle = root.hasAttribute("data-strip-leading-title");
-
-    if (!proseTarget || !storyFile) {
-        return;
-    }
-
-    try {
-        const response = await fetchVersionedResource(storyFile);
-        if (!response.ok) {
-            throw new Error("Could not load project markdown.");
-        }
-
-        const markdown = await response.text();
+        const stripTitle = shouldStripTitle?.(root) ?? false;
         proseTarget.innerHTML = renderMarkdown(stripTitle ? stripLeadingTitle(markdown) : markdown);
-        enhanceProjectMarkdown(root, proseTarget);
+        enhance?.(root, proseTarget);
     } catch (error) {
         console.error(error);
-        proseTarget.innerHTML = `<p>${escapeHtml("Could not load project writing.")}</p>`;
+        proseTarget.innerHTML = `<p>${escapeHtml(errorMessage)}</p>`;
     }
 }
 

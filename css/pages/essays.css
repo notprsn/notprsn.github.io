@@ -44,12 +44,6 @@ body.page-essays:not(.page-paper) {
   }
 }
 
-@media (max-width: 720px) {
-  .theme-card--essay-index h2 {
-    max-width: none;
-  }
-}
-
 .page-paper.page-travel-story {
   --paper-tone-bg:
     radial-gradient(circle at 16% 14%, rgba(160, 111, 63, 0.14), transparent 24%),
@@ -66,9 +60,7 @@ body.page-essays:not(.page-paper) {
   --paper-tone-shadow: 0 28px 80px rgba(8, 4, 2, 0.35);
 }
 
-.page-paper.page-travel-story .paper-panel,
-.page-paper.page-travel-story .page-aside,
-.page-paper.page-travel-story .theme-card {
+.page-paper.page-travel-story .paper-panel {
   backdrop-filter: blur(18px);
 }
 
@@ -320,10 +312,6 @@ body.page-essays.page-travel-atlas {
   vector-effect: non-scaling-stroke;
 }
 
-.travel-map__boundaries {
-  display: none;
-}
-
 .travel-map-stage.is-india-mode .travel-map__countries {
   pointer-events: none;
 }
@@ -468,10 +456,6 @@ body.page-essays.page-travel-atlas {
   .travel-timeline-shell {
     padding: 0.9rem;
     border-radius: 24px;
-  }
-
-  .travel-map-canvas {
-    aspect-ratio: 1160 / 620;
   }
 
   .travel-map-hover-pill {

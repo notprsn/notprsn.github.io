@@ -6,16 +6,11 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const repoRoot = resolve(__dirname, "..");
 const dataDir = resolve(repoRoot, "data");
-const essayThemes = {
-    travel: {
-        directory: resolve(repoRoot, "essays", "travel"),
-        indexPath: resolve(repoRoot, "essays", "travel", "index.html"),
-        backPath: "/essays/travel/",
-        backLabel: "Travel Essays",
-        eyebrow: "Travel",
-        kindLabel: "Travel Essay",
-        descriptionLabel: "travel essay",
-    },
+const TRAVEL_ESSAY_CONFIG = {
+    directory: resolve(repoRoot, "essays", "travel"),
+    backPath: "/essays/travel/",
+    backLabel: "Travel Essays",
+    descriptionLabel: "travel essay",
 };
 
 const version = buildVersion();
@@ -23,7 +18,6 @@ const generatedAt = new Date().toISOString();
 
 const essayEntries = await collectEssayEntries();
 await syncEssayPages(essayEntries);
-await wireEssayIndexPages(essayEntries);
 await rm(resolve(dataDir, "writings-manifest.json"), { force: true });
 await writeJson(resolve(dataDir, "site-meta.json"), { version, generatedAt });
 
@@ -45,36 +39,32 @@ function buildVersion() {
 
 async function collectEssayEntries() {
     const entries = [];
+    const folders = await readdir(TRAVEL_ESSAY_CONFIG.directory, { withFileTypes: true });
 
-    for (const [theme, config] of Object.entries(essayThemes)) {
-        const folders = await readdir(config.directory, { withFileTypes: true });
-
-        for (const folder of folders) {
-            if (!folder.isDirectory()) {
-                continue;
-            }
-
-            const slug = folder.name;
-            const contentPath = resolve(config.directory, slug, "content.md");
-            let markdown = "";
-
-            try {
-                markdown = await readFile(contentPath, "utf8");
-            } catch {
-                continue;
-            }
-
-            entries.push({
-                theme,
-                slug,
-                markdown,
-                hasContent: Boolean(markdown.trim()),
-                outputPath: resolve(config.directory, slug, "index.html"),
-                route: `${config.backPath}${encodeURIComponent(slug)}/`,
-                title: extractTitle(markdown) || fallbackTitle(slug),
-                ...config,
-            });
+    for (const folder of folders) {
+        if (!folder.isDirectory()) {
+            continue;
         }
+
+        const slug = folder.name;
+        const contentPath = resolve(TRAVEL_ESSAY_CONFIG.directory, slug, "content.md");
+        let markdown = "";
+
+        try {
+            markdown = await readFile(contentPath, "utf8");
+        } catch {
+            continue;
+        }
+
+        entries.push({
+            slug,
+            markdown,
+            hasContent: Boolean(markdown.trim()),
+            outputPath: resolve(TRAVEL_ESSAY_CONFIG.directory, slug, "index.html"),
+            route: `${TRAVEL_ESSAY_CONFIG.backPath}${encodeURIComponent(slug)}/`,
+            title: extractTitle(markdown) || fallbackTitle(slug),
+            ...TRAVEL_ESSAY_CONFIG,
+        });
     }
 
     return entries.sort((left, right) => left.route.localeCompare(right.route));
@@ -87,95 +77,32 @@ async function syncEssayPages(entries) {
             continue;
         }
 
-        await writeFile(entry.outputPath, buildEssayHtml(entry), "utf8");
+        await writeFile(entry.outputPath, buildTravelEssayHtml(entry), "utf8");
     }
 }
 
-async function wireEssayIndexPages(entries) {
-    for (const [theme, config] of Object.entries(essayThemes)) {
-        const bySlug = new Map(
-            entries
-                .filter((entry) => entry.theme === theme && entry.hasContent)
-                .map((entry) => [entry.slug, entry])
-        );
-
-        const source = await readFile(config.indexPath, "utf8");
-        const updated = source.replace(
-            /<article\b[\s\S]*?data-essay-slot="([^"]+)"[\s\S]*?<\/article>/g,
-            (article, slug) => {
-                if (!article.includes("data-essay-link")) {
-                    return article;
-                }
-
-                const entry = bySlug.get(slug);
-                const replacement = entry
-                    ? `<div class="writing-link-cluster" data-essay-link>${buildEssayLinkMarkup(entry)}</div>`
-                    : '<div class="writing-link-cluster" data-essay-link hidden></div>';
-
-                return article.replace(
-                    /<div class="writing-link-cluster" data-essay-link(?: hidden)?>([\s\S]*?)<\/div>/,
-                    replacement
-                );
-            }
-        );
-
-        if (updated !== source) {
-            await writeFile(config.indexPath, updated, "utf8");
-        }
-    }
-}
-
-function buildEssayHtml(entry) {
+function buildTravelEssayHtml(entry) {
     const assetPrefix = buildAssetPrefix(entry.outputPath);
     const proseMarkdown = stripLeadingTitle(entry.markdown);
     const proseHtml = renderMarkdown(proseMarkdown.trim() ? proseMarkdown : entry.markdown);
     const title = escapeHtml(entry.title);
-    const kindLabel = escapeHtml(entry.kindLabel);
     const backLabel = escapeHtml(entry.backLabel);
-    const eyebrow = escapeHtml(entry.eyebrow);
     const descriptionLabel = escapeHtml(entry.descriptionLabel);
     const currentYear = new Date().getFullYear().toString();
-    const isTravel = entry.theme === "travel";
-    const bodyClass = isTravel ? "page-paper page-travel-story" : "page-essays";
-    const mainClass = isTravel ? "page-main page-main--paper" : "page-main";
-    const navShellOpen = isTravel ? '<div class="site-nav-tools">' : "";
-    const navShellClose = isTravel ? "</div>" : "";
-    const extraCssLink = isTravel ? `\n    <link href="${assetPrefix}css/pages/work.css" rel="stylesheet">` : "";
-    const heroMarkup = isTravel
-        ? `        <section class="paper-hero paper-hero--work work-story-page__hero">
+    const heroMarkup = `        <section class="paper-hero paper-hero--work work-story-page__hero">
             <div>
                 <a class="story-back-link work-story-page__back" href="${entry.backPath}">&lt; Back to ${backLabel}</a>
                 <h1 class="paper-ledger__title work-story-page__title">${title}</h1>
             </div>
             <div class="paper-hero__rule" aria-hidden="true"></div>
-        </section>`
-        : `        <section class="page-intro">
-            <div>
-                <p class="eyebrow">${eyebrow}</p>
-                <h1>${title}</h1>
-                <p class="page-lede">${kindLabel}</p>
-            </div>
-            <aside class="page-aside">
-                <p class="panel-label">Navigation</p>
-                <div class="entry-links">
-                    <a class="inline-link" href="/">Home</a>
-                    <a class="inline-link" href="${entry.backPath}">Back to ${backLabel}</a>
-                </div>
-            </aside>
         </section>`;
-    const articleMarkup = isTravel
-        ? `        <section class="paper-section">
+    const articleMarkup = `        <section class="paper-section">
             <article class="paper-panel work-story-page__panel">
                 <div class="writing-prose work-story-page__prose">
 ${indentMultiline(proseHtml, 20)}
                 </div>
             </article>
-        </section>`
-        : `        <article class="writing-shell">
-            <div class="writing-prose">
-${indentMultiline(proseHtml, 16)}
-            </div>
-        </article>`;
+        </section>`;
 
     return `<!DOCTYPE html>
 <html lang="en">
@@ -191,24 +118,25 @@ ${indentMultiline(proseHtml, 16)}
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="${assetPrefix}css/style.css" rel="stylesheet">
-    <link href="${assetPrefix}css/pages/essays.css" rel="stylesheet">${extraCssLink}
+    <link href="${assetPrefix}css/pages/essays.css" rel="stylesheet">
+    <link href="${assetPrefix}css/pages/work.css" rel="stylesheet">
 </head>
-<body class="${bodyClass}">
+<body class="page-paper page-travel-story">
     <header class="site-header">
         <div class="site-nav-shell">
             <a class="site-brand" href="/">Prasann Iyer</a>
-            ${navShellOpen}
+            <div class="site-nav-tools">
             <nav class="site-nav" aria-label="Primary">
                 <a href="/work/">Work</a>
                 <a href="/projects/">Projects</a>
                 <a href="/fun/">Fun Stuff</a>
                 <a href="/essays/" aria-current="page">Essays</a>
             </nav>
-            ${navShellClose}
+            </div>
         </div>
     </header>
 
-    <main class="${mainClass}">
+    <main class="page-main page-main--paper">
 ${heroMarkup}
 ${articleMarkup}
     </main>
@@ -232,11 +160,6 @@ ${articleMarkup}
 `;
 }
 
-function buildEssayLinkMarkup(entry) {
-    const title = escapeHtml(entry.title);
-    return `<a class="story-link" href="${entry.route}" aria-label="Open the essay for ${title}"><span class="story-link-label">Open essay</span><span class="story-link-arrow" aria-hidden="true">&gt;</span></a>`;
-}
-
 function buildAssetPrefix(filePath) {
     const fromFileDirToRoot = relative(dirname(filePath), repoRoot).replaceAll("\\", "/");
     return fromFileDirToRoot ? `${fromFileDirToRoot}/` : "";
@@ -258,18 +181,7 @@ function extractTitle(markdown) {
 function fallbackTitle(slug) {
     return slug
         .split("-")
-        .map((part) => {
-            if (part.toUpperCase() === "UK") {
-                return "UK";
-            }
-            if (part.toUpperCase() === "QICAP") {
-                return "QiCAP";
-            }
-            if (part.toUpperCase() === "VRPP") {
-                return "VRPp";
-            }
-            return part.charAt(0).toUpperCase() + part.slice(1);
-        })
+        .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
         .join(" ");
 }
 
