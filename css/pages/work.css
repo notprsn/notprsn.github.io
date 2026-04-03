@@ -4,6 +4,10 @@
   margin-top: 1rem;
 }
 
+.paper-section[id] {
+  scroll-margin-top: calc(var(--scene-header-offset) + 1.2rem);
+}
+
 .paper-ledger__row {
   display: grid;
   grid-template-columns: minmax(120px, 144px) minmax(0, 1fr);
@@ -70,6 +74,14 @@
   margin-top: 0.55rem;
 }
 
+.detail-list--paper b,
+.detail-list--paper strong,
+.paper-panel--achievement b,
+.paper-panel--achievement strong {
+  color: #cccccc;
+  font-weight: 600;
+}
+
 .paper-ledger__body {
   display: block;
 }
@@ -86,11 +98,11 @@
 }
 
 .paper-panel--achievement .panel-label,
-.paper-panel--achievement > p {
+.paper-panel--achievement>p {
   margin: 0;
 }
 
-.paper-panel--achievement > p:last-child {
+.paper-panel--achievement>p:last-child {
   line-height: 1.5;
 }
 

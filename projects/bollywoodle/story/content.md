@@ -37,3 +37,5 @@ Just this year, we realized we'd both spent our first years in Bombay chawls whi
 The *dost* connect backwards.
 
 Bollywoodle has come a long way since. We'll see whether making cool new things leads anywhere. At the very least, things aren't "*whatever*" anymore.
+
+There's your fucking story, Vineet.
