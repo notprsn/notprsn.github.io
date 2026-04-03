@@ -18,9 +18,10 @@ body.page-essays:not(.page-paper) {
 }
 
 .theme-card--essay-index h2 {
-  font-size: clamp(2.8rem, 6vw, 4rem);
+  font-size: clamp(2.1rem, 4.5vw, 2.95rem);
   margin-top: 0;
-  max-width: 10ch;
+  max-width: none;
+  white-space: nowrap;
 }
 
 .theme-card--essay-index .entry-links {
@@ -37,5 +38,389 @@ body.page-essays:not(.page-paper) {
 @media (max-width: 720px) {
   .theme-card--essay-index h2 {
     max-width: none;
+  }
+}
+
+body.page-essays.page-travel-atlas {
+  --travel-ink: #392618;
+  --travel-muted: #715438;
+  --travel-line: rgba(91, 64, 38, 0.15);
+  --travel-line-strong: rgba(91, 64, 38, 0.28);
+  --travel-panel: rgba(251, 243, 230, 0.88);
+  --travel-panel-strong: rgba(246, 235, 216, 0.98);
+  --travel-pill-text: #fff9ef;
+  --travel-pill-stroke: rgba(44, 26, 15, 0.72);
+  color: var(--travel-ink);
+  background:
+    radial-gradient(circle at 14% 15%, rgba(195, 147, 82, 0.18), transparent 23%),
+    radial-gradient(circle at 86% 8%, rgba(108, 70, 34, 0.14), transparent 19%),
+    linear-gradient(180deg, #f7efdf 0%, #eadcc4 100%);
+}
+
+.page-travel-atlas .site-header {
+  background: rgba(247, 238, 224, 0.88);
+  border-bottom-color: var(--travel-line);
+  backdrop-filter: blur(14px);
+}
+
+.page-travel-atlas .site-brand,
+.page-travel-atlas .eyebrow {
+  color: var(--travel-muted);
+}
+
+.page-travel-atlas .site-nav a {
+  border-color: var(--travel-line);
+  background: rgba(255, 255, 255, 0.34);
+  color: var(--travel-muted);
+}
+
+.page-travel-atlas .site-nav a[aria-current="page"],
+.page-travel-atlas .site-nav a:hover,
+.page-travel-atlas .site-nav a:focus-visible {
+  background: rgba(97, 61, 31, 0.94);
+  border-color: rgba(97, 61, 31, 0.94);
+  color: #fff8ef;
+}
+
+.page-main--travel-atlas {
+  display: grid;
+  gap: 0;
+}
+
+.page-main--travel-atlas > .section-block {
+  width: 100%;
+  min-width: 0;
+}
+
+.travel-atlas-hero h1 {
+  margin: 0.28rem 0 0;
+  font-family: var(--font-display);
+  font-size: clamp(3.6rem, 10vw, 7.1rem);
+  font-weight: 500;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  max-width: 10ch;
+}
+
+.page-travel-atlas .section-head {
+  grid-template-columns: 1fr;
+  gap: 0;
+  padding-bottom: 0.85rem;
+}
+
+.page-travel-atlas .section-head h2 {
+  font-size: clamp(2.2rem, 6vw, 3.6rem);
+}
+
+.travel-map-stage,
+.travel-timeline-shell {
+  margin-top: 1.35rem;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  border: 1px solid var(--travel-line);
+  border-radius: 30px;
+  background: var(--travel-panel);
+  box-shadow: 0 24px 70px rgba(84, 56, 30, 0.1);
+  padding: 1.15rem;
+}
+
+.travel-map-stage {
+  position: relative;
+}
+
+.travel-map-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.travel-map-toolbar [hidden] {
+  display: none !important;
+}
+
+.travel-map-canvas {
+  position: relative;
+  width: 100%;
+  margin-top: 0.75rem;
+  aspect-ratio: 1160 / 620;
+  border-radius: 26px;
+  overflow: hidden;
+  border: 1px solid var(--travel-line);
+  background:
+    radial-gradient(circle at 50% 48%, rgba(255, 251, 242, 0.98), rgba(231, 214, 188, 0.98)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.36), rgba(255, 255, 255, 0));
+}
+
+.travel-map-canvas::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.28),
+    inset 0 0 110px rgba(123, 84, 45, 0.12);
+  pointer-events: none;
+}
+
+.travel-map-canvas svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.travel-map-canvas svg * {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.travel-map-hover-pill {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.55rem;
+  max-width: calc(100% - 7.5rem);
+  padding: 0.55rem 1rem;
+  border: 1px solid rgba(58, 34, 18, 0.22);
+  border-radius: 999px;
+  box-shadow: 0 16px 28px rgba(63, 39, 20, 0.16);
+  background: linear-gradient(180deg, rgba(107, 64, 33, 0.97), rgba(74, 43, 21, 0.98));
+  color: var(--travel-pill-text);
+  font-family: var(--font-mono);
+  font-size: clamp(0.68rem, 1.8vw, 0.82rem);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  line-height: 1;
+  text-transform: uppercase;
+  text-shadow: 0 1px 1px rgba(20, 12, 7, 0.34), 0 0 12px rgba(20, 12, 7, 0.2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: opacity 180ms ease, transform 180ms ease;
+  pointer-events: none;
+}
+
+.travel-map-hover-pill.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.travel-map__sphere {
+  fill: rgba(241, 229, 210, 0.94);
+  stroke: rgba(91, 64, 38, 0.18);
+  stroke-width: 1;
+}
+
+.travel-map__graticule {
+  fill: none;
+  stroke: rgba(91, 64, 38, 0.12);
+  stroke-width: 0.8;
+  stroke-dasharray: 2 5;
+}
+
+.travel-map__country {
+  stroke: rgba(95, 67, 39, 0.26);
+  stroke-width: 0.72;
+  vector-effect: non-scaling-stroke;
+  transition: filter 180ms ease, opacity 180ms ease;
+}
+
+.travel-map__country:not(.is-visited) {
+  fill: transparent;
+}
+
+.travel-map__country.is-interactive {
+  cursor: pointer;
+}
+
+.travel-map__country.is-visited {
+  fill-opacity: 1;
+  stroke: rgba(71, 46, 24, 0.34);
+}
+
+.travel-map__country.is-active {
+  filter: drop-shadow(0 0 0.7rem rgba(46, 28, 16, 0.24));
+  stroke: rgba(43, 27, 16, 0.82);
+  stroke-width: 1.2;
+  vector-effect: non-scaling-stroke;
+}
+
+.travel-map__country.is-india-focus {
+  filter: drop-shadow(0 0 0.95rem rgba(46, 28, 16, 0.28));
+  stroke: rgba(43, 27, 16, 0.92);
+  stroke-width: 1.35;
+  vector-effect: non-scaling-stroke;
+}
+
+.travel-map__boundaries {
+  display: none;
+}
+
+.travel-map-stage.is-india-mode .travel-map__countries {
+  pointer-events: none;
+}
+
+.travel-map__world-markers,
+.travel-map__india-pins {
+  transition: opacity 200ms ease;
+}
+
+.travel-map__india-pins {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.travel-map-stage.is-india-mode .travel-map__india-pins {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.travel-map-stage.is-india-mode .travel-map__world-markers {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.travel-map__marker-group,
+.travel-map__india-pin-group {
+  cursor: pointer;
+}
+
+.travel-map__marker-group:focus-visible,
+.travel-map__marker-group:focus,
+.travel-map__country:focus-visible,
+.travel-map__country:focus,
+.travel-map__india-pin-group:focus-visible {
+  outline: none;
+}
+
+.travel-map__india-pin-group:focus {
+  outline: none;
+}
+
+.travel-map__marker-core,
+.travel-map__india-pin {
+  stroke: rgba(253, 248, 238, 0.96);
+  stroke-width: 1.6;
+  vector-effect: non-scaling-stroke;
+  transition: transform 180ms ease, filter 180ms ease;
+}
+
+.travel-map__marker-stem {
+  stroke: rgba(78, 46, 22, 0.72);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.travel-map__india-pin-line {
+  stroke: rgba(66, 41, 22, 0.36);
+  stroke-width: 1.1;
+  vector-effect: non-scaling-stroke;
+}
+
+.travel-map__marker-group.is-active .travel-map__marker-core,
+.travel-map__india-pin-group.is-active .travel-map__india-pin {
+  filter: drop-shadow(0 0 0.62rem rgba(52, 31, 17, 0.3));
+}
+
+.travel-timeline-frame {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 0.25rem;
+  -webkit-overflow-scrolling: touch;
+}
+
+.travel-timeline-frame svg {
+  width: 100%;
+  min-width: 78rem;
+  height: auto;
+  display: block;
+  max-width: none;
+}
+
+.travel-timeline__surface {
+  fill: var(--travel-panel-strong);
+  stroke: rgba(92, 66, 40, 0.08);
+}
+
+.travel-timeline__axis-line,
+.travel-timeline__year-line {
+  stroke: rgba(92, 66, 40, 0.12);
+  stroke-width: 1;
+}
+
+.travel-timeline__year-label {
+  fill: var(--travel-muted);
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.08em;
+}
+
+.travel-timeline__item {
+  cursor: pointer;
+}
+
+.travel-timeline__item:focus-visible {
+  outline: none;
+}
+
+.travel-timeline__item:hover .travel-timeline__pill,
+.travel-timeline__item:focus-visible .travel-timeline__pill {
+  filter: drop-shadow(0 10px 16px rgba(61, 38, 22, 0.16));
+}
+
+.travel-timeline__pill {
+  stroke: rgba(60, 34, 16, 0.18);
+  stroke-width: 1;
+}
+
+.travel-timeline__pill-label {
+  fill: var(--travel-pill-text);
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  paint-order: stroke;
+  stroke: var(--travel-pill-stroke);
+  stroke-width: 3.2px;
+  stroke-linejoin: round;
+}
+
+@media (max-width: 860px) {
+  .travel-atlas-hero h1 {
+    max-width: none;
+  }
+}
+
+@media (max-width: 720px) {
+  .travel-map-stage,
+  .travel-timeline-shell {
+    padding: 0.9rem;
+    border-radius: 24px;
+  }
+
+  .travel-map-canvas {
+    aspect-ratio: 1160 / 620;
+  }
+
+  .travel-map-hover-pill {
+    top: 0.75rem;
+    left: 0.75rem;
+    max-width: calc(100% - 1.5rem);
+  }
+
+  .travel-timeline-frame svg {
+    min-width: 64rem;
   }
 }
