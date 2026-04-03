@@ -14,6 +14,8 @@ const INDIA_PIN_COLORS = {
     state: "#1f7a45",
 };
 
+const TRAVEL_ROUTE_BASE = "/essays/travel/";
+
 const INDIA_FILL = createFlagFill("vertical", [
     [0, "#ff9933"],
     [0.34, "#ff9933"],
@@ -99,417 +101,187 @@ const COUNTRY_FEATURE_IDS = {
     "united-kingdom": ["826"],
 };
 
-const TRAVEL_COUNTRIES = [
-    {
-        slug: "india",
-        name: "India",
-        route: "/essays/travel/india/",
-        displayLabel: "INDIA",
-        hoverLabel: "INDIA",
-        interactionMode: "india-focus",
-        mapFill: INDIA_FILL,
-        timelineFill: null,
-    },
-    {
-        slug: "brunei",
-        name: "Brunei",
-        route: "/essays/travel/brunei/",
-        displayLabel: "BRUNEI",
-        hoverLabel: "BRUNEI - 2006-2009",
-        startYear: 2006,
-        endYear: 2009,
-        interactionMode: "country-link",
-        mapFill: createFlagFill("diagonal", [
-            [0, "#f6d648"],
-            [0.42, "#f6d648"],
-            [0.42, "#ffffff"],
-            [0.47, "#ffffff"],
-            [0.47, "#111111"],
-            [0.57, "#111111"],
-            [0.57, "#ffffff"],
-            [0.62, "#ffffff"],
-            [0.62, "#f6d648"],
-            [1, "#f6d648"],
-        ]),
-        timelineFill: createFlagFill("diagonal", [
-            [0, "#f6d648"],
-            [0.42, "#f6d648"],
-            [0.42, "#ffffff"],
-            [0.47, "#ffffff"],
-            [0.47, "#111111"],
-            [0.57, "#111111"],
-            [0.57, "#ffffff"],
-            [0.62, "#ffffff"],
-            [0.62, "#f6d648"],
-            [1, "#f6d648"],
-        ]),
-    },
+const TIMELINE_FLAG_FILLS = {
+    brunei: createFlagFill("diagonal", [
+        [0, "#f6d648"],
+        [0.42, "#f6d648"],
+        [0.42, "#ffffff"],
+        [0.47, "#ffffff"],
+        [0.47, "#111111"],
+        [0.57, "#111111"],
+        [0.57, "#ffffff"],
+        [0.62, "#ffffff"],
+        [0.62, "#f6d648"],
+        [1, "#f6d648"],
+    ]),
+    singapore: createFlagFill("vertical", [
+        [0, "#df1f26"],
+        [0.5, "#df1f26"],
+        [0.5, "#ffffff"],
+        [1, "#ffffff"],
+    ]),
+    malaysia: createFlagFill("vertical", [
+        [0, "#c8202f"],
+        [0.12, "#c8202f"],
+        [0.12, "#ffffff"],
+        [0.24, "#ffffff"],
+        [0.24, "#c8202f"],
+        [0.36, "#c8202f"],
+        [0.36, "#ffffff"],
+        [0.48, "#ffffff"],
+        [0.48, "#0b3f8a"],
+        [0.76, "#0b3f8a"],
+        [0.76, "#f1c845"],
+        [1, "#f1c845"],
+    ]),
+    thailand: createFlagFill("vertical", [
+        [0, "#b11d2f"],
+        [0.2, "#b11d2f"],
+        [0.2, "#ffffff"],
+        [0.35, "#ffffff"],
+        [0.35, "#1b2f7c"],
+        [0.65, "#1b2f7c"],
+        [0.65, "#ffffff"],
+        [0.8, "#ffffff"],
+        [0.8, "#b11d2f"],
+        [1, "#b11d2f"],
+    ]),
+    canada: createFlagFill("horizontal", [
+        [0, "#d3202d"],
+        [0.25, "#d3202d"],
+        [0.25, "#ffffff"],
+        [0.75, "#ffffff"],
+        [0.75, "#d3202d"],
+        [1, "#d3202d"],
+    ]),
+    jordan: createFlagFill("horizontal", [
+        [0, "#c01d25"],
+        [0.18, "#c01d25"],
+        [0.18, "#111111"],
+        [0.46, "#111111"],
+        [0.46, "#ffffff"],
+        [0.72, "#ffffff"],
+        [0.72, "#1d8a43"],
+        [1, "#1d8a43"],
+    ]),
+    "sri-lanka": createFlagFill("horizontal", [
+        [0, "#f09a28"],
+        [0.16, "#f09a28"],
+        [0.16, "#0f7a3b"],
+        [0.28, "#0f7a3b"],
+        [0.28, "#f7bf3d"],
+        [0.4, "#f7bf3d"],
+        [0.4, "#6f1527"],
+        [1, "#6f1527"],
+    ]),
+    indonesia: createFlagFill("vertical", [
+        [0, "#d21f26"],
+        [0.5, "#d21f26"],
+        [0.5, "#ffffff"],
+        [1, "#ffffff"],
+    ]),
+    netherlands: createFlagFill("vertical", [
+        [0, "#ae1f28"],
+        [0.33, "#ae1f28"],
+        [0.33, "#ffffff"],
+        [0.66, "#ffffff"],
+        [0.66, "#1f4f9c"],
+        [1, "#1f4f9c"],
+    ]),
+    belgium: createFlagFill("horizontal", [
+        [0, "#121212"],
+        [0.33, "#121212"],
+        [0.33, "#f0c533"],
+        [0.66, "#f0c533"],
+        [0.66, "#c62832"],
+        [1, "#c62832"],
+    ]),
+    vietnam: createFlagFill("diagonal", [
+        [0, "#c92026"],
+        [0.78, "#c92026"],
+        [0.78, "#f2c53d"],
+        [1, "#f2c53d"],
+    ]),
+    "united-arab-emirates": createFlagFill("horizontal", [
+        [0, "#d91f26"],
+        [0.18, "#d91f26"],
+        [0.18, "#1f8b4c"],
+        [0.46, "#1f8b4c"],
+        [0.46, "#ffffff"],
+        [0.72, "#ffffff"],
+        [0.72, "#111111"],
+        [1, "#111111"],
+    ]),
+    "united-kingdom": createFlagFill("diagonal", [
+        [0, "#1f3f91"],
+        [0.28, "#1f3f91"],
+        [0.28, "#ffffff"],
+        [0.4, "#ffffff"],
+        [0.4, "#c91f26"],
+        [0.58, "#c91f26"],
+        [0.58, "#ffffff"],
+        [0.7, "#ffffff"],
+        [0.7, "#1f3f91"],
+        [1, "#1f3f91"],
+    ]),
+};
+
+const TRAVEL_COUNTRY_DATA = [
+    { slug: "india", name: "India", interactionMode: "india-focus" },
+    { slug: "brunei", name: "Brunei", startYear: 2006, endYear: 2009 },
     {
         slug: "singapore",
         name: "Singapore",
-        route: "/essays/travel/singapore/",
-        displayLabel: "SINGAPORE",
-        hoverLabel: "SINGAPORE - 2006-2009",
         startYear: 2006,
         endYear: 2009,
-        interactionMode: "country-link",
-        specialMarker: {
-            coordinates: [103.8198, 1.3521],
-            radius: 5.6,
-        },
-        mapFill: createFlagFill("vertical", [
-            [0, "#df1f26"],
-            [0.5, "#df1f26"],
-            [0.5, "#ffffff"],
-            [1, "#ffffff"],
-        ]),
-        timelineFill: createFlagFill("vertical", [
-            [0, "#df1f26"],
-            [0.5, "#df1f26"],
-            [0.5, "#ffffff"],
-            [1, "#ffffff"],
-        ]),
+        specialMarker: { coordinates: [103.8198, 1.3521], radius: 5.6 },
     },
-    {
-        slug: "malaysia",
-        name: "Malaysia",
-        route: "/essays/travel/malaysia/",
-        displayLabel: "MALAYSIA",
-        hoverLabel: "MALAYSIA - 2006-2009",
-        startYear: 2006,
-        endYear: 2009,
-        interactionMode: "country-link",
-        mapFill: createFlagFill("vertical", [
-            [0, "#c8202f"],
-            [0.12, "#c8202f"],
-            [0.12, "#ffffff"],
-            [0.24, "#ffffff"],
-            [0.24, "#c8202f"],
-            [0.36, "#c8202f"],
-            [0.36, "#ffffff"],
-            [0.48, "#ffffff"],
-            [0.48, "#0b3f8a"],
-            [0.76, "#0b3f8a"],
-            [0.76, "#f1c845"],
-            [1, "#f1c845"],
-        ]),
-        timelineFill: createFlagFill("vertical", [
-            [0, "#c8202f"],
-            [0.12, "#c8202f"],
-            [0.12, "#ffffff"],
-            [0.24, "#ffffff"],
-            [0.24, "#c8202f"],
-            [0.36, "#c8202f"],
-            [0.36, "#ffffff"],
-            [0.48, "#ffffff"],
-            [0.48, "#0b3f8a"],
-            [0.76, "#0b3f8a"],
-            [0.76, "#f1c845"],
-            [1, "#f1c845"],
-        ]),
-    },
-    {
-        slug: "thailand",
-        name: "Thailand",
-        route: "/essays/travel/thailand/",
-        displayLabel: "THAILAND",
-        hoverLabel: "THAILAND - 2006-2009",
-        startYear: 2006,
-        endYear: 2009,
-        interactionMode: "country-link",
-        mapFill: createFlagFill("vertical", [
-            [0, "#b11d2f"],
-            [0.2, "#b11d2f"],
-            [0.2, "#ffffff"],
-            [0.35, "#ffffff"],
-            [0.35, "#1b2f7c"],
-            [0.65, "#1b2f7c"],
-            [0.65, "#ffffff"],
-            [0.8, "#ffffff"],
-            [0.8, "#b11d2f"],
-            [1, "#b11d2f"],
-        ]),
-        timelineFill: createFlagFill("vertical", [
-            [0, "#b11d2f"],
-            [0.2, "#b11d2f"],
-            [0.2, "#ffffff"],
-            [0.35, "#ffffff"],
-            [0.35, "#1b2f7c"],
-            [0.65, "#1b2f7c"],
-            [0.65, "#ffffff"],
-            [0.8, "#ffffff"],
-            [0.8, "#b11d2f"],
-            [1, "#b11d2f"],
-        ]),
-    },
-    {
-        slug: "canada",
-        name: "Canada",
-        route: "/essays/travel/canada/",
-        displayLabel: "CANADA",
-        hoverLabel: "CANADA - 2013",
-        startYear: 2013,
-        endYear: 2013,
-        interactionMode: "country-link",
-        mapFill: createFlagFill("horizontal", [
-            [0, "#d3202d"],
-            [0.25, "#d3202d"],
-            [0.25, "#ffffff"],
-            [0.75, "#ffffff"],
-            [0.75, "#d3202d"],
-            [1, "#d3202d"],
-        ]),
-        timelineFill: createFlagFill("horizontal", [
-            [0, "#d3202d"],
-            [0.25, "#d3202d"],
-            [0.25, "#ffffff"],
-            [0.75, "#ffffff"],
-            [0.75, "#d3202d"],
-            [1, "#d3202d"],
-        ]),
-    },
-    {
-        slug: "jordan",
-        name: "Jordan",
-        route: "/essays/travel/jordan/",
-        displayLabel: "JORDAN",
-        hoverLabel: "JORDAN - 2015",
-        startYear: 2015,
-        endYear: 2015,
-        interactionMode: "country-link",
-        mapFill: createFlagFill("horizontal", [
-            [0, "#c01d25"],
-            [0.18, "#c01d25"],
-            [0.18, "#111111"],
-            [0.46, "#111111"],
-            [0.46, "#ffffff"],
-            [0.72, "#ffffff"],
-            [0.72, "#1d8a43"],
-            [1, "#1d8a43"],
-        ]),
-        timelineFill: createFlagFill("horizontal", [
-            [0, "#c01d25"],
-            [0.18, "#c01d25"],
-            [0.18, "#111111"],
-            [0.46, "#111111"],
-            [0.46, "#ffffff"],
-            [0.72, "#ffffff"],
-            [0.72, "#1d8a43"],
-            [1, "#1d8a43"],
-        ]),
-    },
-    {
-        slug: "sri-lanka",
-        name: "Sri Lanka",
-        route: "/essays/travel/sri-lanka/",
-        displayLabel: "SRI LANKA",
-        hoverLabel: "SRI LANKA - 2017",
-        startYear: 2017,
-        endYear: 2017,
-        interactionMode: "country-link",
-        mapFill: createFlagFill("horizontal", [
-            [0, "#f09a28"],
-            [0.16, "#f09a28"],
-            [0.16, "#0f7a3b"],
-            [0.28, "#0f7a3b"],
-            [0.28, "#f7bf3d"],
-            [0.4, "#f7bf3d"],
-            [0.4, "#6f1527"],
-            [1, "#6f1527"],
-        ]),
-        timelineFill: createFlagFill("horizontal", [
-            [0, "#f09a28"],
-            [0.16, "#f09a28"],
-            [0.16, "#0f7a3b"],
-            [0.28, "#0f7a3b"],
-            [0.28, "#f7bf3d"],
-            [0.4, "#f7bf3d"],
-            [0.4, "#6f1527"],
-            [1, "#6f1527"],
-        ]),
-    },
-    {
-        slug: "indonesia",
-        name: "Indonesia",
-        route: "/essays/travel/indonesia/",
-        displayLabel: "INDONESIA",
-        hoverLabel: "INDONESIA - 2019",
-        startYear: 2019,
-        endYear: 2019,
-        interactionMode: "country-link",
-        mapFill: createFlagFill("vertical", [
-            [0, "#d21f26"],
-            [0.5, "#d21f26"],
-            [0.5, "#ffffff"],
-            [1, "#ffffff"],
-        ]),
-        timelineFill: createFlagFill("vertical", [
-            [0, "#d21f26"],
-            [0.5, "#d21f26"],
-            [0.5, "#ffffff"],
-            [1, "#ffffff"],
-        ]),
-    },
-    {
-        slug: "netherlands",
-        name: "Netherlands",
-        route: "/essays/travel/netherlands/",
-        displayLabel: "NETHERLANDS",
-        hoverLabel: "NETHERLANDS - 2023",
-        startYear: 2023,
-        endYear: 2023,
-        interactionMode: "country-link",
-        mapFill: createFlagFill("vertical", [
-            [0, "#ae1f28"],
-            [0.33, "#ae1f28"],
-            [0.33, "#ffffff"],
-            [0.66, "#ffffff"],
-            [0.66, "#1f4f9c"],
-            [1, "#1f4f9c"],
-        ]),
-        timelineFill: createFlagFill("vertical", [
-            [0, "#ae1f28"],
-            [0.33, "#ae1f28"],
-            [0.33, "#ffffff"],
-            [0.66, "#ffffff"],
-            [0.66, "#1f4f9c"],
-            [1, "#1f4f9c"],
-        ]),
-    },
-    {
-        slug: "belgium",
-        name: "Belgium",
-        route: "/essays/travel/belgium/",
-        displayLabel: "BELGIUM",
-        hoverLabel: "BELGIUM - 2023",
-        startYear: 2023,
-        endYear: 2023,
-        interactionMode: "country-link",
-        mapFill: createFlagFill("horizontal", [
-            [0, "#121212"],
-            [0.33, "#121212"],
-            [0.33, "#f0c533"],
-            [0.66, "#f0c533"],
-            [0.66, "#c62832"],
-            [1, "#c62832"],
-        ]),
-        timelineFill: createFlagFill("horizontal", [
-            [0, "#121212"],
-            [0.33, "#121212"],
-            [0.33, "#f0c533"],
-            [0.66, "#f0c533"],
-            [0.66, "#c62832"],
-            [1, "#c62832"],
-        ]),
-    },
-    {
-        slug: "vietnam",
-        name: "Vietnam",
-        route: "/essays/travel/vietnam/",
-        displayLabel: "VIETNAM",
-        hoverLabel: "VIETNAM - 2024",
-        startYear: 2024,
-        endYear: 2024,
-        interactionMode: "country-link",
-        mapFill: createFlagFill("diagonal", [
-            [0, "#c92026"],
-            [0.78, "#c92026"],
-            [0.78, "#f2c53d"],
-            [1, "#f2c53d"],
-        ]),
-        timelineFill: createFlagFill("diagonal", [
-            [0, "#c92026"],
-            [0.78, "#c92026"],
-            [0.78, "#f2c53d"],
-            [1, "#f2c53d"],
-        ]),
-    },
-    {
-        slug: "united-arab-emirates",
-        name: "United Arab Emirates",
-        route: "/essays/travel/united-arab-emirates/",
-        displayLabel: "UAE",
-        hoverLabel: "UNITED ARAB EMIRATES - 2024",
-        startYear: 2024,
-        endYear: 2024,
-        interactionMode: "country-link",
-        mapFill: createFlagFill("horizontal", [
-            [0, "#d91f26"],
-            [0.18, "#d91f26"],
-            [0.18, "#1f8b4c"],
-            [0.46, "#1f8b4c"],
-            [0.46, "#ffffff"],
-            [0.72, "#ffffff"],
-            [0.72, "#111111"],
-            [1, "#111111"],
-        ]),
-        timelineFill: createFlagFill("horizontal", [
-            [0, "#d91f26"],
-            [0.18, "#d91f26"],
-            [0.18, "#1f8b4c"],
-            [0.46, "#1f8b4c"],
-            [0.46, "#ffffff"],
-            [0.72, "#ffffff"],
-            [0.72, "#111111"],
-            [1, "#111111"],
-        ]),
-    },
-    {
-        slug: "united-kingdom",
-        name: "United Kingdom",
-        route: "/essays/travel/united-kingdom/",
-        displayLabel: "UK",
-        hoverLabel: "UNITED KINGDOM - 2025",
-        startYear: 2025,
-        endYear: 2025,
-        interactionMode: "country-link",
-        mapFill: createFlagFill("diagonal", [
-            [0, "#1f3f91"],
-            [0.28, "#1f3f91"],
-            [0.28, "#ffffff"],
-            [0.4, "#ffffff"],
-            [0.4, "#c91f26"],
-            [0.58, "#c91f26"],
-            [0.58, "#ffffff"],
-            [0.7, "#ffffff"],
-            [0.7, "#1f3f91"],
-            [1, "#1f3f91"],
-        ]),
-        timelineFill: createFlagFill("diagonal", [
-            [0, "#1f3f91"],
-            [0.28, "#1f3f91"],
-            [0.28, "#ffffff"],
-            [0.4, "#ffffff"],
-            [0.4, "#c91f26"],
-            [0.58, "#c91f26"],
-            [0.58, "#ffffff"],
-            [0.7, "#ffffff"],
-            [0.7, "#1f3f91"],
-            [1, "#1f3f91"],
-        ]),
-    },
+    { slug: "malaysia", name: "Malaysia", startYear: 2006, endYear: 2009 },
+    { slug: "thailand", name: "Thailand", startYear: 2006, endYear: 2009 },
+    { slug: "canada", name: "Canada", startYear: 2013, endYear: 2013 },
+    { slug: "jordan", name: "Jordan", startYear: 2015, endYear: 2015 },
+    { slug: "sri-lanka", name: "Sri Lanka", startYear: 2017, endYear: 2017 },
+    { slug: "indonesia", name: "Indonesia", startYear: 2019, endYear: 2019 },
+    { slug: "netherlands", name: "Netherlands", startYear: 2023, endYear: 2023 },
+    { slug: "belgium", name: "Belgium", startYear: 2023, endYear: 2023 },
+    { slug: "vietnam", name: "Vietnam", startYear: 2024, endYear: 2024 },
+    { slug: "united-arab-emirates", name: "United Arab Emirates", displayLabel: "UAE", startYear: 2024, endYear: 2024 },
+    { slug: "united-kingdom", name: "United Kingdom", displayLabel: "UK", startYear: 2025, endYear: 2025 },
 ];
+
+const TRAVEL_COUNTRIES = TRAVEL_COUNTRY_DATA.map((country) => {
+    const endYear = country.endYear ?? country.startYear;
+    return {
+        interactionMode: "country-link",
+        ...country,
+        endYear,
+        route: buildTravelRoute(country.slug),
+        displayLabel: country.displayLabel ?? country.name.toUpperCase(),
+        hoverLabel: buildTravelHoverLabel(country.name, country.startYear, endYear),
+        mapFill: MAP_OCHRE_FILLS[country.slug] ?? INDIA_FILL,
+        timelineFill: TIMELINE_FLAG_FILLS[country.slug] ?? null,
+    };
+});
 
 const INDIA_PLACES = [
-    { slug: "mumbai", name: "Mumbai", route: "/essays/travel/mumbai/", kind: "city", coordinates: [72.8777, 19.076], offset: [-10, 8] },
-    { slug: "new-delhi", name: "New Delhi", route: "/essays/travel/new-delhi/", kind: "city", coordinates: [77.209, 28.6139], offset: [10, -16] },
-    { slug: "gurgaon", name: "Gurgaon", route: "/essays/travel/gurgaon/", kind: "city", coordinates: [77.0266, 28.4595], offset: [21, 10] },
-    { slug: "jaipur", name: "Jaipur", route: "/essays/travel/jaipur/", kind: "city", coordinates: [75.7873, 26.9124], offset: [-18, -4] },
-    { slug: "agra", name: "Agra", route: "/essays/travel/agra/", kind: "city", coordinates: [78.0081, 27.1767], offset: [26, -2] },
-    { slug: "goa", name: "Goa", route: "/essays/travel/goa/", kind: "state", coordinates: [74.124, 15.2993], offset: [-12, 14] },
-    { slug: "sikkim", name: "Sikkim", route: "/essays/travel/sikkim/", kind: "state", coordinates: [88.5122, 27.533], offset: [12, -10] },
-    { slug: "himachal-pradesh", name: "Himachal Pradesh", route: "/essays/travel/himachal-pradesh/", kind: "state", coordinates: [77.1734, 31.1048], offset: [-22, -14] },
-    { slug: "kerala", name: "Kerala", route: "/essays/travel/kerala/", kind: "state", coordinates: [76.2711, 10.8505], offset: [15, 10] },
-    { slug: "uttarakhand", name: "Uttarakhand", route: "/essays/travel/uttarakhand/", kind: "state", coordinates: [79.0193, 30.0668], offset: [20, -15] },
-    { slug: "tiruchirapalli", name: "Tiruchirapalli", route: "/essays/travel/tiruchirapalli/", kind: "city", coordinates: [78.7047, 10.7905], offset: [-10, 10] },
-    { slug: "bengaluru", name: "Bengaluru", route: "/essays/travel/bengaluru/", kind: "city", coordinates: [77.5946, 12.9716], offset: [16, -4] },
-    { slug: "mysuru", name: "Mysuru", route: "/essays/travel/mysuru/", kind: "city", coordinates: [76.6394, 12.2958], offset: [-18, 8] },
-    { slug: "andaman-and-nicobar", name: "Andaman and Nicobar", route: "/essays/travel/andaman-and-nicobar/", kind: "state", coordinates: [92.9376, 11.7401], offset: [14, -6] },
-];
-
-for (const country of TRAVEL_COUNTRIES) {
-    country.mapFill = MAP_OCHRE_FILLS[country.slug] ?? country.mapFill;
-}
+    { slug: "mumbai", name: "Mumbai", kind: "city", coordinates: [72.8777, 19.076], offset: [-10, 8] },
+    { slug: "new-delhi", name: "New Delhi", kind: "city", coordinates: [77.209, 28.6139], offset: [10, -16] },
+    { slug: "gurgaon", name: "Gurgaon", kind: "city", coordinates: [77.0266, 28.4595], offset: [21, 10] },
+    { slug: "jaipur", name: "Jaipur", kind: "city", coordinates: [75.7873, 26.9124], offset: [-18, -4] },
+    { slug: "agra", name: "Agra", kind: "city", coordinates: [78.0081, 27.1767], offset: [26, -2] },
+    { slug: "goa", name: "Goa", kind: "state", coordinates: [74.124, 15.2993], offset: [-12, 14] },
+    { slug: "sikkim", name: "Sikkim", kind: "state", coordinates: [88.5122, 27.533], offset: [12, -10] },
+    { slug: "himachal-pradesh", name: "Himachal Pradesh", kind: "state", coordinates: [77.1734, 31.1048], offset: [-22, -14] },
+    { slug: "kerala", name: "Kerala", kind: "state", coordinates: [76.2711, 10.8505], offset: [15, 10] },
+    { slug: "uttarakhand", name: "Uttarakhand", kind: "state", coordinates: [79.0193, 30.0668], offset: [20, -15] },
+    { slug: "tiruchirapalli", name: "Tiruchirapalli", kind: "city", coordinates: [78.7047, 10.7905], offset: [-10, 10] },
+    { slug: "bengaluru", name: "Bengaluru", kind: "city", coordinates: [77.5946, 12.9716], offset: [16, -4] },
+    { slug: "mysuru", name: "Mysuru", kind: "city", coordinates: [76.6394, 12.2958], offset: [-18, 8] },
+    { slug: "andaman-and-nicobar", name: "Andaman and Nicobar", kind: "state", coordinates: [92.9376, 11.7401], offset: [14, -6] },
+].map((place) => ({
+    ...place,
+    route: buildTravelRoute(place.slug),
+}));
 
 const countryByName = new Map(TRAVEL_COUNTRIES.map((country) => [country.name, country]));
 const countryByFeatureId = new Map(
@@ -632,7 +404,7 @@ function initTravelMap({ d3, topojson, worldData, mapStageNode, mapNode, pillNod
             state.activeCountrySlug = country.slug;
             state.activeMarkerSlug = country.specialMarker ? country.slug : "";
             syncMapState();
-            showPill(pillNode, country.hoverLabel, country.mapFill);
+            showPill(pillNode, country.hoverLabel);
         })
         .on("pointerleave", () => {
             if (state.viewMode !== "world") {
@@ -655,7 +427,7 @@ function initTravelMap({ d3, topojson, worldData, mapStageNode, mapNode, pillNod
             state.activeCountrySlug = country.slug;
             state.activeMarkerSlug = country.specialMarker ? country.slug : "";
             syncMapState();
-            showPill(pillNode, country.hoverLabel, country.mapFill);
+            showPill(pillNode, country.hoverLabel);
         })
         .on("blur", () => {
             if (state.viewMode !== "world") {
@@ -722,7 +494,7 @@ function initTravelMap({ d3, topojson, worldData, mapStageNode, mapNode, pillNod
             state.activeCountrySlug = country.slug;
             state.activeMarkerSlug = country.slug;
             syncMapState();
-            showPill(pillNode, country.hoverLabel, country.mapFill);
+            showPill(pillNode, country.hoverLabel);
         })
         .on("pointerleave", () => {
             if (state.viewMode !== "world") {
@@ -739,7 +511,7 @@ function initTravelMap({ d3, topojson, worldData, mapStageNode, mapNode, pillNod
             state.activeCountrySlug = country.slug;
             state.activeMarkerSlug = country.slug;
             syncMapState();
-            showPill(pillNode, country.hoverLabel, country.mapFill);
+            showPill(pillNode, country.hoverLabel);
         })
         .on("blur", () => {
             if (state.viewMode !== "world") {
@@ -801,7 +573,7 @@ function initTravelMap({ d3, topojson, worldData, mapStageNode, mapNode, pillNod
 
             state.activeIndiaPlaceSlug = place.slug;
             syncMapState();
-            showPill(pillNode, place.name, INDIA_FILL);
+            showPill(pillNode, place.name);
         })
         .on("pointerleave", () => {
             if (state.viewMode !== "india") {
@@ -817,7 +589,7 @@ function initTravelMap({ d3, topojson, worldData, mapStageNode, mapNode, pillNod
 
             state.activeIndiaPlaceSlug = place.slug;
             syncMapState();
-            showPill(pillNode, place.name, INDIA_FILL);
+            showPill(pillNode, place.name);
         })
         .on("blur", () => {
             if (state.viewMode !== "india") {
@@ -974,7 +746,7 @@ function initTravelTimeline({ d3, timelineNode }) {
         svg.selectAll("*").remove();
 
         const defs = svg.append("defs");
-        createGradientDefs(defs, TRAVEL_COUNTRIES, "timelineFill", "timeline");
+        createGradientDefs(defs, timelineItems, "timelineFill", "timeline");
 
         svg.append("rect").attr("class", "travel-timeline__surface").attr("x", 0).attr("y", 0).attr("width", width).attr("height", height).attr("rx", 28);
         svg
@@ -1180,10 +952,16 @@ function normalizeCountryKey(value) {
     return normalized || "0";
 }
 
-function buildCssGradient(fill) {
-    const angle = fill.direction === "horizontal" ? "90deg" : fill.direction === "diagonal" ? "135deg" : "180deg";
-    const stopList = fill.stops.map(([offset, color]) => `${color} ${formatGradientOffset(offset)}`).join(", ");
-    return `linear-gradient(${angle}, ${stopList})`;
+function buildTravelRoute(slug) {
+    return `${TRAVEL_ROUTE_BASE}${encodeURIComponent(slug)}/`;
+}
+
+function buildTravelHoverLabel(name, startYear, endYear) {
+    if (!Number.isFinite(startYear)) {
+        return name.toUpperCase();
+    }
+
+    return `${name.toUpperCase()} - ${formatYearRange(startYear, endYear)}`;
 }
 
 function showPill(node, label) {
