@@ -1154,9 +1154,69 @@ body.page-paper.page-project-cloudscript {
 }
 
 @media (max-width: 720px) {
+  body.page-paper.page-project-bollywoodle {
+    overflow-x: hidden;
+  }
+
   .page-project-bollywoodle .project-writing-page__title {
     font-size: clamp(1.55rem, 9.2vw, 2.55rem);
     letter-spacing: 0.045em;
     line-height: 0.98;
+  }
+
+  .page-project-bollywoodle .project-writing-page__hero,
+  .page-project-bollywoodle .project-writing-page__panel,
+  .page-project-bollywoodle .project-writing-page__panel-head,
+  .page-project-bollywoodle .project-writing-page__prose {
+    min-width: 0;
+  }
+
+  .page-project-bollywoodle .project-writing-page__panel {
+    padding: 1rem;
+  }
+
+  .page-project-bollywoodle .project-writing-page__panel,
+  .page-project-bollywoodle .project-writing-page__prose {
+    overflow-x: clip;
+  }
+
+  .page-project-bollywoodle .project-writing-page__prose p,
+  .page-project-bollywoodle .project-writing-page__prose li,
+  .page-project-bollywoodle .project-writing-page__prose blockquote,
+  .page-project-bollywoodle .project-writing-page__prose h2,
+  .page-project-bollywoodle .project-writing-page__prose h3 {
+    font-size: 0.98rem;
+    line-height: 1.72;
+    overflow-wrap: anywhere;
+  }
+
+  .page-project-bollywoodle .project-writing-page__prose h2 {
+    font-size: clamp(1.45rem, 6.6vw, 1.95rem);
+  }
+
+  .page-project-bollywoodle .project-writing-page__prose h3 {
+    font-size: clamp(1.12rem, 5.4vw, 1.45rem);
+  }
+
+  .page-project-bollywoodle .project-writing-page__prose pre {
+    width: 100%;
+    max-width: 100%;
+    padding: 0.72rem 0.62rem;
+    overflow: hidden;
+    contain: inline-size;
+  }
+
+  .page-project-bollywoodle .project-writing-page__prose :not(pre) > code,
+  .page-project-bollywoodle .project-writing-page__prose a {
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  .page-project-bollywoodle .project-writing-page__prose pre code {
+    display: block;
+    width: max-content;
+    max-width: none;
+    font-size: 0.78rem;
+    line-height: 1.45;
   }
 }

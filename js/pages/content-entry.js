@@ -59,10 +59,79 @@ async function initProjectMarkdownPage() {
 
         const markdown = await response.text();
         proseTarget.innerHTML = renderMarkdown(stripTitle ? stripLeadingTitle(markdown) : markdown);
+        enhanceProjectMarkdown(root, proseTarget);
     } catch (error) {
         console.error(error);
         proseTarget.innerHTML = `<p>${escapeHtml("Could not load project writing.")}</p>`;
     }
+}
+
+function enhanceProjectMarkdown(root, proseTarget) {
+    if (!document.body.classList.contains("page-project-bollywoodle")) {
+        return;
+    }
+
+    const fitCodeBlocks = () => fitBollywoodleMobileCodeBlocks(proseTarget);
+
+    fitCodeBlocks();
+
+    if (document.fonts?.ready) {
+        document.fonts.ready.then(fitCodeBlocks).catch(() => {});
+    }
+
+    if (!root.dataset.codeBlocksFitBound) {
+        let frame = 0;
+        const scheduleFit = () => {
+            if (frame) {
+                cancelAnimationFrame(frame);
+            }
+            frame = requestAnimationFrame(() => {
+                frame = 0;
+                fitCodeBlocks();
+            });
+        };
+
+        window.addEventListener("resize", scheduleFit, { passive: true });
+        root.dataset.codeBlocksFitBound = "true";
+    }
+}
+
+function fitBollywoodleMobileCodeBlocks(proseTarget) {
+    const codeBlocks = proseTarget.querySelectorAll("pre code");
+
+    codeBlocks.forEach((codeBlock) => {
+        codeBlock.style.fontSize = "";
+
+        if (window.innerWidth > 720) {
+            return;
+        }
+
+        const pre = codeBlock.closest("pre");
+        if (!pre) {
+            return;
+        }
+
+        const safeInlinePadding = 10;
+        const availableWidth = Math.max(pre.clientWidth - safeInlinePadding, 0);
+        const baseFontSize = parseFloat(getComputedStyle(codeBlock).fontSize);
+
+        if (!availableWidth || !Number.isFinite(baseFontSize)) {
+            return;
+        }
+
+        let nextFontSize = baseFontSize;
+
+        for (let attempt = 0; attempt < 3; attempt += 1) {
+            const contentWidth = codeBlock.scrollWidth;
+
+            if (!contentWidth || contentWidth <= availableWidth) {
+                break;
+            }
+
+            nextFontSize *= availableWidth / contentWidth;
+            codeBlock.style.fontSize = `${nextFontSize}px`;
+        }
+    });
 }
 
 function stripLeadingTitle(markdown) {
@@ -97,7 +166,8 @@ function renderMarkdown(markdown) {
             return;
         }
         const languageClass = codeBlock.language ? ` class="language-${escapeHtml(codeBlock.language)}"` : "";
-        html.push(`<pre><code${languageClass}>${escapeHtml(codeBlock.lines.join("\n"))}</code></pre>`);
+        const languageData = codeBlock.language ? ` data-code-language="${escapeHtml(codeBlock.language)}"` : "";
+        html.push(`<pre${languageData}><code${languageClass}>${escapeHtml(codeBlock.lines.join("\n"))}</code></pre>`);
         codeBlock = null;
     };
 
