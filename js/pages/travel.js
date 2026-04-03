@@ -5,9 +5,9 @@ const MAP_DIMENSIONS = {
     height: 620,
 };
 
-const TIMELINE_MIN_WIDTH = 1260;
-const TIMELINE_LANE_GAP = 62;
-const TIMELINE_PILL_HEIGHT = 34;
+const TIMELINE_MIN_WIDTH = 980;
+const TIMELINE_LANE_GAP = 52;
+const TIMELINE_PILL_HEIGHT = 28;
 
 const INDIA_PIN_COLORS = {
     city: "#c85d38",
@@ -955,18 +955,22 @@ function initTravelTimeline({ d3, timelineNode }) {
         const viewportWidth = Math.max(frame?.clientWidth ?? 0, 980);
         const width = Math.max(viewportWidth, TIMELINE_MIN_WIDTH);
         const padding = {
-            top: 38,
-            right: 44,
-            bottom: 110,
-            left: 44,
+            top: 28,
+            right: 28,
+            bottom: 92,
+            left: 28,
         };
         const x = d3.scaleLinear().domain([minYear, maxYear + 1]).range([padding.left, width - padding.right]);
         const layout = buildTimelineLayout(timelineItems, x);
         const laneCount = d3.max(layout, (item) => item.lane) + 1;
-        const axisY = padding.top + laneCount * TIMELINE_LANE_GAP + 12;
+        const axisY = padding.top + laneCount * TIMELINE_LANE_GAP + 8;
         const height = axisY + padding.bottom;
 
-        const svg = d3.select(timelineNode).attr("viewBox", `0 0 ${width} ${height}`);
+        const svg = d3
+            .select(timelineNode)
+            .attr("viewBox", `0 0 ${width} ${height}`)
+            .attr("width", width)
+            .attr("height", height);
         svg.selectAll("*").remove();
 
         const defs = svg.append("defs");
@@ -990,16 +994,16 @@ function initTravelTimeline({ d3, timelineNode }) {
                 .attr("x1", tickX)
                 .attr("x2", tickX)
                 .attr("y1", padding.top - 8)
-                .attr("y2", axisY + 9);
+                .attr("y2", axisY + 7);
 
             gridLayer
                 .append("text")
                 .attr("class", "travel-timeline__year-label")
-                .attr("x", tickX - 3)
-                .attr("y", axisY + 22)
+                .attr("x", tickX - 2)
+                .attr("y", axisY + 18)
                 .attr("text-anchor", "start")
                 .attr("dominant-baseline", "hanging")
-                .attr("transform", `rotate(45 ${tickX - 3} ${axisY + 22})`)
+                .attr("transform", `rotate(45 ${tickX - 2} ${axisY + 18})`)
                 .text(`${year}`);
         });
 
@@ -1038,7 +1042,7 @@ function initTravelTimeline({ d3, timelineNode }) {
                 .append("text")
                 .attr("class", "travel-timeline__pill-label")
                 .attr("x", item.centerX)
-                .attr("y", pillY + 1)
+                .attr("y", pillY)
                 .attr("text-anchor", "middle")
                 .attr("dominant-baseline", "middle")
                 .text(item.displayLabel);
@@ -1059,13 +1063,13 @@ function buildTimelineLayout(items, scale) {
         .map((item) => {
             const startX = scale(item.startYear);
             const endX = scale(item.endYear + 1);
-            const baseWidth = Math.max(endX - startX - 10, 56);
+            const baseWidth = Math.max(endX - startX - 8, 42);
             const minWidth = estimateLabelWidth(item.displayLabel);
             const width = Math.max(baseWidth, minWidth);
             const centerX = (startX + endX) / 2;
             const x = centerX - width / 2;
             const itemEnd = centerX + width / 2;
-            let lane = laneEnds.findIndex((laneEnd) => x > laneEnd + 12);
+            let lane = laneEnds.findIndex((laneEnd) => x > laneEnd + 8);
 
             if (lane === -1) {
                 lane = laneEnds.length;
@@ -1197,7 +1201,7 @@ function hidePill(node) {
 }
 
 function estimateLabelWidth(label) {
-    return Math.max(118, label.length * 11 + 34);
+    return Math.max(88, label.length * 8.4 + 24);
 }
 
 function formatYearRange(startYear, endYear) {

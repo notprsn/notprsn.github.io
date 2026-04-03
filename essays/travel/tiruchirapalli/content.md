@@ -1,7 +1,3 @@
 # Tiruchirapalli
 
-A placeholder for the Tiruchirapalli travel notes.
-
-## Notes
-
-Notes to add.
+Still working on the draft

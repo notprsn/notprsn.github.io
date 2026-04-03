@@ -1178,6 +1178,10 @@ body.page-paper {
   color: inherit;
 }
 
+.footer-link-placeholder {
+  color: inherit;
+}
+
 @media (max-width: 940px) {
   .page-intro {
     grid-template-columns: 1fr;

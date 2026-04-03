@@ -1,7 +1,3 @@
 # Belgium
 
-A placeholder for the Belgium travel notes.
-
-## 2023
-
-Notes to add.
+Still working on the draft
