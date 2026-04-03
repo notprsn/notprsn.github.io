@@ -16,15 +16,6 @@ const essayThemes = {
         kindLabel: "Travel Essay",
         descriptionLabel: "travel essay",
     },
-    miscellaneous: {
-        directory: resolve(repoRoot, "essays", "miscellaneous"),
-        indexPath: resolve(repoRoot, "essays", "miscellaneous", "index.html"),
-        backPath: "/essays/miscellaneous/",
-        backLabel: "Miscellaneous Essays",
-        eyebrow: "Miscellaneous",
-        kindLabel: "Miscellaneous Essay",
-        descriptionLabel: "miscellaneous essay",
-    },
 };
 
 const version = buildVersion();
@@ -144,6 +135,47 @@ function buildEssayHtml(entry) {
     const eyebrow = escapeHtml(entry.eyebrow);
     const descriptionLabel = escapeHtml(entry.descriptionLabel);
     const currentYear = new Date().getFullYear().toString();
+    const isTravel = entry.theme === "travel";
+    const bodyClass = isTravel ? "page-paper page-travel-story" : "page-essays";
+    const mainClass = isTravel ? "page-main page-main--paper" : "page-main";
+    const navShellOpen = isTravel ? '<div class="site-nav-tools">' : "";
+    const navShellClose = isTravel ? "</div>" : "";
+    const extraCssLink = isTravel ? `\n    <link href="${assetPrefix}css/pages/work.css" rel="stylesheet">` : "";
+    const heroMarkup = isTravel
+        ? `        <section class="paper-hero paper-hero--work work-story-page__hero">
+            <div>
+                <a class="story-back-link work-story-page__back" href="${entry.backPath}">&lt; Back to ${backLabel}</a>
+                <h1 class="paper-ledger__title work-story-page__title">${title}</h1>
+            </div>
+            <div class="paper-hero__rule" aria-hidden="true"></div>
+        </section>`
+        : `        <section class="page-intro">
+            <div>
+                <p class="eyebrow">${eyebrow}</p>
+                <h1>${title}</h1>
+                <p class="page-lede">${kindLabel}</p>
+            </div>
+            <aside class="page-aside">
+                <p class="panel-label">Navigation</p>
+                <div class="entry-links">
+                    <a class="inline-link" href="/">Home</a>
+                    <a class="inline-link" href="${entry.backPath}">Back to ${backLabel}</a>
+                </div>
+            </aside>
+        </section>`;
+    const articleMarkup = isTravel
+        ? `        <section class="paper-section">
+            <article class="paper-panel work-story-page__panel">
+                <div class="writing-prose work-story-page__prose">
+${indentMultiline(proseHtml, 20)}
+                </div>
+            </article>
+        </section>`
+        : `        <article class="writing-shell">
+            <div class="writing-prose">
+${indentMultiline(proseHtml, 16)}
+            </div>
+        </article>`;
 
     return `<!DOCTYPE html>
 <html lang="en">
@@ -159,42 +191,26 @@ function buildEssayHtml(entry) {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="${assetPrefix}css/style.css" rel="stylesheet">
-    <link href="${assetPrefix}css/pages/essays.css" rel="stylesheet">
+    <link href="${assetPrefix}css/pages/essays.css" rel="stylesheet">${extraCssLink}
 </head>
-<body class="page-essays">
+<body class="${bodyClass}">
     <header class="site-header">
         <div class="site-nav-shell">
             <a class="site-brand" href="/">Prasann Iyer</a>
+            ${navShellOpen}
             <nav class="site-nav" aria-label="Primary">
                 <a href="/work/">Work</a>
                 <a href="/projects/">Projects</a>
                 <a href="/fun/">Fun Stuff</a>
                 <a href="/essays/" aria-current="page">Essays</a>
             </nav>
+            ${navShellClose}
         </div>
     </header>
 
-    <main class="page-main">
-        <section class="page-intro">
-            <div>
-                <p class="eyebrow">${eyebrow}</p>
-                <h1>${title}</h1>
-                <p class="page-lede">${kindLabel}</p>
-            </div>
-            <aside class="page-aside">
-                <p class="panel-label">Navigation</p>
-                <div class="entry-links">
-                    <a class="inline-link" href="/">Home</a>
-                    <a class="inline-link" href="${entry.backPath}">Back to ${backLabel}</a>
-                </div>
-            </aside>
-        </section>
-
-        <article class="writing-shell">
-            <div class="writing-prose">
-${indentMultiline(proseHtml, 16)}
-            </div>
-        </article>
+    <main class="${mainClass}">
+${heroMarkup}
+${articleMarkup}
     </main>
 
     <footer class="site-footer">
@@ -202,8 +218,8 @@ ${indentMultiline(proseHtml, 16)}
             <span>${backLabel}</span>
             <div class="footer-links">
                 <a href="/essays/">Essays</a>
-                <a href="/gallery/">Gallery</a>
-                <a href="/glossary/">Glossary</a>
+                <span class="footer-link-placeholder">Gallery</span>
+                <span class="footer-link-placeholder">Glossary</span>
                 <a href="https://github.com/notprsn" target="_blank" rel="noreferrer">GitHub</a>
             </div>
             <span>&copy; <span data-current-year>${currentYear}</span> Prasann Iyer</span>
