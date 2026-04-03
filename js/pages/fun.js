@@ -1,4 +1,4 @@
-const onReady = window.Site?.onReady ?? ((callback) => callback());
+const { onReady, getCanvas2DContext, rafThrottle } = window.Site;
 
 onReady(initFunStarfield);
 
@@ -8,10 +8,7 @@ function initFunStarfield() {
         return;
     }
 
-    const context =
-        canvas.getContext("2d", { alpha: false, desynchronized: true }) ||
-        canvas.getContext("2d", { alpha: false }) ||
-        canvas.getContext("2d");
+    const context = getCanvas2DContext(canvas);
     if (!context) {
         return;
     }
@@ -21,15 +18,21 @@ function initFunStarfield() {
         window.matchMedia("(pointer: coarse)").matches ||
         window.matchMedia("(hover: none)").matches;
     const palette = [
-        "rgba(255, 255, 255, 0.96)",
-        "rgba(214, 230, 255, 0.86)",
-        "rgba(255, 243, 212, 0.82)",
+        "255, 255, 255",
+        "214, 230, 255",
+        "255, 243, 212",
     ];
 
     let width = 0;
     let height = 0;
+    let halfWidth = 0;
+    let halfHeight = 0;
     let dpr = 1;
     let edgeRadius = 1;
+    let contentMaskCenterX = 0;
+    let contentMaskCenterY = 0;
+    let contentMaskScaleX = 1;
+    let contentMaskScaleY = 1;
     let stars = [];
     let lastFrame = 0;
     let frameId = 0;
@@ -39,6 +42,7 @@ function initFunStarfield() {
     const targetInterval = 1000 / (hasCoarsePointer ? 24 : 30);
     const maxSpeed = 110;
     const densityScale = hasCoarsePointer ? 0.18 : 0.245;
+    const rgba = (rgb, alpha) => `rgba(${rgb}, ${alpha.toFixed(3)})`;
 
     class Star {
         constructor(initial = false) {
@@ -54,39 +58,37 @@ function initFunStarfield() {
             this.twinkle = 0.4 + Math.random() * 0.6;
         }
 
-        project(depth) {
-            const safeDepth = Math.max(depth, 1);
-            return {
-                x: (this.x / safeDepth) * width,
-                y: (this.y / safeDepth) * height,
-            };
-        }
-
         update() {
-            const current = this.project(this.z);
+            const currentDepth = Math.max(this.z, 1);
+            const currentX = (this.x / currentDepth) * width;
+            const currentY = (this.y / currentDepth) * height;
 
             this.pz = this.z;
             this.z -= currentSpeed;
 
             if (
                 this.z < 1 ||
-                current.x < -width * 0.54 ||
-                current.x > width * 0.54 ||
-                current.y < -height * 0.54 ||
-                current.y > height * 0.54
+                currentX < -width * 0.54 ||
+                currentX > width * 0.54 ||
+                currentY < -height * 0.54 ||
+                currentY > height * 0.54
             ) {
                 this.reset();
             }
         }
 
         draw() {
-            const current = this.project(this.z);
-            const previous = this.project(this.pz);
-            const screenX = width / 2 + current.x;
-            const screenY = height / 2 + current.y;
-            const previousX = width / 2 + previous.x;
-            const previousY = height / 2 + previous.y;
-            const radial = Math.min(1, Math.hypot(current.x, current.y) / edgeRadius);
+            const currentDepth = Math.max(this.z, 1);
+            const previousDepth = Math.max(this.pz, 1);
+            const currentX = (this.x / currentDepth) * width;
+            const currentY = (this.y / currentDepth) * height;
+            const previousProjectedX = (this.x / previousDepth) * width;
+            const previousProjectedY = (this.y / previousDepth) * height;
+            const screenX = halfWidth + currentX;
+            const screenY = halfHeight + currentY;
+            const previousX = halfWidth + previousProjectedX;
+            const previousY = halfHeight + previousProjectedY;
+            const radial = Math.min(1, Math.hypot(currentX, currentY) / edgeRadius);
 
             if (screenX < 0 || screenX > width || screenY < 0 || screenY > height) {
                 return;
@@ -98,7 +100,7 @@ function initFunStarfield() {
             const isStreaking = speedRatio > 0.16;
             const strokeOpacity = isStreaking ? Math.min(1, brightness + 0.42) : brightness;
 
-            context.strokeStyle = this.color.replace(/[\d.]+\)$/, `${strokeOpacity.toFixed(3)})`);
+            context.strokeStyle = rgba(this.color, strokeOpacity);
             context.lineWidth = Math.max(0.4, radius * 2);
             context.lineCap = "round";
             context.beginPath();
@@ -107,7 +109,7 @@ function initFunStarfield() {
             context.stroke();
 
             if (!isStreaking) {
-                context.fillStyle = this.color.replace(/[\d.]+\)$/, `${Math.min(1, brightness + 0.2).toFixed(3)})`);
+                context.fillStyle = rgba(this.color, Math.min(1, brightness + 0.2));
                 context.beginPath();
                 context.arc(screenX, screenY, radius, 0, Math.PI * 2);
                 context.fill();
@@ -119,13 +121,17 @@ function initFunStarfield() {
         dpr = Math.min(Math.max(window.devicePixelRatio || 1, 1), hasCoarsePointer ? 1.25 : 1.5);
         width = window.innerWidth;
         height = window.innerHeight;
-        edgeRadius = Math.hypot(width * 0.5, height * 0.5);
-        pointerX = width * 0.5;
-        pointerY = height * 0.5;
+        halfWidth = width * 0.5;
+        halfHeight = height * 0.5;
+        edgeRadius = Math.hypot(halfWidth, halfHeight);
+        pointerX = halfWidth;
+        pointerY = halfHeight;
 
         canvas.width = Math.floor(width * dpr);
         canvas.height = Math.floor(height * dpr);
         context.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+        updateContentMask();
 
         const starCount = Math.max(
             Math.floor(1200 * densityScale),
@@ -137,6 +143,17 @@ function initFunStarfield() {
         context.fillRect(0, 0, width, height);
     }
 
+    function updateContentMask() {
+        const isMobile = width < 760;
+        const radiusX = width * (isMobile ? 0.48 : 0.31);
+        const radiusY = height * (isMobile ? 0.26 : 0.29);
+
+        contentMaskCenterX = width * (isMobile ? 0.5 : 0.37);
+        contentMaskCenterY = height * (isMobile ? 0.36 : 0.42);
+        contentMaskScaleX = 1 / Math.max(radiusX, 1);
+        contentMaskScaleY = 1 / Math.max(radiusY, 1);
+    }
+
     function drawFrame() {
         currentSpeed = getPointerSpeed();
         const fadeAlpha = 0.82 - (currentSpeed / maxSpeed) * 0.54;
@@ -145,10 +162,11 @@ function initFunStarfield() {
 
         context.save();
         context.globalCompositeOperation = "screen";
-        stars.forEach((star) => {
+        for (let index = 0; index < stars.length; index += 1) {
+            const star = stars[index];
             star.update();
             star.draw();
-        });
+        }
         context.restore();
     }
 
@@ -156,11 +174,12 @@ function initFunStarfield() {
         context.fillStyle = "#000";
         context.fillRect(0, 0, width, height);
 
-        stars.forEach((star) => {
+        for (let index = 0; index < stars.length; index += 1) {
+            const star = stars[index];
             star.z = width * (0.35 + Math.random() * 0.65);
             star.pz = star.z;
             star.draw();
-        });
+        }
     }
 
     function tick(timestamp) {
@@ -194,20 +213,15 @@ function initFunStarfield() {
             return maxSpeed * 0.1;
         }
 
-        const distance = Math.min(edgeRadius, Math.hypot(pointerX - width * 0.5, pointerY - height * 0.5));
+        const distance = Math.min(edgeRadius, Math.hypot(pointerX - halfWidth, pointerY - halfHeight));
         const proximity = 1 - distance / edgeRadius;
         return maxSpeed * Math.pow(Math.max(0, proximity), 2.4);
     }
 
     function getContentMask(screenX, screenY) {
-        const isMobile = width < 760;
-        const centerX = width * (isMobile ? 0.5 : 0.37);
-        const centerY = height * (isMobile ? 0.36 : 0.42);
-        const radiusX = width * (isMobile ? 0.48 : 0.31);
-        const radiusY = height * (isMobile ? 0.26 : 0.29);
         const ellipseDistance = Math.sqrt(
-            ((screenX - centerX) / radiusX) ** 2 +
-            ((screenY - centerY) / radiusY) ** 2
+            ((screenX - contentMaskCenterX) * contentMaskScaleX) ** 2 +
+            ((screenY - contentMaskCenterY) * contentMaskScaleY) ** 2
         );
 
         if (ellipseDistance >= 1) {
@@ -219,17 +233,15 @@ function initFunStarfield() {
         return 0.14 + eased * 0.86;
     }
 
+    const handleResize = rafThrottle(() => {
+        resize();
+        if (prefersReducedMotion) {
+            drawReducedFrame();
+        }
+    });
+
     resize();
-    window.addEventListener(
-        "resize",
-        () => {
-            resize();
-            if (prefersReducedMotion) {
-                drawReducedFrame();
-            }
-        },
-        { passive: true }
-    );
+    window.addEventListener("resize", handleResize, { passive: true });
     window.addEventListener(
         "pointermove",
         (event) => {

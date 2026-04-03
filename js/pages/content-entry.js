@@ -1,7 +1,4 @@
-const onReady = window.Site?.onReady ?? ((callback) => callback());
-const fetchVersionedResource =
-    window.Site?.fetchVersionedResource ??
-    ((resourcePath, options = {}) => fetch(resourcePath, options));
+const { onReady, fetchVersionedResource, rafThrottle } = window.Site;
 
 onReady(initContentEntries);
 
@@ -64,16 +61,7 @@ function enhanceProjectMarkdown(root, proseTarget) {
     }
 
     if (!root.dataset.codeBlocksFitBound) {
-        let frame = 0;
-        const scheduleFit = () => {
-            if (frame) {
-                cancelAnimationFrame(frame);
-            }
-            frame = requestAnimationFrame(() => {
-                frame = 0;
-                fitCodeBlocks();
-            });
-        };
+        const scheduleFit = rafThrottle(fitCodeBlocks);
 
         window.addEventListener("resize", scheduleFit, { passive: true });
         root.dataset.codeBlocksFitBound = "true";

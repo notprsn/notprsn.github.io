@@ -1,4 +1,4 @@
-const onReady = window.Site?.onReady ?? ((callback) => callback());
+const { onReady, getCanvas2DContext, rafThrottle } = window.Site;
 
 onReady(initMatrixRain);
 
@@ -8,10 +8,7 @@ function initMatrixRain() {
         return;
     }
 
-    const context =
-        canvas.getContext("2d", { alpha: false, desynchronized: true }) ||
-        canvas.getContext("2d", { alpha: false }) ||
-        canvas.getContext("2d");
+    const context = getCanvas2DContext(canvas);
     if (!context) {
         return;
     }
@@ -91,19 +88,17 @@ function initMatrixRain() {
         frameId = window.requestAnimationFrame(tick);
     }
 
-    resize();
-    window.addEventListener(
-        "resize",
-        () => {
-            resize();
-            if (prefersReducedMotion) {
-                for (let index = 0; index < 10; index += 1) {
-                    drawFrame();
-                }
+    const handleResize = rafThrottle(() => {
+        resize();
+        if (prefersReducedMotion) {
+            for (let index = 0; index < 10; index += 1) {
+                drawFrame();
             }
-        },
-        { passive: true }
-    );
+        }
+    });
+
+    resize();
+    window.addEventListener("resize", handleResize, { passive: true });
     document.addEventListener("visibilitychange", () => {
         if (document.hidden) {
             stop();
