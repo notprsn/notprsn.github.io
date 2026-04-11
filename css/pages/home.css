@@ -27,3 +27,45 @@ body.page-home {
     radial-gradient(circle at 88% 12%, rgba(255, 255, 255, 0.06), transparent 18%),
     linear-gradient(180deg, rgba(5, 7, 10, 0.24) 0%, rgba(5, 7, 10, 0.62) 68%, rgba(5, 7, 10, 0.84) 100%);
 }
+
+.pi-mascot {
+  --pi-mascot-size: clamp(11.9rem, 26.25vw, 18.9rem);
+  position: fixed;
+  top: calc(var(--scene-header-offset) + 18vh);
+  left: calc(100vw - var(--pi-mascot-size) - clamp(1rem, 5vw, 4rem));
+  z-index: 3;
+  width: var(--pi-mascot-size);
+  aspect-ratio: 1;
+  pointer-events: none;
+  opacity: 0.92;
+  transform: translate3d(0, 0, 0) rotate(var(--pi-mascot-tilt, -2deg));
+  transform-origin: center 72%;
+  transition: opacity 180ms ease, filter 180ms ease;
+  filter: drop-shadow(0 0 22px rgba(120, 255, 146, 0.26));
+  will-change: transform;
+}
+
+.pi-mascot img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  user-select: none;
+}
+
+.pi-mascot--smile {
+  opacity: 1;
+  filter: drop-shadow(0 0 30px rgba(233, 255, 238, 0.34));
+}
+
+.pi-mascot--cornered {
+  opacity: 1;
+  filter:
+    drop-shadow(0 0 14px rgba(233, 255, 238, 0.56))
+    drop-shadow(0 0 38px rgba(120, 255, 146, 0.38));
+}
+
+@media (max-width: 720px), (pointer: coarse) {
+  .pi-mascot {
+    display: none;
+  }
+}

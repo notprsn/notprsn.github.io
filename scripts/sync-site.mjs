@@ -113,7 +113,7 @@ ${indentMultiline(proseHtml, 20)}
     <meta name="author" content="Prasann Iyer">
     <meta name="site-version" content="${version}">
     <title>${title} | Prasann Iyer</title>
-    <link href="${assetPrefix}img/favicon.png" rel="icon" type="image/png" sizes="128x128">
+${buildFaviconLinks(assetPrefix)}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
@@ -163,6 +163,22 @@ ${articleMarkup}
 function buildAssetPrefix(filePath) {
     const fromFileDirToRoot = relative(dirname(filePath), repoRoot).replaceAll("\\", "/");
     return fromFileDirToRoot ? `${fromFileDirToRoot}/` : "";
+}
+
+function buildFaviconLinks(assetPrefix) {
+    const basePath = `${assetPrefix}img/favicon`;
+    return [
+        `<link href="${basePath}/favicon.ico" rel="icon" sizes="any">`,
+        `<link href="${basePath}/favicon.svg" rel="icon" type="image/svg+xml">`,
+        `<link href="${basePath}/favicon-32x32.png" rel="icon" type="image/png" sizes="32x32">`,
+        `<link href="${basePath}/favicon-16x16.png" rel="icon" type="image/png" sizes="16x16">`,
+        `<link href="${basePath}/apple-touch-icon.png" rel="apple-touch-icon" sizes="180x180">`,
+        `<link href="${basePath}/site.webmanifest" rel="manifest">`,
+        `<link href="${basePath}/safari-pinned-tab.svg" rel="mask-icon" color="#78ff92">`,
+        `<meta name="theme-color" content="#05070a">`,
+        `<meta name="msapplication-TileColor" content="#05070a">`,
+        `<meta name="msapplication-config" content="${basePath}/browserconfig.xml">`,
+    ].map((line) => `    ${line}`).join("\n");
 }
 
 function indentMultiline(value, spaces) {
@@ -332,7 +348,7 @@ function updateHtml(source) {
     updated = ensureMeta(updated, "site-version", version);
     updated = stripCacheMeta(updated);
     updated = stripGoogleAnalytics(updated);
-    updated = ensureFaviconLink(updated);
+    updated = ensureFaviconLinks(updated);
     updated = updated.replace(
         /((?:href|src)=["'])(?!https?:\/\/|\/\/|mailto:|#)([^"']+\.(?:css|js))(?:\?v=[^"']*)?(["'])/g,
         `$1$2?v=${version}$3`
@@ -365,11 +381,15 @@ function stripGoogleAnalytics(source) {
         );
 }
 
-function ensureFaviconLink(source) {
-    return source.replace(
-        /<link href="([^"]*?)favicon\.(?:ico|png|svg)" rel="icon" type="[^"]*"(?: sizes="[^"]*")?>/,
-        '<link href="$1favicon.png" rel="icon" type="image/png" sizes="128x128">'
-    );
+function ensureFaviconLinks(source) {
+    const assetPrefix = source.match(/<link href="([^"]*)img\/favicon(?:\/[^"]+|\.[^"]+)"/)?.[1] ||
+        source.match(/<link href="([^"]*)css\/style\.css/)?.[1] ||
+        "";
+    const withoutFavicons = source
+        .replace(/^\s*<link\b(?=[^>]*\brel="(?:icon|apple-touch-icon|manifest|mask-icon)")[^>]*>\n/gm, "")
+        .replace(/^\s*<meta name="(?:theme-color|msapplication-TileColor|msapplication-config)" content="[^"]*">\n/gm, "");
+
+    return withoutFavicons.replace(/(<title>[^<]*<\/title>\n)/, `$1${buildFaviconLinks(assetPrefix)}\n`);
 }
 
 async function collectFiles(directory, predicate) {
