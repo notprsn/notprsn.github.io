@@ -105,77 +105,84 @@
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    pointer-events: none;
+    pointer-events: auto;
   }
 
-  .about-figure {
-    width: min(320px, 26vw);
-    height: auto;
+  .about-character {
+    position: relative;
+    width: min(340px, 26vw);
+    aspect-ratio: 384 / 420;
     opacity: 0.68;
-    overflow: visible;
-    filter: drop-shadow(0 0 12px rgba(93, 169, 255, 0.16));
-    shape-rendering: optimizeSpeed;
+    filter:
+      drop-shadow(0 0 12px rgba(93, 169, 255, 0.18)) drop-shadow(0 16px 26px rgba(3, 5, 12, 0.36));
+    transform: translateY(4px);
+    transition: opacity 180ms ease, transform 220ms ease;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
   }
 
-  .about-figure-dancer {
-    transform-origin: 50% 82%;
-    animation: about-figure-sway 8.6s ease-in-out infinite;
-    will-change: transform;
+  .about-character:hover {
+    opacity: 0.84;
+    transform: translateY(-2px);
   }
 
-  .about-figure-hair {
-    fill: url(#aboutHairGradient);
-    opacity: 0.88;
+  .about-character__frame {
+    position: absolute;
+    inset: 0;
+    background-image: url("../../assets/about-character/joi_bladerunner_about_sprite.png");
+    background-repeat: no-repeat;
+    background-size: 400% 100%;
+    transition: opacity 180ms ease;
   }
 
-  .about-figure-bangs {
-    fill: none;
-    stroke: rgba(173, 223, 255, 0.96);
-    stroke-width: 8;
-    stroke-linecap: round;
+  .about-character__frame--idle {
+    background-position: 0% 0;
   }
 
-  .about-figure-head,
-  .about-figure-neck,
-  .about-figure-torso,
-  .about-figure-hips,
-  .about-figure-leg,
-  .about-figure-foot {
-    fill: none;
-    stroke: rgba(255, 92, 176, 0.86);
-    stroke-linecap: round;
-    stroke-linejoin: round;
+  .about-character__frame--motion {
+    opacity: 0;
+    background-position: 33.333% 0;
   }
 
-  .about-figure-head {
-    stroke-width: 4;
+  .about-character:hover .about-character__frame--idle {
+    opacity: 0;
   }
 
-  .about-figure-neck,
-  .about-figure-torso,
-  .about-figure-hips,
-  .about-figure-leg,
-  .about-figure-foot {
-    stroke-width: 6;
-  }
-
-  .about-figure-arm {
-    fill: none;
-    stroke: rgba(255, 92, 176, 0.86);
-    stroke-width: 6;
-    stroke-linecap: round;
-    stroke-linejoin: round;
+  .about-character:hover .about-character__frame--motion {
+    opacity: 1;
+    animation: about-character-blink 1s step-end infinite;
   }
 }
 
-@keyframes about-figure-sway {
+@keyframes about-character-blink {
+
   0%,
-  100% {
-    transform: translateY(0) rotate(-1.5deg);
+  40% {
+    background-position: 33.333% 0;
   }
 
-  50% {
-    transform: translateY(-6px) rotate(2deg);
+  40.01%,
+  50%,
+  90.01%,
+  100% {
+    background-position: 66.666% 0;
+  }
+
+  50.01%,
+  90% {
+    background-position: 100% 0;
+  }
+}
+
+@media (min-width: 941px) and (prefers-reduced-motion: reduce) {
+
+  .about-character,
+  .about-character__frame {
+    transition: none;
+  }
+
+  .about-character:hover .about-character__frame--motion {
+    animation: none;
   }
 }
 
