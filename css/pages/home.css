@@ -64,8 +64,60 @@ body.page-home {
     drop-shadow(0 0 38px rgba(120, 255, 146, 0.38));
 }
 
+.landing-actions--signals {
+  align-items: center;
+  gap: 0.42rem;
+}
+
+.landing-actions--signals a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.36rem;
+  min-height: 2.45rem;
+  padding: 0.5rem 0.58rem;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  color: rgba(245, 243, 236, 0.72);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transition: border-color 180ms ease, background 180ms ease, color 180ms ease;
+}
+
+.signal-dot {
+  width: 0.52rem;
+  height: 0.52rem;
+  border-radius: 50%;
+  background: #78ff92;
+  box-shadow: 0 0 16px rgba(120, 255, 146, 0.62);
+}
+
+.landing-actions--signals a:hover,
+.landing-actions--signals a:focus-visible {
+  border-color: rgba(245, 243, 236, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  color: #ffffff;
+}
+
 @media (max-width: 720px), (pointer: coarse) {
   .pi-mascot {
     display: none;
+  }
+
+  .landing-actions--signals {
+    gap: 0.18rem;
+  }
+
+  .landing-actions--signals a {
+    gap: 0.25rem;
+    min-height: 2.25rem;
+    padding: 0.42rem 0.34rem;
+    font-size: 0.7rem;
+  }
+
+  .signal-dot {
+    width: 0.44rem;
+    height: 0.44rem;
   }
 }

@@ -2,7 +2,7 @@
 
 My love-hate relationship with music began when I was five. My aunt, who was fifteen then, found it hilarious to make me sing "*Bheege Honth*." Having sung about wet lips and thirsty hearts at five, maybe I do need therapy.
 
-I also remember Saturday singing shows on TV with my *Thaata*. He would lie on a mattress, balance me on his legs, and feel the music so physically that I could feel it too. If the song was upbeat, he'd wiggle his toes and I'd grab them in delight. If the song was quieter, I could still sense him being moved, even through his stillness.
+I also remember Saturday singing shows on TV with my *Thaata*. He would lie on a mattress, balance me on his legs, and feel the music so physically that I would feel it too. If the song was upbeat, he'd wiggle his toes and I'd grab them in delight. If the song was quieter, I could sense him being moved, even through his stillness.
 
 Then came some music-related heartbreaks.
 
@@ -10,7 +10,7 @@ I took to the guitar. My sister took to the keyboard and was pronounced the bett
 
 In first year, I got an electric guitar and decided I was going to lock in and rock on stage. Then another Iyer in college dropped a YouTube-hit cover of "*Chhoo Lo*." Great. There was already a better Iyer at home, and now there was Akshay, a better Iyer on campus too.
 
-Then I started feeling for someone who sang really well. They casually mentioned being into a boy who could play a guitar held behind his head. Yikes. You should probably be with him. I can't compete.
+I started feeling for someone who sang really well. They casually mentioned being into a boy who could play the guitar held behind his head. Yikes. You should probably be with him. I can't compete.
 
 In final year, I auditioned for a music club event and got a rejection email. Pfft. The selection committee is tone deaf and the Nile is a river.
 
@@ -20,7 +20,7 @@ Later, I met a wannabe tech bro. I taught them their first guitar song. We did W
 
 I lost a 300-plus Wordle streak. Games, work, dates, all of it flattened into "whatever."
 
-A while later I stumbled onto [Bandle](https://bandle.app/). I spent a week challenging a workmate at it and got absolutely smoked. I told them I wasn't into Britney Spears and that if there were a Bollywood version, I'd beat them. I couldn't find one. So I hacked together a tune splitter, wired it into a UI Vineet built, and we had a bare-bones Bollywoodle.
+A while later I stumbled onto [Bandle](https://bandle.app/). I spent a week challenging a workmate at it and got absolutely smoked. I told them I wasn't into Brittney Spears and that if there were a Bollywood version, I'd beat them. I couldn't find one. So I hacked together a tune splitter, wired it into a UI Vineet built, and we had a bare-bones Bollywoodle.
 
 I got bested at that too.
 
