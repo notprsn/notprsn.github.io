@@ -150,7 +150,7 @@ ${articleMarkup}
                 <span class="footer-link-placeholder">Glossary</span>
                 <a href="https://github.com/notprsn" target="_blank" rel="noreferrer">GitHub</a>
             </div>
-            <span>&copy; <span data-current-year>${currentYear}</span> Prasann Iyer</span>
+            <span>&copy; <span data-current-year>${currentYear}</span> PI - All rights reversed</span>
         </div>
     </footer>
 
