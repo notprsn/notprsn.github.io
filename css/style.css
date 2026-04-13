@@ -164,13 +164,13 @@ input {
 }
 
 .site-nav {
+  --site-nav-underline: rgba(255, 250, 244, 0.92);
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
-  gap: 0.55rem;
+  gap: clamp(0.95rem, 2.8vw, 1.85rem);
 }
 
-.site-nav a,
 .inline-link,
 .lock-button {
   display: inline-flex;
@@ -185,22 +185,65 @@ input {
 }
 
 .site-nav a {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.9rem;
+  padding: 0.7rem 0;
   color: var(--muted);
+  line-height: 1;
+  transition: color 180ms ease;
+}
+
+.site-nav a::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0.46rem;
+  left: 0;
+  height: 1px;
+  background: var(--site-nav-underline);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 180ms ease;
 }
 
 .site-nav a[aria-current="page"],
 .site-nav a:hover,
-.site-nav a:focus-visible,
+.site-nav a:focus-visible {
+  color: var(--ink);
+}
+
+.inline-link:hover,
+.inline-link:focus-visible,
+.lock-button:hover,
+.lock-button:focus-visible {
+  border-color: rgba(23, 20, 17, 0.22);
+  color: var(--ink);
+}
+
+.site-nav a[aria-current="page"]::after,
+.site-nav a:hover::after,
+.site-nav a:focus-visible::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
 .inline-link:hover,
 .inline-link:focus-visible,
 .lock-button:hover,
 .lock-button:focus-visible {
   transform: translateY(-1px);
-  border-color: rgba(23, 20, 17, 0.22);
-  color: var(--ink);
 }
 
-.page-dark .site-nav a,
+.page-dark .site-nav {
+  --site-nav-underline: rgba(255, 255, 255, 0.94);
+}
+
+.page-dark .site-nav a {
+  color: rgba(245, 243, 236, 0.82);
+}
+
 .page-dark .inline-link,
 .page-dark .lock-button {
   border-color: rgba(255, 255, 255, 0.12);
@@ -224,9 +267,31 @@ input {
 .page-dark .inline-link:focus-visible,
 .page-dark .lock-button:hover,
 .page-dark .lock-button:focus-visible {
+  color: #ffffff;
+}
+
+.page-dark .inline-link:hover,
+.page-dark .inline-link:focus-visible,
+.page-dark .lock-button:hover,
+.page-dark .lock-button:focus-visible {
   background: rgba(255, 255, 255, 0.09);
   border-color: rgba(255, 255, 255, 0.24);
-  color: #ffffff;
+}
+
+.page-home .site-nav {
+  --site-nav-underline: #78ff92;
+}
+
+.page-about .site-nav {
+  --site-nav-underline: #00f5ff;
+}
+
+.page-love .site-nav {
+  --site-nav-underline: #7a4a22;
+}
+
+.page-paper .site-nav {
+  --site-nav-underline: rgba(255, 250, 244, 0.95);
 }
 
 .page-main,
@@ -643,18 +708,13 @@ body.page-paper {
 }
 
 .page-paper .site-nav a {
-  border-color: var(--paper-tone-line);
-  background: var(--paper-tone-surface-soft);
   color: var(--paper-tone-muted);
 }
 
 .page-paper .site-nav a[aria-current="page"],
 .page-paper .site-nav a:hover,
 .page-paper .site-nav a:focus-visible {
-  transform: none;
-  background: var(--paper-tone-text);
-  border-color: transparent;
-  color: var(--paper-tone-surface-strong);
+  color: var(--paper-tone-text);
 }
 
 .page-paper .page-main {

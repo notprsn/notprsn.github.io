@@ -48,20 +48,13 @@
   color: rgba(196, 208, 255, 0.82);
 }
 
-.page-fun-space .site-nav a,
-.page-fun-space .inline-link {
-  border-color: rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.04);
+.page-fun-space .site-nav a {
   color: rgba(244, 246, 255, 0.82);
 }
 
 .page-fun-space .site-nav a[aria-current="page"],
 .page-fun-space .site-nav a:hover,
-.page-fun-space .site-nav a:focus-visible,
-.page-fun-space .inline-link:hover,
-.page-fun-space .inline-link:focus-visible {
-  border-color: rgba(255, 255, 255, 0.22);
-  background: rgba(255, 255, 255, 0.1);
+.page-fun-space .site-nav a:focus-visible {
   color: #ffffff;
 }
 
@@ -93,37 +86,124 @@
 }
 
 .page-fun-space .lab-card {
+  position: relative;
+  display: grid;
+  min-height: 8.8rem;
   padding: 1.1rem 1.2rem;
+  overflow: hidden;
+  border-color: rgba(255, 255, 255, 0.08);
+  background: rgba(6, 7, 10, 0.72);
+  color: inherit;
+  box-shadow: 0 28px 90px rgba(0, 0, 0, 0.48);
+  backdrop-filter: blur(18px);
+  transition: border-color 180ms ease, background-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+
+.page-fun-space .lab-card::before {
+  content: "";
+  position: absolute;
+  top: -2.6rem;
+  right: -3.3rem;
+  width: 11rem;
+  height: 11rem;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 50%;
+  box-shadow:
+    -1.65rem 1.1rem 0 -0.06rem rgba(139, 233, 255, 0.58),
+    inset 0 0 28px rgba(139, 233, 255, 0.04);
+  opacity: 0;
+  transform: rotate(-18deg) scale(0.82);
+  transition: opacity 220ms ease, transform 320ms ease;
+}
+
+.page-fun-space .lab-card::after {
+  content: "";
+  position: absolute;
+  top: 2.08rem;
+  right: 2.05rem;
+  width: 0.34rem;
+  height: 0.34rem;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 0 18px rgba(255, 255, 255, 0.9);
+  opacity: 0;
+  transition: opacity 220ms ease, transform 320ms ease;
+}
+
+.page-fun-space .lab-card:hover,
+.page-fun-space .lab-card:focus-visible {
+  border-color: rgba(139, 233, 255, 0.4);
+  background-color: rgba(7, 13, 22, 0.94);
+  box-shadow: 0 28px 90px rgba(0, 0, 0, 0.54);
+  transform: translateY(-2px);
+}
+
+.page-fun-space .lab-card:hover::before,
+.page-fun-space .lab-card:focus-visible::before {
+  opacity: 1;
+  transform: rotate(10deg) scale(1);
+}
+
+.page-fun-space .lab-card:hover::after,
+.page-fun-space .lab-card:focus-visible::after {
+  opacity: 1;
+  transform: translate(-0.7rem, 1rem);
+}
+
+.page-fun-space .lab-card:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 3px;
 }
 
 .page-fun-space .lab-card-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
+  position: relative;
+  z-index: 1;
+  align-self: center;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  min-height: 100%;
+  text-align: center;
 }
 
 .page-fun-space .lab-card h3 {
+  position: relative;
   margin-top: 0;
 }
 
-.page-fun-space .lab-card h3 a {
-  color: inherit;
+.page-fun-space .lab-card h3::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: -0.42rem;
+  left: 0;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.92);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 180ms ease;
 }
 
-.page-fun-space .lab-card .inline-link {
-  flex: 0 0 auto;
+.page-fun-space .lab-card:hover h3::after,
+.page-fun-space .lab-card:focus-visible h3::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.page-fun-space .lab-card-cta {
+  display: none;
+  width: fit-content;
+  margin-top: 1rem;
+  color: #ffffff;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  line-height: 1;
+  text-transform: uppercase;
 }
 
 .page-fun-space .page-lede {
   color: rgba(231, 235, 250, 0.76);
-}
-
-.page-fun-space .lab-card {
-  border-color: rgba(255, 255, 255, 0.08);
-  background: rgba(6, 7, 10, 0.72);
-  box-shadow: 0 28px 90px rgba(0, 0, 0, 0.48);
-  backdrop-filter: blur(18px);
 }
 
 .page-fun-space .site-footer,
@@ -147,7 +227,10 @@
   }
 
   .page-fun-space .lab-card-head {
-    align-items: flex-start;
-    flex-wrap: wrap;
+    min-height: auto;
+  }
+
+  .page-fun-space .lab-card-cta {
+    display: inline-flex;
   }
 }

@@ -111,16 +111,12 @@ body.page-essays.page-travel-atlas {
 }
 
 .page-travel-atlas .site-nav a {
-  border-color: var(--travel-line);
-  background: rgba(255, 248, 237, 0.06);
   color: var(--travel-muted);
 }
 
 .page-travel-atlas .site-nav a[aria-current="page"],
 .page-travel-atlas .site-nav a:hover,
 .page-travel-atlas .site-nav a:focus-visible {
-  background: rgba(213, 178, 132, 0.18);
-  border-color: rgba(222, 186, 139, 0.28);
   color: #fff8ef;
 }
 

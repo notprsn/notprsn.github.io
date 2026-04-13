@@ -162,19 +162,6 @@ body.page-love::after {
   color: #11110f;
 }
 
-.page-love .site-nav a {
-  border-color: rgba(21, 23, 16, 0.18);
-  background: rgba(255, 255, 255, 0.16);
-}
-
-.page-love .site-nav a[aria-current="page"],
-.page-love .site-nav a:hover,
-.page-love .site-nav a:focus-visible {
-  border-color: rgba(21, 23, 16, 0.3);
-  background: rgba(255, 255, 255, 0.3);
-  color: #11110f;
-}
-
 .page-main--love {
   position: relative;
   z-index: 1;
