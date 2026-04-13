@@ -2,8 +2,81 @@ const onReady = window.Site?.onReady ?? ((callback) => callback());
 const fetchVersionedResource =
     window.Site?.fetchVersionedResource ??
     ((resourcePath, options = {}) => fetch(resourcePath, options));
+const MEOW_PATHS = [
+    "/love-letters/audio/meow-1.mp3",
+    "/love-letters/audio/meow-2.mp3",
+    "/love-letters/audio/meow-3.mp3",
+    "/love-letters/audio/meow-4.mp3",
+    "/love-letters/audio/meow-5.mp3",
+    "/love-letters/audio/meow-6.mp3",
+    "/love-letters/audio/meow-7.mp3",
+    "/love-letters/audio/meow-8.mp3",
+    "/love-letters/audio/meow-9.mp3",
+    "/love-letters/audio/meow-10.mp3",
+];
+const ARM_WIDTH_RATIO = 260 / 660;
+const PRINT_TO_ARM_RATIO = 0.52;
+const ARM_ASSETS = [
+    {
+        src: "/love-letters/paws/arm-blue-1.png",
+        pawAnchorRatio: 0.1042,
+    },
+    {
+        src: "/love-letters/paws/arm-blue-2.png",
+        pawAnchorRatio: 0.0997,
+    },
+    {
+        src: "/love-letters/paws/arm-brown-1.png",
+        pawAnchorRatio: 0.1052,
+    },
+    {
+        src: "/love-letters/paws/arm-brown-2.png",
+        pawAnchorRatio: 0.0985,
+    },
+    {
+        src: "/love-letters/paws/arm-calico-1.png",
+        pawAnchorRatio: 0.1057,
+    },
+    {
+        src: "/love-letters/paws/arm-calico-2.png",
+        pawAnchorRatio: 0.0981,
+    },
+    {
+        src: "/love-letters/paws/arm-gray-1.png",
+        pawAnchorRatio: 0.1026,
+    },
+    {
+        src: "/love-letters/paws/arm-gray-2.png",
+        pawAnchorRatio: 0.1011,
+    },
+    {
+        src: "/love-letters/paws/arm-orange-1.png",
+        pawAnchorRatio: 0.1048,
+    },
+    {
+        src: "/love-letters/paws/arm-orange-2.png",
+        pawAnchorRatio: 0.0994,
+    },
+    {
+        src: "/love-letters/paws/arm-white-1.png",
+        pawAnchorRatio: 0.105,
+    },
+    {
+        src: "/love-letters/paws/arm-white-2.png",
+        pawAnchorRatio: 0.1008,
+    },
+];
+const PRINT_PATHS = [
+    "/love-letters/paws/print-1.png",
+    "/love-letters/paws/print-2.png",
+    "/love-letters/paws/print-3.png",
+    "/love-letters/paws/print-4.png",
+    "/love-letters/paws/print-5.png",
+    "/love-letters/paws/print-6.png",
+];
 
 onReady(initLoveLetters);
+onReady(initCatPaws);
 
 function initLoveLetters() {
     const form = document.querySelector("[data-love-letters-form]");
@@ -118,6 +191,164 @@ function initLoveLetters() {
             submitButton.disabled = false;
         }
     });
+}
+
+function initCatPaws() {
+    const layer = document.querySelector("[data-cat-paw-layer]");
+    if (!layer) {
+        return;
+    }
+
+    const interactiveSelector = [
+        "a",
+        "button",
+        "input",
+        "textarea",
+        "select",
+        "label",
+        "dialog",
+        "[role='button']",
+    ].join(",");
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const meowCache = MEOW_PATHS.map((source) => {
+        const audio = new Audio(source);
+        audio.preload = "auto";
+        return audio;
+    });
+    ARM_ASSETS.forEach((asset) => {
+        const arm = new Image();
+        arm.src = asset.src;
+    });
+    PRINT_PATHS.forEach((path) => {
+        const print = new Image();
+        print.src = path;
+    });
+    let lastMeowAt = 0;
+    let lastMeowIndex = -1;
+
+    document.addEventListener("pointerdown", (event) => {
+        const target = event.target instanceof Element ? event.target : null;
+        if (event.button !== 0 || !target || target.closest(interactiveSelector)) {
+            return;
+        }
+
+        reachForPoint(layer, event.clientX, event.clientY, reduceMotion.matches);
+        const now = window.performance.now();
+        if (now - lastMeowAt > 260) {
+            playMeow();
+            lastMeowAt = now;
+        }
+    });
+
+    function playMeow() {
+        let index = Math.floor(Math.random() * MEOW_PATHS.length);
+        if (MEOW_PATHS.length > 1 && index === lastMeowIndex) {
+            index = (index + 1) % MEOW_PATHS.length;
+        }
+
+        lastMeowIndex = index;
+        const meow = meowCache[index].cloneNode(true);
+        meow.volume = 0.5;
+        meow.play().catch(() => {});
+    }
+}
+
+function reachForPoint(layer, x, y, reduceMotion) {
+    const armAsset = ARM_ASSETS[Math.floor(Math.random() * ARM_ASSETS.length)];
+    const printPath = PRINT_PATHS[Math.floor(Math.random() * PRINT_PATHS.length)];
+    const origin = pickReachOrigin();
+    const dx = x - origin.x;
+    const dy = y - origin.y;
+    const distance = Math.hypot(dx, dy);
+    const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+
+    if (reduceMotion) {
+        dropCatPrint(layer, x, y, angle, printPath, fallbackPrintSize());
+        return;
+    }
+
+    const tapOffset = Math.min(
+        130,
+        Math.max(28, distance * armAsset.pawAnchorRatio / (1 - armAsset.pawAnchorRatio))
+    );
+    const reachLength = distance + tapOffset;
+    const reachWidth = Math.min(260, Math.max(92, reachLength * ARM_WIDTH_RATIO));
+    const printSize = Math.min(136, Math.max(48, reachWidth * PRINT_TO_ARM_RATIO));
+    const reach = document.createElement("span");
+    const arm = document.createElement("span");
+    const image = document.createElement("img");
+    const tap = document.createElement("span");
+
+    reach.className = "cat-reach";
+    reach.style.setProperty("--reach-x", `${origin.x}px`);
+    reach.style.setProperty("--reach-y", `${origin.y}px`);
+    reach.style.setProperty("--reach-length", `${reachLength}px`);
+    reach.style.setProperty("--reach-width", `${reachWidth}px`);
+    reach.style.setProperty("--reach-distance", `${distance}px`);
+    reach.style.setProperty("--reach-angle", `${angle + 90}deg`);
+
+    arm.className = "cat-reach__arm";
+    image.className = "cat-reach__image";
+    image.src = armAsset.src;
+    image.alt = "";
+    image.draggable = false;
+    tap.className = "cat-reach__tap";
+
+    arm.appendChild(image);
+    reach.append(arm, tap);
+    layer.appendChild(reach);
+    const reaches = layer.querySelectorAll(".cat-reach");
+    if (reaches.length > 12) {
+        reaches[0].remove();
+    }
+
+    window.setTimeout(() => {
+        if (reach.isConnected) {
+            dropCatPrint(layer, x, y, angle, printPath, printSize);
+        }
+    }, 640);
+
+    reach.addEventListener("animationend", (event) => {
+        if (event.animationName === "cat-arm-reach") {
+            reach.remove();
+        }
+    });
+}
+
+function pickReachOrigin() {
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    const edgePadding = 54;
+    const edges = [
+        { x: -edgePadding, y: Math.random() * height },
+        { x: width + edgePadding, y: Math.random() * height },
+        { x: Math.random() * width, y: -edgePadding },
+        { x: Math.random() * width, y: height + edgePadding },
+    ];
+
+    return edges[Math.floor(Math.random() * edges.length)];
+}
+
+function fallbackPrintSize() {
+    return Math.min(136, Math.max(58, Math.min(window.innerWidth, window.innerHeight) * 0.16));
+}
+
+function dropCatPrint(layer, x, y, angle, printPath, printSize) {
+    const print = document.createElement("img");
+    print.className = "cat-print";
+    print.src = printPath;
+    print.alt = "";
+    print.draggable = false;
+    print.style.setProperty("--print-x", `${x}px`);
+    print.style.setProperty("--print-y", `${y}px`);
+    print.style.setProperty("--print-angle", `${angle + 90 + (-7 + Math.random() * 14)}deg`);
+    print.style.setProperty("--print-size", `${printSize}px`);
+    layer.appendChild(print);
+
+    const prints = layer.querySelectorAll(".cat-print");
+    if (prints.length > 120) {
+        prints[0].remove();
+    }
 }
 
 async function decryptArchive(bundle, passphrase) {
