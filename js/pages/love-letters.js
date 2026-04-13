@@ -74,6 +74,21 @@ const PRINT_PATHS = [
     "/love-letters/paws/print-5.png",
     "/love-letters/paws/print-6.png",
 ];
+const START_ARM_ASSET = ARM_ASSETS.find((asset) => asset.src.endsWith("arm-orange-2.png")) ?? ARM_ASSETS[0];
+const START_PRINT_PATH = "/love-letters/paws/print-2.png";
+const STATUS_COPY = {
+    empty: "Enter the answer first.",
+    locked: "Locked and Encrypted",
+    pending: "Checking...",
+};
+const CAT_LIMITS = {
+    firstPrintMax: 92,
+    firstPrintMin: 52,
+    firstPrintScale: 1.08,
+    maxPrints: 120,
+    maxReaches: 12,
+    meowCooldownMs: 260,
+};
 
 onReady(initLoveLetters);
 onReady(initCatPaws);
@@ -93,7 +108,7 @@ function initLoveLetters() {
     const modal = document.querySelector("[data-love-modal]");
     const modalMessage = document.querySelector("[data-love-modal-message]");
     const modalClose = document.querySelector("[data-love-modal-close]");
-    const submitButton = form.querySelector('button[type="submit"]');
+    const submitButton = form.querySelector("[data-love-submit]");
     let bundlePromise;
 
     const setStatus = (message, state = "info") => {
@@ -103,6 +118,15 @@ function initLoveLetters() {
 
         status.textContent = message;
         status.dataset.state = state;
+        status.hidden = !message;
+    };
+
+    const updateSubmitVisibility = () => {
+        if (!passwordInput || !submitButton) {
+            return;
+        }
+
+        submitButton.hidden = !passwordInput.value.trim();
     };
 
     const showModal = (message) => {
@@ -138,6 +162,8 @@ function initLoveLetters() {
             closeModal();
         }
     });
+    passwordInput?.addEventListener("input", updateSubmitVisibility);
+    updateSubmitVisibility();
 
     const getBundle = async () => {
         if (!bundlePromise) {
@@ -160,12 +186,12 @@ function initLoveLetters() {
 
         const passphrase = passwordInput.value.trim();
         if (!passphrase) {
-            setStatus("Enter the answer first.", "error");
+            setStatus(STATUS_COPY.empty, "error");
             return;
         }
 
         submitButton.disabled = true;
-        setStatus("Checking...", "pending");
+        setStatus(STATUS_COPY.pending, "pending");
 
         try {
             const bundle = await getBundle();
@@ -180,15 +206,17 @@ function initLoveLetters() {
             renderArchive(archive, { archiveTitle, archiveIntro, lettersList });
             output.hidden = false;
             form.reset();
-            setStatus("Archive unlocked.", "success");
+            updateSubmitVisibility();
+            setStatus("", "success");
             showModal("oh, you made it. i thought someone was indifferent");
         } catch (error) {
             console.error(error);
             output.hidden = true;
-            setStatus("Locked.", "error");
+            setStatus(STATUS_COPY.locked, "error");
             showModal("nice try, kiddo. i guess you'ren't her");
         } finally {
             submitButton.disabled = false;
+            updateSubmitVisibility();
         }
     });
 }
@@ -199,6 +227,8 @@ function initCatPaws() {
         return;
     }
 
+    const startButton = document.querySelector("[data-cat-paw-start]");
+    const heroRow = startButton?.closest(".love-hero-row");
     const interactiveSelector = [
         "a",
         "button",
@@ -225,25 +255,68 @@ function initCatPaws() {
     });
     let lastMeowAt = 0;
     let lastMeowIndex = -1;
+    let pawModeEnabled = !startButton;
+    let printPositionFrame = 0;
+
+    const schedulePrintPositionUpdate = () => {
+        if (printPositionFrame) {
+            return;
+        }
+
+        printPositionFrame = window.requestAnimationFrame(() => {
+            printPositionFrame = 0;
+            updateCatPrintPositions(layer);
+        });
+    };
+
+    startButton?.addEventListener("click", () => {
+        if (pawModeEnabled) {
+            return;
+        }
+
+        const rect = startButton.getBoundingClientRect();
+        const viewportX = rect.left + rect.width / 2;
+        const viewportY = rect.top + rect.height / 2;
+        pawModeEnabled = true;
+        startButton.disabled = true;
+        startButton.setAttribute("aria-hidden", "true");
+        heroRow?.classList.add("is-paw-started");
+        reachForPoint(layer, viewportX, viewportY, reduceMotion.matches, {
+            armAsset: START_ARM_ASSET,
+            printPath: START_PRINT_PATH,
+            printSize: Math.min(
+                CAT_LIMITS.firstPrintMax,
+                Math.max(CAT_LIMITS.firstPrintMin, rect.width * CAT_LIMITS.firstPrintScale)
+            ),
+        });
+        playMeow();
+        lastMeowAt = window.performance.now();
+    });
 
     document.addEventListener("pointerdown", (event) => {
         const target = event.target instanceof Element ? event.target : null;
-        if (event.button !== 0 || !target || target.closest(interactiveSelector)) {
+        if (!pawModeEnabled || event.button !== 0 || !target || target.closest(interactiveSelector)) {
             return;
         }
 
         reachForPoint(layer, event.clientX, event.clientY, reduceMotion.matches);
         const now = window.performance.now();
-        if (now - lastMeowAt > 260) {
+        if (now - lastMeowAt > CAT_LIMITS.meowCooldownMs) {
             playMeow();
             lastMeowAt = now;
         }
     });
+    window.addEventListener("scroll", schedulePrintPositionUpdate, { passive: true });
+    window.addEventListener("resize", schedulePrintPositionUpdate);
 
     function playMeow() {
-        let index = Math.floor(Math.random() * MEOW_PATHS.length);
-        if (MEOW_PATHS.length > 1 && index === lastMeowIndex) {
-            index = (index + 1) % MEOW_PATHS.length;
+        if (!meowCache.length) {
+            return;
+        }
+
+        let index = Math.floor(Math.random() * meowCache.length);
+        if (meowCache.length > 1 && index === lastMeowIndex) {
+            index = (index + 1) % meowCache.length;
         }
 
         lastMeowIndex = index;
@@ -253,17 +326,17 @@ function initCatPaws() {
     }
 }
 
-function reachForPoint(layer, x, y, reduceMotion) {
-    const armAsset = ARM_ASSETS[Math.floor(Math.random() * ARM_ASSETS.length)];
-    const printPath = PRINT_PATHS[Math.floor(Math.random() * PRINT_PATHS.length)];
+function reachForPoint(layer, viewportX, viewportY, reduceMotion, options = {}) {
+    const armAsset = options.armAsset ?? randomItem(ARM_ASSETS);
+    const printPath = options.printPath ?? randomItem(PRINT_PATHS);
     const origin = pickReachOrigin();
-    const dx = x - origin.x;
-    const dy = y - origin.y;
+    const dx = viewportX - origin.x;
+    const dy = viewportY - origin.y;
     const distance = Math.hypot(dx, dy);
     const angle = Math.atan2(dy, dx) * 180 / Math.PI;
 
     if (reduceMotion) {
-        dropCatPrint(layer, x, y, angle, printPath, fallbackPrintSize());
+        dropCatPrint(layer, viewportX, viewportY, angle, printPath, options.printSize ?? fallbackPrintSize());
         return;
     }
 
@@ -273,7 +346,7 @@ function reachForPoint(layer, x, y, reduceMotion) {
     );
     const reachLength = distance + tapOffset;
     const reachWidth = Math.min(260, Math.max(92, reachLength * ARM_WIDTH_RATIO));
-    const printSize = Math.min(136, Math.max(48, reachWidth * PRINT_TO_ARM_RATIO));
+    const printSize = options.printSize ?? Math.min(136, Math.max(48, reachWidth * PRINT_TO_ARM_RATIO));
     const reach = document.createElement("span");
     const arm = document.createElement("span");
     const image = document.createElement("img");
@@ -298,13 +371,13 @@ function reachForPoint(layer, x, y, reduceMotion) {
     reach.append(arm, tap);
     layer.appendChild(reach);
     const reaches = layer.querySelectorAll(".cat-reach");
-    if (reaches.length > 12) {
+    if (reaches.length > CAT_LIMITS.maxReaches) {
         reaches[0].remove();
     }
 
     window.setTimeout(() => {
         if (reach.isConnected) {
-            dropCatPrint(layer, x, y, angle, printPath, printSize);
+            dropCatPrint(layer, viewportX, viewportY, angle, printPath, printSize);
         }
     }, 640);
 
@@ -326,29 +399,49 @@ function pickReachOrigin() {
         { x: Math.random() * width, y: height + edgePadding },
     ];
 
-    return edges[Math.floor(Math.random() * edges.length)];
+    return randomItem(edges);
 }
 
 function fallbackPrintSize() {
     return Math.min(136, Math.max(58, Math.min(window.innerWidth, window.innerHeight) * 0.16));
 }
 
-function dropCatPrint(layer, x, y, angle, printPath, printSize) {
+function dropCatPrint(layer, viewportX, viewportY, angle, printPath, printSize) {
     const print = document.createElement("img");
     print.className = "cat-print";
     print.src = printPath;
     print.alt = "";
     print.draggable = false;
-    print.style.setProperty("--print-x", `${x}px`);
-    print.style.setProperty("--print-y", `${y}px`);
+    print.dataset.printDocumentX = `${viewportX + window.scrollX}`;
+    print.dataset.printDocumentY = `${viewportY + window.scrollY}`;
     print.style.setProperty("--print-angle", `${angle + 90 + (-7 + Math.random() * 14)}deg`);
     print.style.setProperty("--print-size", `${printSize}px`);
+    positionCatPrint(print);
     layer.appendChild(print);
 
     const prints = layer.querySelectorAll(".cat-print");
-    if (prints.length > 120) {
+    if (prints.length > CAT_LIMITS.maxPrints) {
         prints[0].remove();
     }
+}
+
+function updateCatPrintPositions(layer) {
+    layer.querySelectorAll(".cat-print").forEach(positionCatPrint);
+}
+
+function positionCatPrint(print) {
+    const documentX = Number(print.dataset.printDocumentX);
+    const documentY = Number(print.dataset.printDocumentY);
+    if (!Number.isFinite(documentX) || !Number.isFinite(documentY)) {
+        return;
+    }
+
+    print.style.setProperty("--print-x", `${documentX - window.scrollX}px`);
+    print.style.setProperty("--print-y", `${documentY - window.scrollY}px`);
+}
+
+function randomItem(items) {
+    return items[Math.floor(Math.random() * items.length)];
 }
 
 async function decryptArchive(bundle, passphrase) {
@@ -388,9 +481,7 @@ async function decryptArchive(bundle, passphrase) {
 function renderArchive(archive, targets) {
     const { archiveTitle, archiveIntro, lettersList } = targets;
     const title = typeof archive.archiveTitle === "string" ? archive.archiveTitle : "Love Letters";
-    const intro = typeof archive.intro === "string"
-        ? archive.intro
-        : "Unlocked locally in your browser.";
+    const intro = typeof archive.intro === "string" ? archive.intro : "";
     const letters = Array.isArray(archive.letters) ? archive.letters : [];
 
     archiveTitle.textContent = title;
