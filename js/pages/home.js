@@ -252,12 +252,14 @@ function initPiMascot() {
             setCornered(false);
             return base;
         }
-        const centerX = x + size * 0.52;
-        const centerY = y + size * 0.46;
-        const awayX = centerX - pointer.x;
-        const awayY = centerY - pointer.y;
-        const distance = Math.hypot(awayX, awayY) || 1;
-        const onMascot = distance < size * 0.48;
+        const currentCenterX = x + size * 0.52;
+        const currentCenterY = y + size * 0.46;
+        const baseCenterX = base.x + size * 0.52;
+        const baseCenterY = base.y + size * 0.46;
+        const currentAwayX = currentCenterX - pointer.x;
+        const currentAwayY = currentCenterY - pointer.y;
+        const currentDistance = Math.hypot(currentAwayX, currentAwayY) || 1;
+        const onMascot = currentDistance < size * 0.48;
         const pinned = onMascot && nearWall({ x, y });
         setSmile(onMascot);
         setCornered(pinned);
@@ -267,15 +269,21 @@ function initPiMascot() {
         }
 
         const repelRadius = Math.max(size * 1.3, 170);
+        const baseAwayX = baseCenterX - pointer.x;
+        const baseAwayY = baseCenterY - pointer.y;
+        const baseDistance = Math.hypot(baseAwayX, baseAwayY);
+        const distance = baseDistance || currentDistance;
         if (distance >= repelRadius) {
             return base;
         }
 
         const pressure = (repelRadius - distance) / repelRadius;
         const push = 40 + pressure * 150;
+        const awayX = baseDistance ? baseAwayX : currentAwayX;
+        const awayY = baseDistance ? baseAwayY : currentAwayY;
         return clampToBounds({
-            x: x + (awayX / distance) * push,
-            y: y + (awayY / distance) * push,
+            x: base.x + (awayX / distance) * push,
+            y: base.y + (awayY / distance) * push,
         });
     }
 
