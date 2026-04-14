@@ -3,22 +3,58 @@ body.brownian-page {
   min-height: 100vh;
   min-height: 100dvh;
   font-family: "Source Sans 3", sans-serif;
-  color: #f3f9ff;
-  background:
-    radial-gradient(circle at 15% 12%, rgba(138, 213, 255, 0.13), transparent 24%),
-    radial-gradient(circle at 84% 18%, rgba(164, 189, 255, 0.11), transparent 23%),
-    linear-gradient(180deg, #07101a 0%, #0d1724 46%, #142234 100%);
+  color: #123044;
+  background: #eef7fb;
   --fun-project-shell-max-width: 1420px;
   --fun-project-sidebar-width: 372px;
-  --fun-project-page-text: #f3f9ff;
-  --fun-project-copy-text: rgba(243, 249, 255, 0.82);
-  --fun-project-card-border: rgba(243, 249, 255, 0.1);
-  --fun-project-card-bg: linear-gradient(180deg, rgba(9, 18, 30, 0.96) 0%, rgba(12, 24, 38, 0.94) 100%);
-  --fun-project-control-label: rgba(243, 249, 255, 0.7);
-  --fun-project-output: #d9efff;
-  --fun-project-accent: #8bd8ff;
-  --fun-project-button-border: rgba(243, 249, 255, 0.14);
-  --fun-project-button-border-hover: rgba(243, 249, 255, 0.28);
-  --fun-project-button-bg: rgba(15, 28, 42, 0.94);
-  --fun-project-button-hover-bg: rgba(18, 34, 49, 0.96);
+  --fun-project-page-text: #123044;
+  --fun-project-copy-text: rgba(18, 48, 68, 0.78);
+  --fun-project-card-border: rgba(79, 168, 216, 0.24);
+  --fun-project-card-bg: #ffffff;
+  --fun-project-control-label: rgba(18, 48, 68, 0.68);
+  --fun-project-output: #0f5f8c;
+  --fun-project-accent: #4fa8d8;
+  --fun-project-button-border: rgba(79, 168, 216, 0.34);
+  --fun-project-button-border-hover: rgba(79, 168, 216, 0.56);
+  --fun-project-button-bg: #d9eff9;
+  --fun-project-button-hover-bg: #c7e7f5;
+  --fun-project-button-text: #123044;
+  --fun-project-display-bg: #f7fcff;
+  --fun-project-link-color: #0f5f8c;
+  --fun-project-link-border: rgba(15, 95, 140, 0.42);
+  --fun-project-link-border-hover: rgba(15, 95, 140, 0.82);
+  --fun-project-fallback-border: rgba(79, 168, 216, 0.24);
+  --fun-project-fallback-bg: rgba(255, 255, 255, 0.88);
+  --fun-project-fallback-text: rgba(18, 48, 68, 0.88);
+}
+
+.brownian-page .site-header {
+  background: rgba(238, 247, 251, 0.86);
+  border-bottom-color: rgba(79, 168, 216, 0.22);
+}
+
+.brownian-page .site-brand,
+.brownian-page .site-nav a,
+.brownian-page .footer-links a,
+.brownian-page .footer-link-placeholder,
+.brownian-page .site-footer {
+  color: rgba(18, 48, 68, 0.76);
+}
+
+.brownian-page .site-nav a[aria-current="page"],
+.brownian-page .site-nav a:hover,
+.brownian-page .site-nav a:focus-visible,
+.brownian-page .footer-links a:hover,
+.brownian-page .footer-links a:focus-visible {
+  color: #123044;
+}
+
+.brownian-page .site-nav {
+  --site-nav-underline: #4fa8d8;
+}
+
+.brownian-page .fun-project-copy-card,
+.brownian-page .fun-project-controls-card,
+.brownian-page .fun-project-display-card {
+  box-shadow: 0 24px 60px rgba(18, 48, 68, 0.12);
 }

@@ -4,27 +4,33 @@ body.julia-page {
   min-height: 100dvh;
   font-family: "Source Sans 3", sans-serif;
   color: #f8f4ef;
-  background:
-    radial-gradient(circle at 18% 12%, rgba(232, 181, 77, 0.12), transparent 24%),
-    radial-gradient(circle at 84% 20%, rgba(101, 193, 216, 0.11), transparent 22%),
-    linear-gradient(180deg, #090b11 0%, #111624 46%, #1a2132 100%);
+  background: #170b07;
   --fun-project-shell-max-width: 1400px;
   --fun-project-sidebar-width: 286px;
   --fun-project-gap: 0.7rem;
   --fun-project-page-text: #f8f4ef;
   --fun-project-copy-text: rgba(248, 244, 239, 0.82);
-  --fun-project-card-border: rgba(248, 244, 239, 0.1);
-  --fun-project-card-bg: linear-gradient(180deg, rgba(15, 19, 31, 0.96) 0%, rgba(18, 24, 39, 0.94) 100%);
-  --fun-project-control-label: rgba(248, 244, 239, 0.7);
-  --fun-project-output: #f5d9b4;
-  --fun-project-accent: #d99c52;
-  --fun-project-button-border: rgba(248, 244, 239, 0.14);
-  --fun-project-button-border-hover: rgba(248, 244, 239, 0.28);
-  --fun-project-button-bg: rgba(17, 22, 36, 0.94);
-  --fun-project-button-hover-bg: rgba(21, 28, 44, 0.96);
-  --fun-project-fallback-border: rgba(248, 244, 239, 0.14);
-  --fun-project-fallback-bg: rgba(15, 19, 31, 0.84);
+  --fun-project-card-border: rgba(255, 122, 26, 0.28);
+  --fun-project-card-bg: #26110b;
+  --fun-project-control-label: rgba(248, 244, 239, 0.68);
+  --fun-project-output: #ffd1a8;
+  --fun-project-accent: #ff7a1a;
+  --fun-project-button-border: rgba(255, 122, 26, 0.34);
+  --fun-project-button-border-hover: rgba(255, 122, 26, 0.56);
+  --fun-project-button-bg: #33160d;
+  --fun-project-button-hover-bg: #431d10;
+  --fun-project-display-bg: #090302;
+  --fun-project-link-color: #ffb15f;
+  --fun-project-link-border: rgba(255, 177, 95, 0.42);
+  --fun-project-link-border-hover: rgba(255, 177, 95, 0.82);
+  --fun-project-fallback-border: rgba(255, 122, 26, 0.22);
+  --fun-project-fallback-bg: rgba(38, 17, 11, 0.84);
   --fun-project-fallback-text: rgba(248, 244, 239, 0.88);
+}
+
+.julia-page .site-header {
+  background: rgba(23, 11, 7, 0.84);
+  border-bottom-color: rgba(255, 122, 26, 0.18);
 }
 
 .julia-page .fun-project-copy-card {

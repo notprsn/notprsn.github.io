@@ -154,11 +154,7 @@ vec3 paletteColor(float signal) {
 
 vec3 backgroundColor(vec3 rd, vec2 fragCoord) {
     float vertical = smoothstep(-0.15, 0.85, rd.y * 0.5 + 0.5);
-    vec3 bg = mix(u_bgBottom, u_bgTop, vertical);
-    vec2 centered = (fragCoord - 0.5 * u_resolution) / u_resolution.y;
-    float halo = exp(-4.2 * dot(centered, centered));
-    bg += u_glowColor * halo * 0.13;
-    return bg;
+    return mix(u_bgBottom, u_bgTop, vertical);
 }
 
 void main() {

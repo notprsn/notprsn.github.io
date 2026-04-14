@@ -283,7 +283,7 @@ function plotPoint(ctx, targetIndex, pointSize) {
 }
 
 function drawBackdrop(p) {
-    p.background(0);
+    p.background("#05050b");
 }
 
 function drawGuides(p) {

@@ -52,8 +52,12 @@ const CPU_TIER_SETTINGS = {
     },
 };
 
-const NEON_PALETTE_MIN_ANCHORS = 4;
-const NEON_PALETTE_MAX_ANCHORS = 6;
+const GRAPHITE_PALETTE_ANCHORS = new Float32Array([
+    0.18, 0.19, 0.21,
+    0.38, 0.39, 0.42,
+    0.68, 0.7, 0.74,
+    0.92, 0.94, 0.96,
+]);
 const REFERENCE_DISTANCE = window.innerWidth < 960 ? 5.35 : 4.8;
 const REFERENCE_PITCH_RANGE = {
     min: -0.62,
@@ -166,7 +170,7 @@ const CPU_LOG_PREFIX = "[mandelbulb-cpu]";
 const state = {
     params: { ...DEFAULT_PARAMS },
     view: buildReferenceView(),
-    palette: createRandomNeonPalette(),
+    palette: createGraphitePalette(),
     paletteVersion: 0,
     displaySize: { width: 0, height: 0 },
     renderSize: { width: 0, height: 0 },
@@ -218,8 +222,6 @@ const normalScratch = new Float32Array(3);
 const paletteScratch = new Float32Array(3);
 const shadowScratch = new Float32Array(3);
 const accentScratch = new Float32Array(3);
-const backgroundScratch = new Float32Array(3);
-const backgroundAccentScratch = new Float32Array(3);
 
 bindControls();
 updateControlUI();
@@ -250,7 +252,7 @@ function bindControls() {
     });
 
     elements.resetButton?.addEventListener("click", () => {
-        state.palette = createRandomNeonPalette();
+        state.palette = createGraphitePalette();
         state.paletteVersion += 1;
         state.view = buildReferenceView();
         markInteraction();
@@ -1077,24 +1079,14 @@ function buildWebGLPaletteUniforms(palette) {
     samplePalette(0.08, palette, paletteScratch);
     samplePalette(0.42, palette, shadowScratch);
     samplePalette(0.78, palette, accentScratch);
-    samplePalette(0.18, palette, backgroundScratch);
-    samplePalette(0.56, palette, backgroundAccentScratch);
 
     return {
         paletteA: [paletteScratch[0], paletteScratch[1], paletteScratch[2]],
         paletteB: [shadowScratch[0], shadowScratch[1], shadowScratch[2]],
         paletteC: [accentScratch[0], accentScratch[1], accentScratch[2]],
         glow: [palette.glow[0], palette.glow[1], palette.glow[2]],
-        bgTop: [
-            mix(backgroundScratch[0] * 0.18, palette.glow[0] * 0.12, 0.35),
-            mix(backgroundScratch[1] * 0.18, palette.glow[1] * 0.12, 0.35),
-            mix(backgroundScratch[2] * 0.18, palette.glow[2] * 0.12, 0.35),
-        ],
-        bgBottom: [
-            backgroundAccentScratch[0] * 0.05,
-            backgroundAccentScratch[1] * 0.05,
-            backgroundAccentScratch[2] * 0.05,
-        ],
+        bgTop: [0.018, 0.019, 0.022],
+        bgBottom: [0, 0, 0],
     };
 }
 
@@ -1135,7 +1127,7 @@ function createFrameSignature(tierSettings) {
 }
 
 function createFrameConfig(tierSettings, now) {
-    const palette = buildNeonPalette();
+    const palette = buildThemePalette();
     const cameraPos = getCameraPosition();
     const targetX = 0;
     const targetY = 0.05;
@@ -1457,8 +1449,8 @@ function ambientOcclusion(x, y, z, nx, ny, nz, samples) {
     return clamp(1 - occlusion, 0.32, 1);
 }
 
-function buildNeonPalette() {
-    const palette = state.palette || createRandomNeonPalette();
+function buildThemePalette() {
+    const palette = state.palette || createGraphitePalette();
     return {
         anchorCount: palette.anchors.length / 3,
         anchors: palette.anchors,
@@ -1528,45 +1520,10 @@ function syncRasterCache(width, height) {
     }
 }
 
-function createRandomNeonPalette() {
-    const anchorCount = Math.floor(randomBetween(NEON_PALETTE_MIN_ANCHORS, NEON_PALETTE_MAX_ANCHORS + 1));
-    const modeRoll = Math.random();
-    const baseHue = Math.random();
-    const span = modeRoll < 0.34
-        ? randomBetween(0.16, 0.28)
-        : modeRoll < 0.68
-            ? randomBetween(0.34, 0.52)
-            : randomBetween(0.56, 0.8);
-    const direction = Math.random() < 0.5 ? -1 : 1;
-    const anchors = new Float32Array(anchorCount * 3);
-    let glowHue = baseHue;
-    let glowSat = 0.84;
-    let glowVal = 1.0;
-
-    for (let index = 0; index < anchorCount; index += 1) {
-        const ratio = anchorCount === 1 ? 0 : index / (anchorCount - 1);
-        const wave = Math.sin((ratio * Math.PI * 2) + modeRoll * Math.PI * 2) * 0.035;
-        const jitter = randomBetween(-0.025, 0.025);
-        const hue = wrap01(baseHue + direction * span * (ratio - 0.5) + wave + jitter);
-        const saturation = randomBetween(0.74, 0.98);
-        const value = randomBetween(0.95, 1.0);
-        const rgb = hsvToRgb(hue, saturation, value);
-        const offset = index * 3;
-
-        anchors[offset] = rgb[0];
-        anchors[offset + 1] = rgb[1];
-        anchors[offset + 2] = rgb[2];
-
-        if (index === Math.floor(anchorCount * 0.65)) {
-            glowHue = hue;
-            glowSat = saturation;
-            glowVal = value;
-        }
-    }
-
+function createGraphitePalette() {
     return {
-        anchors,
-        glow: hsvToRgb(glowHue + randomBetween(-0.04, 0.04), Math.max(0.68, glowSat - 0.14), glowVal),
+        anchors: new Float32Array(GRAPHITE_PALETTE_ANCHORS),
+        glow: [0.74, 0.76, 0.8],
     };
 }
 

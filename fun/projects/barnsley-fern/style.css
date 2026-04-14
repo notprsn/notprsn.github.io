@@ -4,21 +4,27 @@ body.fern-page {
   min-height: 100dvh;
   font-family: "Source Sans 3", sans-serif;
   color: #eef6ec;
-  background:
-    radial-gradient(circle at 15% 12%, rgba(150, 210, 150, 0.13), transparent 24%),
-    radial-gradient(circle at 84% 18%, rgba(106, 168, 132, 0.12), transparent 23%),
-    linear-gradient(180deg, #07110c 0%, #0c1913 46%, #13211a 100%);
+  background: #10170f;
   --fun-project-shell-max-width: 1360px;
   --fun-project-sidebar-width: 336px;
   --fun-project-page-text: #eef6ec;
   --fun-project-copy-text: rgba(238, 246, 236, 0.82);
-  --fun-project-card-border: rgba(238, 246, 236, 0.1);
-  --fun-project-card-bg: linear-gradient(180deg, rgba(8, 18, 14, 0.96) 0%, rgba(12, 24, 18, 0.94) 100%);
-  --fun-project-control-label: rgba(238, 246, 236, 0.7);
+  --fun-project-card-border: rgba(143, 189, 91, 0.22);
+  --fun-project-card-bg: #172315;
+  --fun-project-control-label: rgba(238, 246, 236, 0.68);
   --fun-project-output: #d8f0d3;
-  --fun-project-accent: #9fd483;
-  --fun-project-button-border: rgba(238, 246, 236, 0.14);
-  --fun-project-button-border-hover: rgba(238, 246, 236, 0.28);
-  --fun-project-button-bg: rgba(17, 31, 23, 0.94);
-  --fun-project-button-hover-bg: rgba(22, 40, 29, 0.96);
+  --fun-project-accent: #8fbd5b;
+  --fun-project-button-border: rgba(143, 189, 91, 0.3);
+  --fun-project-button-border-hover: rgba(143, 189, 91, 0.48);
+  --fun-project-button-bg: #1f311a;
+  --fun-project-button-hover-bg: #263c20;
+  --fun-project-display-bg: #061008;
+  --fun-project-link-color: #c9ee9a;
+  --fun-project-link-border: rgba(201, 238, 154, 0.42);
+  --fun-project-link-border-hover: rgba(201, 238, 154, 0.82);
+}
+
+.fern-page .site-header {
+  background: rgba(16, 23, 15, 0.82);
+  border-bottom-color: rgba(143, 189, 91, 0.18);
 }

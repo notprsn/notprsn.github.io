@@ -163,15 +163,9 @@ function createSketch() {
 }
 
 function drawBackdrop(p) {
-    const glowSize = Math.min(p.width, p.height);
-
-    p.background(0);
+    p.background("#0e130c");
     p.noStroke();
-    p.fill(28, 58, 12, 0.065);
-    p.ellipse(p.width * 0.5, p.height * 0.64, glowSize * 0.9, glowSize * 1.04);
-    p.fill(204, 24, 18, 0.035);
-    p.ellipse(p.width * 0.62, p.height * 0.24, glowSize * 0.44, glowSize * 0.44);
-    p.fill(22, 24, 10, 0.22);
+    p.fill("#1b1309");
     p.rect(0, p.height * 0.92, p.width, p.height * 0.08);
 }
 
