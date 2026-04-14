@@ -902,7 +902,7 @@ body.page-paper.page-project-cloudscript {
 }
 
 .page-project-cloudscript .project-writing-page__prose {
-  max-width: 42rem;
+  max-width: none;
 }
 
 .page-project-cloudscript .project-writing-page__prose p,

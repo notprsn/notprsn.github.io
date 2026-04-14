@@ -2,12 +2,13 @@
 
 Directories
 - `essays/<theme>/<slug>/content.md`: essay draft and published markdown, owned by its theme directory.
-- `projects/<slug>/content.md`: markdown for a single-note project page.
+- `projects/<slug>/content.md`: markdown for a single-note project page or a root project note.
 - `projects/<slug>/<note>/content.md`: markdown for a project that owns multiple standalone write-ups.
 - `work/stories/<slug>/story.md`: finalized work-story markdown rendered directly on dedicated `work/stories/*` pages.
 
 Path format
 - `projects/cloudscript/content.md`
+- `projects/cloudscript/story/content.md`
 - `projects/bollywoodle/story/content.md`
 - `essays/travel/uk/content.md`
 - `essays/miscellaneous/jigsaw-puzzles/content.md`
@@ -26,7 +27,7 @@ Website wiring
 - Project markdown pages load through `js/pages/content-entry.js`.
 - The repo currently has 3 kinds of project writing state:
   - public multi-note pages for Bollywoodle
-  - a public single-note shell for CloudScript with intentionally minimal markdown
+  - public message and story windows for CloudScript
   - an empty unpublished draft for Polymarket Crypto Desk
 - Work-story markdown should contain the narrative only:
   - keep the `# Company` title in `story.md`
