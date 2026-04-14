@@ -12,11 +12,14 @@ varying vec2 vUv;
 const int MAX_ITER = 320;
 
 vec3 palette(float t) {
-    vec3 a = vec3(0.06, 0.07, 0.10);
-    vec3 b = vec3(0.64, 0.42, 0.28);
-    vec3 c = vec3(1.0, 0.85, 0.68);
-    vec3 d = vec3(0.12, 0.18, 0.24);
-    return a + b * cos(6.28318 * (c * t + d));
+    t = clamp(t, 0.0, 1.0);
+    vec3 ember = vec3(0.18, 0.03, 0.01);
+    vec3 red = vec3(0.66, 0.08, 0.02);
+    vec3 orange = vec3(1.0, 0.34, 0.04);
+    vec3 gold = vec3(1.0, 0.76, 0.16);
+    vec3 color = mix(ember, red, smoothstep(0.0, 0.28, t));
+    color = mix(color, orange, smoothstep(0.22, 0.66, t));
+    return mix(color, gold, smoothstep(0.58, 1.0, t));
 }
 
 void main() {
@@ -45,7 +48,7 @@ void main() {
     }
 
     if (!escaped) {
-        gl_FragColor = vec4(vec3(0.03, 0.03, 0.05), 1.0);
+        gl_FragColor = vec4(vec3(0.035, 0.012, 0.006), 1.0);
         return;
     }
 

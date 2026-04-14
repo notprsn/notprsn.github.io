@@ -4,27 +4,32 @@ body.mandelbulb-page {
   min-height: 100dvh;
   font-family: "Source Sans 3", sans-serif;
   color: #edf4f6;
-  background:
-    radial-gradient(circle at 12% 12%, rgba(108, 255, 194, 0.12), transparent 24%),
-    radial-gradient(circle at 88% 18%, rgba(80, 146, 255, 0.11), transparent 22%),
-    linear-gradient(180deg, #060b11 0%, #0d141d 48%, #04070c 100%);
+  background: #030406;
   --fun-project-shell-max-width: 1360px;
   --fun-project-sidebar-width: 352px;
   --fun-project-page-text: #edf4f6;
-  --fun-project-copy-text: rgba(237, 244, 246, 0.82);
-  --fun-project-card-border: rgba(237, 244, 246, 0.1);
-  --fun-project-card-bg: linear-gradient(180deg, rgba(16, 23, 32, 0.96) 0%, rgba(8, 14, 20, 0.92) 100%);
-  --fun-project-control-label: rgba(237, 244, 246, 0.72);
-  --fun-project-output: #d2ffda;
-  --fun-project-accent: #88ece3;
-  --fun-project-button-border: rgba(237, 244, 246, 0.14);
-  --fun-project-button-border-hover: rgba(237, 244, 246, 0.28);
-  --fun-project-button-bg: rgba(14, 23, 32, 0.92);
-  --fun-project-button-hover-bg: rgba(18, 30, 41, 0.96);
+  --fun-project-copy-text: rgba(237, 244, 246, 0.8);
+  --fun-project-card-border: rgba(200, 204, 210, 0.2);
+  --fun-project-card-bg: #0b0d10;
+  --fun-project-control-label: rgba(237, 244, 246, 0.68);
+  --fun-project-output: #d9dde3;
+  --fun-project-accent: #c8ccd2;
+  --fun-project-button-border: rgba(200, 204, 210, 0.26);
+  --fun-project-button-border-hover: rgba(200, 204, 210, 0.44);
+  --fun-project-button-bg: #12161b;
+  --fun-project-button-hover-bg: #1a1f26;
   --fun-project-display-bg: #000;
-  --fun-project-fallback-border: rgba(237, 244, 246, 0.14);
-  --fun-project-fallback-bg: rgba(10, 16, 24, 0.84);
+  --fun-project-link-color: #d9dde3;
+  --fun-project-link-border: rgba(217, 221, 227, 0.42);
+  --fun-project-link-border-hover: rgba(217, 221, 227, 0.82);
+  --fun-project-fallback-border: rgba(200, 204, 210, 0.2);
+  --fun-project-fallback-bg: rgba(11, 13, 16, 0.84);
   --fun-project-fallback-text: rgba(237, 244, 246, 0.88);
+}
+
+.mandelbulb-page .site-header {
+  background: rgba(3, 4, 6, 0.84);
+  border-bottom-color: rgba(200, 204, 210, 0.14);
 }
 
 #mandelbulb-stage {

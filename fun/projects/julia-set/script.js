@@ -448,7 +448,7 @@ function advancePhase(value, delta) {
     }
 
     if (bounced) {
-        setPaletteHue(randomNeonHue());
+        setPaletteHue(randomFireHue());
     }
 
     return clamp(nextValue, 0, PHASE_PERIOD);
@@ -497,9 +497,9 @@ function buildPalette(size, baseHue) {
     for (let index = 0; index < size; index += 1) {
         const t = index / Math.max(size - 1, 1);
         const offset = index * 4;
-        const hue = (baseHue + 62 * t + 26 * Math.sin(TAU * (t + 0.12))) % 360;
-        const saturation = clamp(0.72 + 0.22 * Math.sin(Math.PI * t), 0, 1);
-        const value = clamp(0.14 + 0.96 * Math.pow(t, 0.72), 0, 1);
+        const hue = (baseHue - 14 + 34 * t + 10 * Math.sin(Math.PI * t)) % 360;
+        const saturation = clamp(0.84 + 0.12 * Math.sin(Math.PI * t), 0, 1);
+        const value = clamp(0.08 + 1.02 * Math.pow(t, 0.64), 0, 1);
         const rgb = hsvToRgb(hue, saturation, value);
         palette[offset] = rgb.r;
         palette[offset + 1] = rgb.g;
@@ -556,8 +556,8 @@ function hsvToRgb(hue, saturation, value) {
     };
 }
 
-function randomNeonHue() {
-    return Math.floor(Math.random() * 360);
+function randomFireHue() {
+    return Math.floor(18 + Math.random() * 28);
 }
 
 function applyPanDelta(dx, dy) {

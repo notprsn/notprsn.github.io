@@ -4,22 +4,27 @@ body.tree-page {
   min-height: 100dvh;
   font-family: "Source Sans 3", sans-serif;
   color: #f5efe8;
-  background:
-    radial-gradient(circle at 16% 10%, rgba(255, 214, 150, 0.14), transparent 24%),
-    radial-gradient(circle at 84% 16%, rgba(128, 179, 255, 0.11), transparent 24%),
-    linear-gradient(180deg, #08111a 0%, #111822 42%, #19110f 100%);
+  background: #17130d;
   --fun-project-shell-max-width: 1340px;
   --fun-project-sidebar-width: 324px;
   --fun-project-page-text: #f5efe8;
   --fun-project-copy-text: rgba(245, 239, 232, 0.82);
-  --fun-project-card-border: rgba(245, 239, 232, 0.1);
-  --fun-project-card-bg: linear-gradient(180deg, rgba(22, 19, 26, 0.94) 0%, rgba(15, 18, 24, 0.94) 100%);
-  --fun-project-control-label: rgba(245, 239, 232, 0.7);
+  --fun-project-card-border: rgba(185, 135, 76, 0.26);
+  --fun-project-card-bg: #241b12;
+  --fun-project-control-label: rgba(245, 239, 232, 0.68);
   --fun-project-output: #ffddb9;
-  --fun-project-accent: #e2b992;
-  --fun-project-button-border: rgba(245, 239, 232, 0.14);
-  --fun-project-button-border-hover: rgba(245, 239, 232, 0.28);
-  --fun-project-button-bg: rgba(20, 19, 24, 0.94);
-  --fun-project-button-hover-bg: rgba(24, 24, 31, 0.96);
-  --fun-project-display-bg: #000;
+  --fun-project-accent: #b9874c;
+  --fun-project-button-border: rgba(185, 135, 76, 0.34);
+  --fun-project-button-border-hover: rgba(185, 135, 76, 0.54);
+  --fun-project-button-bg: #2e2114;
+  --fun-project-button-hover-bg: #3a2918;
+  --fun-project-display-bg: #0e130c;
+  --fun-project-link-color: #e3b87c;
+  --fun-project-link-border: rgba(227, 184, 124, 0.42);
+  --fun-project-link-border-hover: rgba(227, 184, 124, 0.82);
+}
+
+.tree-page .site-header {
+  background: rgba(23, 19, 13, 0.84);
+  border-bottom-color: rgba(185, 135, 76, 0.18);
 }

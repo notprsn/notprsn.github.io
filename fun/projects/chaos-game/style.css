@@ -4,42 +4,45 @@ body.chaos-page {
   min-height: 100dvh;
   font-family: "Source Sans 3", sans-serif;
   color: #f4f6ef;
-  background:
-    radial-gradient(circle at 16% 12%, rgba(201, 224, 153, 0.12), transparent 24%),
-    radial-gradient(circle at 86% 18%, rgba(109, 197, 196, 0.1), transparent 22%),
-    linear-gradient(180deg, #071013 0%, #0d1a22 46%, #15262a 100%);
+  background: #101016;
   --fun-project-shell-max-width: 1320px;
   --fun-project-sidebar-width: 320px;
   --fun-project-page-text: #f4f6ef;
-  --fun-project-copy-text: rgba(244, 246, 239, 0.82);
-  --fun-project-card-border: rgba(244, 246, 239, 0.1);
-  --fun-project-card-bg: linear-gradient(180deg, rgba(10, 22, 28, 0.96) 0%, rgba(13, 28, 34, 0.94) 100%);
-  --fun-project-control-label: rgba(244, 246, 239, 0.7);
-  --fun-project-output: #e8f0c9;
-  --fun-project-accent: #cde29e;
-  --fun-project-button-border: rgba(244, 246, 239, 0.14);
-  --fun-project-button-border-hover: rgba(244, 246, 239, 0.28);
-  --fun-project-button-bg: rgba(10, 22, 28, 0.94);
-  --fun-project-button-hover-bg: rgba(13, 28, 34, 0.96);
-  --fun-project-link-color: #ffffff;
-  --fun-project-link-border: rgba(255, 255, 255, 0.34);
-  --fun-project-link-border-hover: rgba(255, 255, 255, 0.76);
+  --fun-project-copy-text: rgba(244, 246, 239, 0.8);
+  --fun-project-card-border: rgba(255, 94, 168, 0.24);
+  --fun-project-card-bg: #171724;
+  --fun-project-control-label: rgba(244, 246, 239, 0.68);
+  --fun-project-output: #ffd2e5;
+  --fun-project-accent: #ff5ea8;
+  --fun-project-button-border: rgba(255, 94, 168, 0.32);
+  --fun-project-button-border-hover: rgba(255, 94, 168, 0.52);
+  --fun-project-button-bg: #21182b;
+  --fun-project-button-hover-bg: #2b1b37;
+  --fun-project-display-bg: #05050b;
+  --fun-project-link-color: #ff9eca;
+  --fun-project-link-border: rgba(255, 158, 202, 0.42);
+  --fun-project-link-border-hover: rgba(255, 158, 202, 0.82);
+}
+
+.chaos-page .site-header {
+  background: rgba(16, 16, 22, 0.82);
+  border-bottom-color: rgba(255, 94, 168, 0.16);
 }
 
 .chaos-rule-select {
   width: 100%;
   min-height: 2.8rem;
   padding: 0.7rem 0.9rem;
-  border: 1px solid rgba(244, 246, 239, 0.14);
+  border: 1px solid rgba(255, 94, 168, 0.24);
   border-radius: 16px;
-  background: rgba(10, 22, 28, 0.94);
+  background: #21182b;
   color: #f4f6ef;
   font: inherit;
   cursor: pointer;
 }
 
 .chaos-rule-select:focus-visible {
-  outline: 1px solid rgba(205, 226, 158, 0.82);
+  outline: 1px solid rgba(255, 94, 168, 0.82);
   outline-offset: 2px;
-  border-color: rgba(205, 226, 158, 0.5);
+  border-color: rgba(255, 94, 168, 0.5);
 }

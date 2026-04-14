@@ -86,6 +86,8 @@
 }
 
 .page-fun-space .lab-card {
+  --lab-card-accent: #8be9ff;
+  --lab-card-accent-rgb: 139, 233, 255;
   position: relative;
   display: grid;
   min-height: 8.8rem;
@@ -99,6 +101,36 @@
   transition: border-color 180ms ease, background-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
 }
 
+.page-fun-space .lab-card--chaos {
+  --lab-card-accent: #ff5ea8;
+  --lab-card-accent-rgb: 255, 94, 168;
+}
+
+.page-fun-space .lab-card--fern {
+  --lab-card-accent: #8fbd5b;
+  --lab-card-accent-rgb: 143, 189, 91;
+}
+
+.page-fun-space .lab-card--julia {
+  --lab-card-accent: #ff7a1a;
+  --lab-card-accent-rgb: 255, 122, 26;
+}
+
+.page-fun-space .lab-card--snowflake {
+  --lab-card-accent: #4fa8d8;
+  --lab-card-accent-rgb: 79, 168, 216;
+}
+
+.page-fun-space .lab-card--tree {
+  --lab-card-accent: #b9874c;
+  --lab-card-accent-rgb: 185, 135, 76;
+}
+
+.page-fun-space .lab-card--mandelbulb {
+  --lab-card-accent: #c8ccd2;
+  --lab-card-accent-rgb: 200, 204, 210;
+}
+
 .page-fun-space .lab-card::before {
   content: "";
   position: absolute;
@@ -109,8 +141,8 @@
   border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: 50%;
   box-shadow:
-    -1.65rem 1.1rem 0 -0.06rem rgba(139, 233, 255, 0.58),
-    inset 0 0 28px rgba(139, 233, 255, 0.04);
+    -1.65rem 1.1rem 0 -0.06rem rgba(var(--lab-card-accent-rgb), 0.58),
+    inset 0 0 28px rgba(var(--lab-card-accent-rgb), 0.04);
   opacity: 0;
   transform: rotate(-18deg) scale(0.82);
   transition: opacity 220ms ease, transform 320ms ease;
@@ -124,17 +156,17 @@
   width: 0.34rem;
   height: 0.34rem;
   border-radius: 50%;
-  background: #ffffff;
-  box-shadow: 0 0 18px rgba(255, 255, 255, 0.9);
+  background: var(--lab-card-accent);
+  box-shadow: 0 0 18px rgba(var(--lab-card-accent-rgb), 0.9);
   opacity: 0;
   transition: opacity 220ms ease, transform 320ms ease;
 }
 
 .page-fun-space .lab-card:hover,
 .page-fun-space .lab-card:focus-visible {
-  border-color: rgba(139, 233, 255, 0.4);
+  border-color: rgba(var(--lab-card-accent-rgb), 0.42);
   background-color: rgba(7, 13, 22, 0.94);
-  box-shadow: 0 28px 90px rgba(0, 0, 0, 0.54);
+  box-shadow: 0 28px 90px rgba(0, 0, 0, 0.54), 0 0 0 1px rgba(var(--lab-card-accent-rgb), 0.08);
   transform: translateY(-2px);
 }
 
@@ -178,7 +210,7 @@
   bottom: -0.42rem;
   left: 0;
   height: 1px;
-  background: rgba(255, 255, 255, 0.92);
+  background: var(--lab-card-accent);
   transform: scaleX(0);
   transform-origin: right;
   transition: transform 180ms ease;

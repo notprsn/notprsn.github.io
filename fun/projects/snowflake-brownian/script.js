@@ -150,7 +150,7 @@ function createSketch() {
 
         p.draw = () => {
             advanceSimulation();
-            p.background(0);
+            p.background("#f7fcff");
             p.push();
             p.translate(p.width * 0.5, p.height * 0.5);
             p.rotate(p.frameCount * FIXED_ROTATION_SPEED * 0.01);
@@ -327,11 +327,11 @@ function drawParticlePoint(target, x, y, radius, ratio, isWalker, useAbsoluteCen
     if (useAbsoluteCenter) {
         target.translate(target.width * 0.5, target.height * 0.5);
     }
-    target.stroke(glowHue, 36 + ratio * 18, 100, isWalker ? 0.16 : FIXED_BLOOM * 0.42);
+    target.stroke(glowHue, 18 + ratio * 12, 100, isWalker ? 0.18 : FIXED_BLOOM * 0.56);
     target.strokeWeight(Math.max(1.2, scaledRadius * (isWalker ? 2.15 : 2.45)));
     target.point(x, y);
 
-    target.stroke(hue, 48 + ratio * 18, isWalker ? 100 : 94 - ratio * 8, isWalker ? 0.78 : 0.96);
+    target.stroke(hue, 46 + ratio * 14, isWalker ? 72 : 76 - ratio * 10, isWalker ? 0.78 : 0.96);
     target.strokeWeight(Math.max(1.2, scaledRadius * (isWalker ? 1.15 : 1.3)));
     target.point(x, y);
     target.pop();
@@ -362,8 +362,8 @@ function getHiddenParticleLimit() {
 }
 
 function createPalette() {
-    const baseHue = randomBetween(0, 360);
-    const accentOffset = randomBetween(24, 60);
+    const baseHue = randomBetween(192, 212);
+    const accentOffset = randomBetween(8, 18);
     return {
         baseHue,
         glowHue: (baseHue + accentOffset) % 360,

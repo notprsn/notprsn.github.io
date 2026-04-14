@@ -240,7 +240,7 @@ function resetSimulation(p) {
 }
 
 function drawBackdrop(p) {
-    p.background(0, 0, 0);
+    p.background("#061008");
 }
 
 function drawGuides(p) {
