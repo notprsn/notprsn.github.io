@@ -45,8 +45,8 @@ It is a design-translation log, not a promise that every corresponding public pr
 - Shelf card implemented on [`projects/index.html`](/Users/prasanniyer/notprsn.github.io/projects/index.html)
 - Shelf and project-detail implementation styles live in [`css/pages/projects.css`](/Users/prasanniyer/notprsn.github.io/css/pages/projects.css)
 - Shared primitives still come from [`css/style.css`](/Users/prasanniyer/notprsn.github.io/css/style.css)
-- Public page shell lives at [`projects/cloudscript/index.html`](/Users/prasanniyer/notprsn.github.io/projects/cloudscript/index.html)
-- The current markdown note at [`projects/cloudscript/content.md`](/Users/prasanniyer/notprsn.github.io/projects/cloudscript/content.md) is intentionally the public-facing content for now
+- Public detail pages live at [`projects/cloudscript/message/index.html`](/Users/prasanniyer/notprsn.github.io/projects/cloudscript/message/index.html) and [`projects/cloudscript/story/index.html`](/Users/prasanniyer/notprsn.github.io/projects/cloudscript/story/index.html)
+- The CloudScript project directory mirrors Bollywoodle: notes live in sibling subdirectories, and the shelf card opens the message page first
 
 ### Design read
 - Soft, playful, mobile-first art-tool feel
