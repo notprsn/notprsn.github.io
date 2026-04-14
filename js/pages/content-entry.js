@@ -230,7 +230,7 @@ function parseInlineMarkdown(text) {
     let output = escapeHtml(text);
 
     output = output.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_match, label, url) => {
-        return `<a href="${url}">${label}</a>`;
+        return `<a href="${url}" target="_blank" rel="noreferrer">${label}</a>`;
     });
     output = output.replace(/`([^`]+)`/g, (_match, code) => `<code>${code}</code>`);
     output = output.replace(/\*\*([^*]+)\*\*/g, (_match, strong) => `<strong>${strong}</strong>`);

@@ -7,7 +7,7 @@ Directories
 - `work/stories/<slug>/story.md`: finalized work-story markdown rendered directly on dedicated `work/stories/*` pages.
 
 Path format
-- `projects/cloudscript/content.md`
+- `projects/cloudscript/message/content.md`
 - `projects/cloudscript/story/content.md`
 - `projects/bollywoodle/story/content.md`
 - `essays/travel/uk/content.md`
@@ -27,7 +27,7 @@ Website wiring
 - Project markdown pages load through `js/pages/content-entry.js`.
 - The repo currently has 3 kinds of project writing state:
   - public multi-note pages for Bollywoodle
-  - public message and story windows for CloudScript
+  - public message and story windows for CloudScript under sibling note directories
   - an empty unpublished draft for Polymarket Crypto Desk
 - Work-story markdown should contain the narrative only:
   - keep the `# Company` title in `story.md`

@@ -17,13 +17,9 @@ body.page-paper.page-project-bollywoodle {
 
 body.page-paper.page-project-cloudscript {
   color-scheme: light;
-  --paper-tone-bg:
-    radial-gradient(circle at 14% 14%, rgba(147, 197, 253, 0.3), transparent 24%),
-    radial-gradient(circle at 88% 10%, rgba(254, 215, 170, 0.22), transparent 20%),
-    radial-gradient(circle at 72% 74%, rgba(186, 230, 253, 0.28), transparent 22%),
-    linear-gradient(180deg, #f6f8fc 0%, #edf5ff 100%);
+  --paper-tone-bg: #f6f8fc;
   --paper-tone-header: rgba(255, 255, 255, 0.78);
-  --paper-tone-surface: rgba(255, 255, 255, 0.82);
+  --paper-tone-surface: rgba(255, 255, 255, 0.86);
   --paper-tone-surface-strong: rgba(255, 255, 255, 0.96);
   --paper-tone-surface-soft: rgba(255, 255, 255, 0.72);
   --paper-tone-text: #0f172a;
@@ -31,6 +27,10 @@ body.page-paper.page-project-cloudscript {
   --paper-tone-line: rgba(15, 23, 42, 0.08);
   --paper-tone-line-strong: rgba(15, 23, 42, 0.14);
   --paper-tone-shadow: 0 28px 50px -32px rgba(15, 23, 42, 0.28);
+}
+
+body.page-paper.page-project-cloudscript .site-nav {
+  --site-nav-underline: #0f172a;
 }
 
 .paper-project-grid {
@@ -284,15 +284,9 @@ body.page-paper.page-project-cloudscript {
 }
 
 .project-shelf-card--cloudscript {
-  --cs-bg: #f6f8fc;
-  --cs-panel: rgba(255, 255, 255, 0.86);
-  --cs-panel-strong: #ffffff;
-  --cs-panel-soft: rgba(255, 255, 255, 0.92);
   --cs-ink: #0f172a;
   --cs-muted: #94a3b8;
   --cs-muted-strong: #475569;
-  --cs-stroke: #3b82f6;
-  --cs-fill: #e7f0fe;
   --cs-border: rgba(15, 23, 42, 0.08);
   --cs-border-soft: rgba(148, 163, 184, 0.25);
   --cs-shadow: 0 18px 30px -20px rgba(15, 23, 42, 0.35);
@@ -305,37 +299,10 @@ body.page-paper.page-project-cloudscript {
   padding: clamp(1.2rem, 3vw, 1.7rem) clamp(1.35rem, 3vw, 2rem);
   border: 1px solid var(--cs-border);
   border-radius: 999px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.88) 0%, rgba(241, 247, 255, 0.92) 55%, rgba(235, 244, 255, 0.98) 100%);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.86) 0%, rgba(241, 247, 255, 0.92) 100%);
   box-shadow: var(--cs-shadow);
   color: var(--cs-ink);
   transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
-}
-
-.project-shelf-card--cloudscript::before,
-.project-shelf-card--cloudscript::after {
-  content: "";
-  position: absolute;
-  pointer-events: none;
-}
-
-.project-shelf-card--cloudscript::before {
-  inset: auto auto -35% -4%;
-  width: 15rem;
-  height: 15rem;
-  background:
-    radial-gradient(circle, rgba(186, 230, 253, 0.42) 0%, transparent 56%),
-    radial-gradient(circle at 70% 30%, rgba(254, 215, 170, 0.22) 0%, transparent 52%);
-  filter: blur(28px);
-}
-
-.project-shelf-card--cloudscript::after {
-  inset: -24% -6% auto auto;
-  width: 13rem;
-  height: 13rem;
-  background:
-    radial-gradient(circle, rgba(147, 197, 253, 0.26) 0%, transparent 54%),
-    radial-gradient(circle at 28% 68%, rgba(125, 211, 252, 0.18) 0%, transparent 48%);
-  filter: blur(32px);
 }
 
 .project-shelf-card--cloudscript:hover,
@@ -343,12 +310,6 @@ body.page-paper.page-project-cloudscript {
   transform: translateY(-1px);
   border-color: rgba(59, 130, 246, 0.28);
   box-shadow: var(--cs-shadow-lg);
-}
-
-.cloudscript-card__copy,
-.cloudscript-card__aside {
-  position: relative;
-  z-index: 1;
 }
 
 .cloudscript-card__copy {
@@ -768,6 +729,21 @@ body.page-paper.page-project-cloudscript {
   font-size: clamp(1.3rem, 2.4vw, 1.72rem);
 }
 
+.page-project-bollywoodle .project-writing-page__prose a {
+  color: #f1c89b;
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-color: rgba(241, 200, 155, 0.78);
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.16em;
+}
+
+.page-project-bollywoodle .project-writing-page__prose a:hover,
+.page-project-bollywoodle .project-writing-page__prose a:focus-visible {
+  color: #ffffff;
+  text-decoration-color: currentColor;
+}
+
 .page-project-bollywoodle .project-writing-page__prose blockquote {
   border-left-color: rgba(223, 161, 104, 0.34);
   color: #f1c89b;
@@ -794,16 +770,13 @@ body.page-paper.page-project-cloudscript {
 
 .page-project-cloudscript .project-writing-page__hero {
   grid-template-columns: minmax(0, 1fr) auto;
-  align-items: center;
+  gap: 1rem;
+  align-items: start;
 }
 
-.page-project-cloudscript .project-writing-page__eyebrow {
-  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  font-size: 0.64rem;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: #94a3b8;
+.page-project-cloudscript .project-writing-page__copy {
+  grid-column: 1;
+  grid-row: 1;
 }
 
 .page-project-cloudscript .project-writing-page__title {
@@ -817,6 +790,10 @@ body.page-paper.page-project-cloudscript {
 
 .page-project-cloudscript .project-writing-page__subtitle {
   color: #475569;
+}
+
+.page-project-cloudscript .paper-section {
+  margin-top: clamp(1.35rem, 4vw, 2rem);
 }
 
 .page-project-cloudscript .project-card-action {
@@ -841,9 +818,17 @@ body.page-paper.page-project-cloudscript {
 }
 
 .page-project-cloudscript .project-writing-page__cloud-art {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  align-self: start;
   position: relative;
   width: clamp(11rem, 28vw, 17.5rem);
   height: clamp(5.8rem, 12vw, 8.4rem);
+}
+
+.page-project-cloudscript .project-writing-actions {
+  grid-column: 1;
+  grid-row: 2;
 }
 
 .page-project-cloudscript .project-writing-page__cloud-word {
@@ -871,33 +856,21 @@ body.page-paper.page-project-cloudscript {
   box-shadow: 0 18px 30px -20px rgba(15, 23, 42, 0.35);
 }
 
-.page-project-cloudscript .project-writing-page__panel::before {
-  content: "";
-  position: absolute;
-  inset: auto auto -28% -6%;
-  width: 18rem;
-  height: 18rem;
-  pointer-events: none;
-  background:
-    radial-gradient(circle, rgba(186, 230, 253, 0.4) 0%, transparent 56%),
-    radial-gradient(circle at 70% 30%, rgba(254, 215, 170, 0.2) 0%, transparent 52%);
-  filter: blur(28px);
-}
-
 .page-project-cloudscript .project-writing-page__panel-head {
+  gap: 0;
+  margin-bottom: clamp(0.9rem, 2.4vw, 1.2rem);
+  padding-bottom: clamp(0.72rem, 2vw, 0.95rem);
   border-bottom-color: rgba(15, 23, 42, 0.08);
-}
-
-.page-project-cloudscript .project-writing-page__panel-label {
-  color: #94a3b8;
+  align-content: start;
 }
 
 .page-project-cloudscript .project-writing-page__panel-title {
   font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  font-size: clamp(2rem, 4vw, 3rem);
+  font-size: clamp(1.8rem, 4vw, 3rem);
   font-weight: 700;
   letter-spacing: -0.04em;
   line-height: 1.02;
+  white-space: nowrap;
   color: #0f172a;
 }
 
@@ -920,6 +893,21 @@ body.page-paper.page-project-cloudscript {
   font-weight: 700;
   letter-spacing: -0.03em;
   color: #0f172a;
+}
+
+.page-project-cloudscript .project-writing-page__prose a {
+  color: #0f172a;
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-color: rgba(14, 165, 233, 0.78);
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.16em;
+}
+
+.page-project-cloudscript .project-writing-page__prose a:hover,
+.page-project-cloudscript .project-writing-page__prose a:focus-visible {
+  color: #0369a1;
+  text-decoration-color: currentColor;
 }
 
 .page-project-cloudscript .project-writing-page__prose blockquote {
@@ -1144,7 +1132,7 @@ body.page-paper.page-project-cloudscript {
   }
 
   .page-project-cloudscript .project-writing-page__hero {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(8rem, 32%);
   }
 
   .page-project-cloudscript .project-writing-page__cloud-art {
@@ -1154,6 +1142,61 @@ body.page-paper.page-project-cloudscript {
 }
 
 @media (max-width: 720px) {
+  .page-project-cloudscript .project-writing-page__hero {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    position: relative;
+  }
+
+  .page-project-cloudscript .project-writing-page__copy,
+  .page-project-cloudscript .project-writing-actions {
+    position: relative;
+    z-index: 1;
+  }
+
+  .page-project-cloudscript .project-writing-page__title {
+    margin-top: 2.9rem;
+    font-size: clamp(3rem, 14vw, 4.4rem);
+  }
+
+  .page-project-cloudscript .project-writing-page__cloud-art {
+    position: absolute;
+    top: 0.05rem;
+    right: 0;
+    width: clamp(9rem, 44vw, 11.2rem);
+    height: 5.7rem;
+    z-index: 0;
+  }
+
+  .page-project-cloudscript .project-writing-page__cloud-word--cloud {
+    top: 0.05rem;
+    left: 0;
+    width: 60%;
+  }
+
+  .page-project-cloudscript .project-writing-page__cloud-word--script {
+    right: -0.25rem;
+    bottom: 0.2rem;
+    width: 80%;
+  }
+
+  .page-project-cloudscript .project-writing-actions {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    flex-wrap: nowrap;
+    gap: 0.42rem;
+  }
+
+  .page-project-cloudscript .project-card-action {
+    min-height: 1.9rem;
+    padding: 0.32rem 0.62rem;
+    font-size: 0.58rem;
+  }
+
+  .page-project-cloudscript .project-writing-page__panel-title {
+    font-size: clamp(1.45rem, 6.25vw, 2rem);
+  }
+
   body.page-paper.page-project-bollywoodle {
     overflow-x: hidden;
   }
