@@ -1,46 +1,79 @@
-body.page-essays:not(.page-paper) {
-  background:
-    radial-gradient(circle at 10% 12%, rgba(217, 230, 216, 0.62), transparent 24%),
-    radial-gradient(circle at 95% 8%, rgba(238, 230, 217, 0.84), transparent 26%),
-    linear-gradient(180deg, #fcfaf6 0%, #f0eadf 100%);
-}
-
-.theme-grid--essay-index {
+.essay-shelf-list {
   margin-top: 0;
 }
 
-.theme-grid--essay-index .theme-card {
-  grid-column: span 6;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: start;
-  gap: 1rem;
+.essay-shelf-card--travel {
+  --travel-card-ink: #2a1a11;
+  --travel-card-paper: #d9bd85;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   min-height: 0;
-  padding-block: 1rem;
+  border: 1px solid rgba(72, 47, 24, 0.26);
+  border-radius: 999px;
+  background:
+    linear-gradient(90deg, rgba(234, 214, 165, 0.28), rgba(217, 189, 133, 0.1) 34%, rgba(234, 214, 165, 0.32)),
+    linear-gradient(180deg, rgba(255, 245, 215, 0.3), rgba(116, 76, 37, 0.12)),
+    url("../../assets/essays/world-map-strip.png") center / cover no-repeat,
+    var(--travel-card-paper);
+  box-shadow: 0 18px 34px -24px rgba(72, 47, 24, 0.38);
+  color: var(--travel-card-ink);
+  text-align: center;
+  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
 }
 
-.theme-card--essay-index h2 {
-  font-size: clamp(2.1rem, 4.5vw, 2.95rem);
-  margin-top: 0;
-  max-width: none;
-  white-space: nowrap;
+.essay-shelf-card--travel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background:
+    linear-gradient(180deg, rgba(255, 248, 226, 0.26), rgba(86, 55, 25, 0.1)),
+    repeating-linear-gradient(90deg, rgba(72, 47, 24, 0.03) 0 1px, transparent 1px 11px);
+  mix-blend-mode: multiply;
+  opacity: 0.54;
+  pointer-events: none;
 }
 
-.theme-card--essay-index .entry-links {
-  justify-self: end;
-  align-self: start;
+.essay-shelf-card--travel:hover,
+.essay-shelf-card--travel:focus-within {
+  transform: translateY(-1px);
+  border-color: rgba(72, 47, 24, 0.38);
+  box-shadow: 0 20px 38px -24px rgba(72, 47, 24, 0.46);
+}
+
+.travel-essay-card__copy {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  width: 100%;
+}
+
+.essay-shelf-card--travel h2 {
+  margin: 0;
+  color: var(--travel-card-ink);
+  font-family: var(--font-display);
+  font-size: clamp(2.3rem, 5vw, 3.45rem);
+  font-weight: 600;
+  line-height: 0.92;
+  letter-spacing: -0.03em;
+  text-shadow:
+    0 1px 0 rgba(255, 244, 202, 0.74),
+    0 0 14px rgba(255, 244, 202, 0.38);
 }
 
 @media (max-width: 940px) {
-  .theme-grid--essay-index .theme-card {
-    grid-column: span 12;
-    grid-template-columns: minmax(0, 1fr);
-    min-height: 0;
-    padding-block: 1.3rem;
+  .essay-shelf-card--travel {
+    border-radius: 32px;
   }
+}
 
-  .theme-card--essay-index .entry-links {
-    justify-self: start;
+@media (max-width: 620px) {
+  .essay-shelf-card--travel {
+    border-radius: 28px;
   }
 }
 
