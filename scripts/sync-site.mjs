@@ -9,6 +9,7 @@ const dataDir = resolve(repoRoot, "data");
 const SITE_ORIGIN = "https://notprsn.github.io";
 const SITE_NAME = "Prasann Iyer";
 const SITE_IMAGE = `${SITE_ORIGIN}/img/profile.JPEG`;
+const GOOGLE_SITE_VERIFICATION = "GZtrgh8Ax2owrBJKA_MCv-YCBtpKMIvS2hiNTc_GqU0";
 const SOCIAL_LINKS = [
     "https://github.com/notprsn",
     "https://www.linkedin.com/in/prsn/",
@@ -418,6 +419,7 @@ async function updateHtml(filePath, source) {
     updated = ensureTitle(updated, seo.title);
     updated = ensureMeta(updated, "description", seo.description);
     updated = ensureMeta(updated, "site-version", version);
+    updated = ensureGoogleSiteVerification(updated, route);
     updated = ensureRobotsMeta(updated, route);
     updated = stripCacheMeta(updated);
     updated = stripGoogleAnalytics(updated);
@@ -501,6 +503,14 @@ function stripMetaByName(source, name) {
 
 function escapeRegExp(value) {
     return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function ensureGoogleSiteVerification(source, route) {
+    if (route !== "/") {
+        return stripMetaByName(source, "google-site-verification");
+    }
+
+    return ensureMeta(source, "google-site-verification", GOOGLE_SITE_VERIFICATION);
 }
 
 function ensureRobotsMeta(source, route) {
