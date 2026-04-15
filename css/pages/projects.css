@@ -33,18 +33,6 @@ body.page-paper.page-project-cloudscript .site-nav {
   --site-nav-underline: #0f172a;
 }
 
-.paper-project-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.75fr);
-  gap: 1rem;
-  margin-top: 1rem;
-}
-
-.paper-project-stack {
-  display: grid;
-  gap: 1rem;
-}
-
 .paper-project-list {
   display: grid;
   gap: 1rem;
@@ -65,11 +53,6 @@ body.page-paper.page-project-cloudscript .site-nav {
   font-size: clamp(1.95rem, 4vw, 2.5rem);
   line-height: 0.95;
   margin-top: 0.28rem;
-}
-
-.paper-project-subhead {
-  margin: 0.45rem 0 0;
-  font-size: 1rem;
 }
 
 .paper-project-card--shelf {
@@ -571,10 +554,6 @@ body.page-paper.page-project-cloudscript .site-nav {
   width: fit-content;
 }
 
-.project-writing-page__eyebrow {
-  margin: 0.75rem 0 0;
-}
-
 .project-writing-page__title {
   max-width: none;
   margin-top: 0.22rem;
@@ -1050,10 +1029,6 @@ body.page-paper.page-project-cloudscript .site-nav {
 }
 
 @media (max-width: 940px) {
-  .paper-project-grid {
-    grid-template-columns: 1fr;
-  }
-
   .project-shelf-card--bollywoodle {
     grid-template-columns: 1fr;
     align-items: start;

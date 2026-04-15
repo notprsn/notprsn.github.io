@@ -8,6 +8,7 @@ body.julia-page {
   --fun-project-shell-max-width: 1400px;
   --fun-project-sidebar-width: 286px;
   --fun-project-gap: 0.7rem;
+  --fun-project-copy-min-height: 15rem;
   --fun-project-page-text: #f8f4ef;
   --fun-project-copy-text: rgba(248, 244, 239, 0.82);
   --fun-project-card-border: rgba(255, 122, 26, 0.28);

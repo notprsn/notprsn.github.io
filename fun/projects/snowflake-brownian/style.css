@@ -7,6 +7,7 @@ body.brownian-page {
   background: #eef7fb;
   --fun-project-shell-max-width: 1420px;
   --fun-project-sidebar-width: 372px;
+  --fun-project-copy-min-height: 9.75rem;
   --fun-project-page-text: #123044;
   --fun-project-copy-text: rgba(18, 48, 68, 0.78);
   --fun-project-card-border: rgba(79, 168, 216, 0.24);
@@ -19,7 +20,7 @@ body.brownian-page {
   --fun-project-button-bg: #d9eff9;
   --fun-project-button-hover-bg: #c7e7f5;
   --fun-project-button-text: #123044;
-  --fun-project-display-bg: #f7fcff;
+  --fun-project-display-bg: #02070d;
   --fun-project-link-color: #0f5f8c;
   --fun-project-link-border: rgba(15, 95, 140, 0.42);
   --fun-project-link-border-hover: rgba(15, 95, 140, 0.82);
@@ -57,4 +58,59 @@ body.brownian-page {
 .brownian-page .fun-project-controls-card,
 .brownian-page .fun-project-display-card {
   box-shadow: 0 24px 60px rgba(18, 48, 68, 0.12);
+}
+
+.brownian-page .fun-project-copy-card {
+  --fun-project-card-border: rgba(142, 234, 255, 0.22);
+  --fun-project-card-bg: #03070d;
+  color: #effcff;
+  box-shadow: 0 26px 58px rgba(8, 35, 54, 0.24);
+}
+
+.brownian-page .fun-project-copy-card p {
+  color: rgba(220, 244, 255, 0.76);
+}
+
+.brownian-page .fun-project-controls-card,
+.brownian-page .fun-project-display-card {
+  --fun-project-card-border: rgba(142, 234, 255, 0.22);
+  --fun-project-card-bg: #03070d;
+  --fun-project-control-label: rgba(220, 244, 255, 0.72);
+  --fun-project-output: #e8fbff;
+  --fun-project-accent: #8eeaff;
+  --fun-project-button-border: rgba(142, 234, 255, 0.32);
+  --fun-project-button-border-hover: rgba(184, 243, 255, 0.62);
+  --fun-project-button-bg: #071421;
+  --fun-project-button-hover-bg: #0b1b2d;
+  --fun-project-button-text: #effcff;
+  color: #effcff;
+  box-shadow: 0 26px 58px rgba(8, 35, 54, 0.24);
+}
+
+.brownian-page .fun-project-display-host {
+  background:
+    linear-gradient(180deg, #02070d 0%, #000308 100%);
+}
+
+@media (min-width: 961px) {
+  .brownian-page .fun-project-copy-card {
+    padding: 0.95rem 1.05rem 1rem;
+  }
+
+  .brownian-page .fun-project-controls-card {
+    padding: 0.78rem 0.9rem;
+  }
+
+  .brownian-page .fun-project-control-row {
+    gap: 0.38rem;
+  }
+
+  .brownian-page .fun-project-control-row + .fun-project-control-row {
+    margin-top: 0.62rem;
+  }
+
+  .brownian-page .fun-project-button {
+    min-height: 2.35rem;
+    margin-top: 0.68rem;
+  }
 }

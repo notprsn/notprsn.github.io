@@ -1,4 +1,5 @@
 const onReady = window.Site?.onReady ?? ((callback) => callback());
+const CARD_INTERACTIVE_SELECTOR = "a, button, input, select, textarea, summary, [role='button'], [role='link']";
 
 onReady(initProjectCardLinks);
 
@@ -14,19 +15,8 @@ function initProjectCardLinks() {
             return;
         }
 
-        const isInteractiveTarget = (target) => {
-            if (!(target instanceof Element)) {
-                return false;
-            }
-
-            const interactiveParent = target.closest(
-                "a, button, input, select, textarea, summary, [role='button'], [role='link']"
-            );
-            return Boolean(interactiveParent && interactiveParent !== card);
-        };
-
         card.addEventListener("click", (event) => {
-            if (isInteractiveTarget(event.target)) {
+            if (isInteractiveCardTarget(event.target, card)) {
                 return;
             }
 
@@ -42,4 +32,13 @@ function initProjectCardLinks() {
             window.location.href = href;
         });
     });
+}
+
+function isInteractiveCardTarget(target, card) {
+    if (!(target instanceof Element)) {
+        return false;
+    }
+
+    const interactiveParent = target.closest(CARD_INTERACTIVE_SELECTOR);
+    return Boolean(interactiveParent && interactiveParent !== card);
 }

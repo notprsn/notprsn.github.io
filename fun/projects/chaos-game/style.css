@@ -7,6 +7,7 @@ body.chaos-page {
   background: #101016;
   --fun-project-shell-max-width: 1320px;
   --fun-project-sidebar-width: 320px;
+  --fun-project-copy-min-height: 16rem;
   --fun-project-page-text: #f4f6ef;
   --fun-project-copy-text: rgba(244, 246, 239, 0.8);
   --fun-project-card-border: rgba(255, 94, 168, 0.24);

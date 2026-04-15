@@ -378,6 +378,8 @@ function initTravelMap({ d3, topojson, worldData, mapStageNode, mapNode, pillNod
     const countriesLayer = scene.append("g").attr("class", "travel-map__countries");
     const worldMarkersLayer = scene.append("g").attr("class", "travel-map__world-markers");
     const indiaPinsLayer = scene.append("g").attr("class", "travel-map__india-pins");
+    const isWorldMode = () => state.viewMode === "world";
+    const isIndiaMode = () => state.viewMode === "india";
 
     const countrySelection = countriesLayer
         .selectAll("path")
@@ -389,12 +391,11 @@ function initTravelMap({ d3, topojson, worldData, mapStageNode, mapNode, pillNod
             const country = getCountryForFeature(feature);
             return country?.mapFill ? `url(#map-${country.slug})` : "transparent";
         })
-        .attr("tabindex", -1)
-        .on("pointerenter", (_, feature) => {
-            if (state.viewMode !== "world") {
-                return;
-            }
+        .attr("tabindex", -1);
 
+    bindScopedD3Interaction(countrySelection, {
+        isActive: isWorldMode,
+        onEnter: (_event, feature) => {
             const country = getCountryForFeature(feature);
             if (!country) {
                 clearWorldHover();
@@ -405,74 +406,23 @@ function initTravelMap({ d3, topojson, worldData, mapStageNode, mapNode, pillNod
             state.activeMarkerSlug = country.specialMarker ? country.slug : "";
             syncMapState();
             showPill(pillNode, country.hoverLabel);
-        })
-        .on("pointerleave", () => {
-            if (state.viewMode !== "world") {
-                return;
-            }
-
-            clearWorldHover();
-        })
-        .on("focus", (_, feature) => {
-            if (state.viewMode !== "world") {
-                return;
-            }
-
+        },
+        onLeave: clearWorldHover,
+        onActivate: (event, feature) => {
             const country = getCountryForFeature(feature);
             if (!country) {
-                clearWorldHover();
-                return;
-            }
-
-            state.activeCountrySlug = country.slug;
-            state.activeMarkerSlug = country.specialMarker ? country.slug : "";
-            syncMapState();
-            showPill(pillNode, country.hoverLabel);
-        })
-        .on("blur", () => {
-            if (state.viewMode !== "world") {
-                return;
-            }
-
-            clearWorldHover();
-        })
-        .on("click", (event, feature) => {
-            if (state.viewMode !== "world") {
-                return;
-            }
-
-            const country = getCountryForFeature(feature);
-            if (!country) {
-                return;
-            }
-
-            if (country.interactionMode === "india-focus") {
-                event.currentTarget?.blur?.();
-                enterIndiaMode();
                 return;
             }
 
             event.currentTarget?.blur?.();
-            window.location.href = country.route;
-        })
-        .on("keydown", (event, feature) => {
-            if (state.viewMode !== "world" || (event.key !== "Enter" && event.key !== " ")) {
-                return;
-            }
-
-            event.preventDefault();
-            const country = getCountryForFeature(feature);
-            if (!country) {
-                return;
-            }
-
             if (country.interactionMode === "india-focus") {
                 enterIndiaMode();
                 return;
             }
 
             window.location.href = country.route;
-        });
+        },
+    });
 
     const markerSelection = worldMarkersLayer
         .selectAll("g")
@@ -485,57 +435,19 @@ function initTravelMap({ d3, topojson, worldData, mapStageNode, mapNode, pillNod
         })
         .attr("tabindex", -1)
         .attr("role", "link")
-        .attr("aria-label", (country) => `Open ${country.name}`)
-        .on("pointerenter", (_, country) => {
-            if (state.viewMode !== "world") {
-                return;
-            }
+        .attr("aria-label", (country) => `Open ${country.name}`);
 
+    bindScopedD3Interaction(markerSelection, {
+        isActive: isWorldMode,
+        onEnter: (_event, country) => {
             state.activeCountrySlug = country.slug;
             state.activeMarkerSlug = country.slug;
             syncMapState();
             showPill(pillNode, country.hoverLabel);
-        })
-        .on("pointerleave", () => {
-            if (state.viewMode !== "world") {
-                return;
-            }
-
-            clearWorldHover();
-        })
-        .on("focus", (_, country) => {
-            if (state.viewMode !== "world") {
-                return;
-            }
-
-            state.activeCountrySlug = country.slug;
-            state.activeMarkerSlug = country.slug;
-            syncMapState();
-            showPill(pillNode, country.hoverLabel);
-        })
-        .on("blur", () => {
-            if (state.viewMode !== "world") {
-                return;
-            }
-
-            clearWorldHover();
-        })
-        .on("click", (event, country) => {
-            if (state.viewMode !== "world") {
-                return;
-            }
-
-            event.currentTarget?.blur?.();
-            window.location.href = country.route;
-        })
-        .on("keydown", (event, country) => {
-            if (state.viewMode !== "world" || (event.key !== "Enter" && event.key !== " ")) {
-                return;
-            }
-
-            event.preventDefault();
-            window.location.href = country.route;
-        });
+        },
+        onLeave: clearWorldHover,
+        onActivate: openTravelItem,
+    });
 
     markerSelection
         .append("line")
@@ -565,55 +477,18 @@ function initTravelMap({ d3, topojson, worldData, mapStageNode, mapNode, pillNod
         })
         .attr("tabindex", -1)
         .attr("role", "link")
-        .attr("aria-label", (place) => `Open ${place.name}`)
-        .on("pointerenter", (_, place) => {
-            if (state.viewMode !== "india") {
-                return;
-            }
+        .attr("aria-label", (place) => `Open ${place.name}`);
 
+    bindScopedD3Interaction(indiaPinSelection, {
+        isActive: isIndiaMode,
+        onEnter: (_event, place) => {
             state.activeIndiaPlaceSlug = place.slug;
             syncMapState();
             showPill(pillNode, place.name);
-        })
-        .on("pointerleave", () => {
-            if (state.viewMode !== "india") {
-                return;
-            }
-
-            clearIndiaHover();
-        })
-        .on("focus", (_, place) => {
-            if (state.viewMode !== "india") {
-                return;
-            }
-
-            state.activeIndiaPlaceSlug = place.slug;
-            syncMapState();
-            showPill(pillNode, place.name);
-        })
-        .on("blur", () => {
-            if (state.viewMode !== "india") {
-                return;
-            }
-
-            clearIndiaHover();
-        })
-        .on("click", (event, place) => {
-            if (state.viewMode !== "india") {
-                return;
-            }
-
-            event.currentTarget?.blur?.();
-            window.location.href = place.route;
-        })
-        .on("keydown", (event, place) => {
-            if (state.viewMode !== "india" || (event.key !== "Enter" && event.key !== " ")) {
-                return;
-            }
-
-            event.preventDefault();
-            window.location.href = place.route;
-        });
+        },
+        onLeave: clearIndiaHover,
+        onActivate: openTravelItem,
+    });
 
     indiaPinSelection
         .append("line")
@@ -716,6 +591,50 @@ function initTravelMap({ d3, topojson, worldData, mapStageNode, mapNode, pillNod
     syncMapState();
 }
 
+function bindScopedD3Interaction(selection, { isActive, onEnter, onLeave, onActivate }) {
+    const enter = (event, item) => {
+        if (isActive()) {
+            onEnter(event, item);
+        }
+    };
+    const leave = () => {
+        if (isActive()) {
+            onLeave();
+        }
+    };
+    const activate = (event, item) => {
+        if (!isActive()) {
+            return;
+        }
+
+        onActivate(event, item);
+    };
+
+    selection
+        .on("pointerenter", enter)
+        .on("pointerleave", leave)
+        .on("focus", enter)
+        .on("blur", leave)
+        .on("click", activate)
+        .on("keydown", (event, item) => {
+            if (!isKeyboardActivation(event) || !isActive()) {
+                return;
+            }
+
+            event.preventDefault();
+            onActivate(event, item);
+        });
+}
+
+function openTravelItem(event, item) {
+    event.currentTarget?.blur?.();
+    window.location.href = item.route;
+}
+
+function isKeyboardActivation(event) {
+    return event.key === "Enter" || event.key === " ";
+}
+
 function initTravelTimeline({ d3, timelineNode }) {
     const timelineItems = TRAVEL_COUNTRIES.filter((country) => country.timelineFill && Number.isFinite(country.startYear) && Number.isFinite(country.endYear));
     const minYear = d3.min(timelineItems, (item) => item.startYear);
@@ -788,16 +707,16 @@ function initTravelTimeline({ d3, timelineNode }) {
                 .attr("tabindex", 0)
                 .attr("role", "link")
                 .attr("aria-label", `Open ${item.name}`)
-                .on("click", () => {
-                    window.location.href = item.route;
+                .on("click", (event) => {
+                    openTravelItem(event, item);
                 })
                 .on("keydown", (event) => {
-                    if (event.key !== "Enter" && event.key !== " ") {
+                    if (!isKeyboardActivation(event)) {
                         return;
                     }
 
                     event.preventDefault();
-                    window.location.href = item.route;
+                    openTravelItem(event, item);
                 });
 
             group
