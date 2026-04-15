@@ -209,6 +209,7 @@ function initLoveLetters() {
             updateSubmitVisibility();
             setStatus("", "success");
             showModal("oh, you made it. i thought someone was indifferent");
+            trackSuccessfulUnlock(output);
         } catch (error) {
             console.error(error);
             output.hidden = true;
@@ -219,6 +220,22 @@ function initLoveLetters() {
             updateSubmitVisibility();
         }
     });
+}
+
+function trackSuccessfulUnlock(output) {
+    void loadAnalyticsModule()
+        .then(async (analytics) => {
+            await analytics.trackLoveLettersUnlock();
+            await analytics.mountLoveLettersStatsPanel(output);
+        })
+        .catch((error) => {
+            console.debug("[site analytics] Love-letter unlock analytics did not start.", error);
+        });
+}
+
+function loadAnalyticsModule() {
+    const modulePath = window.Site?.appendSiteVersion?.("../firebase-analytics.js") ?? "../firebase-analytics.js";
+    return import(modulePath);
 }
 
 function initCatPaws() {

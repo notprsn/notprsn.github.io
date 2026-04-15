@@ -1,0 +1,139 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return request.auth != null
+        && request.auth.token.email_verified == true
+        && request.auth.token.email in [
+          "prasann.work@gmail.com"
+        ];
+    }
+
+    function isShortString(value, maxLength) {
+      return value is string && value.size() <= maxLength;
+    }
+
+    function isOptionalShortString(data, key, maxLength) {
+      return !(key in data) || isShortString(data[key], maxLength);
+    }
+
+    function isOptionalTimestamp(data, key) {
+      return !(key in data) || data[key] is timestamp;
+    }
+
+    function isCounter(value) {
+      return value is int && value >= 0;
+    }
+
+    function isOptionalCounter(data, key) {
+      return !(key in data) || isCounter(data[key]);
+    }
+
+    function isValidVisitor(data, visitorId) {
+      return data.keys().hasOnly([
+          "visitorId",
+          "createdAt",
+          "updatedAt",
+          "visitCount",
+          "firstPath",
+          "lastPath",
+          "lastReferrerHost"
+        ])
+        && data.visitorId == visitorId
+        && isCounter(data.visitCount)
+        && data.updatedAt == request.time
+        && isOptionalTimestamp(data, "createdAt")
+        && isOptionalShortString(data, "firstPath", 240)
+        && isShortString(data.lastPath, 240)
+        && isOptionalShortString(data, "lastReferrerHost", 120);
+    }
+
+    function isNewVisitor(data, visitorId) {
+      return isValidVisitor(data, visitorId)
+        && data.visitCount == 1
+        && data.createdAt == request.time
+        && isShortString(data.firstPath, 240);
+    }
+
+    function isReturningVisitor(data, visitorId) {
+      return isValidVisitor(data, visitorId)
+        && data.visitorId == resource.data.visitorId
+        && data.createdAt == resource.data.createdAt
+        && data.firstPath == resource.data.firstPath
+        && data.visitCount == resource.data.visitCount + 1;
+    }
+
+    function isValidCounters(data) {
+      return data.keys().hasOnly([
+          "totalVisits",
+          "uniqueVisitors",
+          "loveLettersUnlocks",
+          "updatedAt",
+          "lastVisitAt",
+          "lastUnlockAt"
+        ])
+        && isOptionalCounter(data, "totalVisits")
+        && isOptionalCounter(data, "uniqueVisitors")
+        && isOptionalCounter(data, "loveLettersUnlocks")
+        && isOptionalTimestamp(data, "updatedAt")
+        && isOptionalTimestamp(data, "lastVisitAt")
+        && isOptionalTimestamp(data, "lastUnlockAt");
+    }
+
+    function smallInitialCounter(data, key) {
+      return !(key in data) || (data[key] is int && data[key] >= 0 && data[key] <= 1);
+    }
+
+    function isValidCounterCreate(data) {
+      return isValidCounters(data)
+        && smallInitialCounter(data, "totalVisits")
+        && smallInitialCounter(data, "uniqueVisitors")
+        && smallInitialCounter(data, "loveLettersUnlocks");
+    }
+
+    function counterDoesNotJump(data, key) {
+      return !(key in data)
+        || (!(key in resource.data) && data[key] <= 1)
+        || (
+          key in resource.data
+          && data[key] >= resource.data[key]
+          && data[key] <= resource.data[key] + 1
+        );
+    }
+
+    function isValidCounterUpdate(data) {
+      return isValidCounters(data)
+        && counterDoesNotJump(data, "totalVisits")
+        && counterDoesNotJump(data, "uniqueVisitors")
+        && counterDoesNotJump(data, "loveLettersUnlocks");
+    }
+
+    match /visitors/{visitorId} {
+      allow get, list: if isAdmin();
+      allow create: if isSignedIn()
+        && visitorId == request.auth.uid
+        && isNewVisitor(request.resource.data, visitorId);
+      allow update: if isSignedIn()
+        && visitorId == request.auth.uid
+        && isReturningVisitor(request.resource.data, visitorId);
+      allow delete: if false;
+    }
+
+    match /analytics/site {
+      allow get: if isAdmin();
+      allow list: if false;
+      allow create: if isSignedIn() && isValidCounterCreate(request.resource.data);
+      allow update: if isSignedIn() && isValidCounterUpdate(request.resource.data);
+      allow delete: if false;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

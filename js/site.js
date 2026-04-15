@@ -34,6 +34,15 @@ async function fetchVersionedResource(resourcePath, options = {}) {
     });
 }
 
+async function initSiteAnalytics() {
+    try {
+        const analytics = await import(appendSiteVersion("./firebase-analytics.js"));
+        await analytics.initSiteAnalytics();
+    } catch (error) {
+        console.debug("[site analytics] Analytics module did not start.", error);
+    }
+}
+
 function getCanvas2DContext(canvas) {
     if (!(canvas instanceof HTMLCanvasElement)) {
         return null;
@@ -84,3 +93,4 @@ window.Site = Object.freeze({
 });
 
 onReady(setCurrentYear);
+onReady(initSiteAnalytics);
