@@ -24,7 +24,7 @@ Website wiring
 - Non-empty essay files publish to `/essays/travel/<slug>/` or `/essays/miscellaneous/<slug>/` during sync.
 - Theme queue cards wire their `Open essay` link from `data-essay-slot` and `data-essay-link` during sync.
 - Work stories live on dedicated routes like `/work/stories/qicap/` and are linked directly from `/work/`.
-- Project markdown pages load through `js/pages/content-entry.js`.
+- Work and project markdown pages are static-rendered by `scripts/sync-site.mjs`; `js/pages/content-entry.js` remains as a browser enhancement that can refresh the prose from the markdown source.
 - The repo currently has 3 kinds of project writing state:
   - public multi-note pages for Bollywoodle
   - public message and story windows for CloudScript under sibling note directories
@@ -39,6 +39,9 @@ Automation
 - That script:
   - refreshes the site version
   - writes `data/site-meta.json`
+  - writes `robots.txt` and `sitemap.xml`
+  - updates canonical, Open Graph, Twitter card, and JSON-LD metadata
+  - injects static HTML for markdown-backed work and project pages
   - updates local asset query params in HTML
   - strips legacy Google Analytics snippets from shipped HTML
   - generates essay detail pages for non-empty theme-local `content.md` files

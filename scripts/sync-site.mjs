@@ -6,12 +6,66 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const repoRoot = resolve(__dirname, "..");
 const dataDir = resolve(repoRoot, "data");
+const SITE_ORIGIN = "https://notprsn.github.io";
+const SITE_NAME = "Prasann Iyer";
+const SITE_IMAGE = `${SITE_ORIGIN}/img/profile.JPEG`;
+const SOCIAL_LINKS = [
+    "https://github.com/notprsn",
+    "https://www.linkedin.com/in/prsn/",
+    "https://x.com/fireballthecat",
+    "https://bollywoodle.app",
+    "https://cloudscript.lalalab.tech",
+];
 const TRAVEL_ESSAY_CONFIG = {
     directory: resolve(repoRoot, "essays", "travel"),
     backPath: "/essays/travel/",
     backLabel: "Travel Essays",
     descriptionLabel: "travel essay",
 };
+const SEO_OVERRIDES = {
+    "/": {
+        title: "Prasann Iyer",
+        description: "Personal website of Prasann Iyer: work, projects, essays, Bollywoodle, CloudScript, math, music, and small web experiments.",
+        schemaType: "home",
+    },
+    "/about/": {
+        description: "About Prasann Iyer: math, music, curiosity, and whatever intuition says to build next.",
+    },
+    "/work/": {
+        description: "Professional work experience, scholastic achievements, technical skills, and CV of Prasann Iyer.",
+    },
+    "/projects/": {
+        description: "Projects by Prasann Iyer, including Bollywoodle, CloudScript, and other web experiments.",
+    },
+    "/projects/bollywoodle/story/": {
+        description: "How Prasann Iyer built Bollywoodle, a daily Bollywood music guessing game, and the story behind it.",
+        schemaType: "creativeWork",
+    },
+    "/projects/bollywoodle/humming/": {
+        description: "The humming algorithm behind Bollywoodle Musicle, explained by Prasann Iyer.",
+        schemaType: "creativeWork",
+    },
+    "/projects/cloudscript/story/": {
+        description: "The story behind CloudScript, a cloud-message web app by Prasann Iyer.",
+        schemaType: "creativeWork",
+    },
+    "/projects/cloudscript/message/": {
+        description: "A CloudScript message by Prasann Iyer.",
+        schemaType: "creativeWork",
+    },
+    "/fun/": {
+        description: "Pretty math experiments and visual toys by Prasann Iyer.",
+    },
+    "/essays/": {
+        description: "Essay themes and writing queues for Prasann Iyer.",
+    },
+    "/essays/travel/": {
+        description: "Travel atlas and essay index for Prasann Iyer.",
+    },
+};
+const NOINDEX_ROUTES = new Set([
+    "/love-letters/",
+]);
 
 const version = buildVersion();
 const generatedAt = new Date().toISOString();
@@ -25,11 +79,14 @@ const htmlFiles = await collectFiles(repoRoot, (filePath) => extname(filePath) =
 
 for (const filePath of htmlFiles) {
     const source = await readFile(filePath, "utf8");
-    const updated = updateHtml(source);
+    const updated = await updateHtml(filePath, source);
     if (updated !== source) {
         await writeFile(filePath, updated, "utf8");
     }
 }
+
+await writeRobotsTxt();
+await writeSitemapXml(htmlFiles);
 
 console.log(`Synced site metadata at version ${version}`);
 
@@ -233,7 +290,8 @@ function renderMarkdown(markdown) {
             return;
         }
         const languageClass = codeBlock.language ? ` class="language-${escapeHtml(codeBlock.language)}"` : "";
-        html.push(`<pre><code${languageClass}>${escapeHtml(codeBlock.lines.join("\n"))}</code></pre>`);
+        const languageData = codeBlock.language ? ` data-code-language="${escapeHtml(codeBlock.language)}"` : "";
+        html.push(`<pre${languageData}><code${languageClass}>${escapeHtml(codeBlock.lines.join("\n"))}</code></pre>`);
         codeBlock = null;
     };
 
@@ -342,13 +400,30 @@ function escapeHtml(value) {
         .replaceAll("'", "&#39;");
 }
 
-function updateHtml(source) {
-    let updated = source;
+function escapeXml(value) {
+    return value
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&apos;");
+}
 
+async function updateHtml(filePath, source) {
+    let updated = source;
+    const route = routeFromFile(filePath);
+    const seo = buildSeoForPage(route, updated);
+
+    updated = await renderMarkdownBackedContent(updated);
+    updated = ensureTitle(updated, seo.title);
+    updated = ensureMeta(updated, "description", seo.description);
     updated = ensureMeta(updated, "site-version", version);
+    updated = ensureRobotsMeta(updated, route);
     updated = stripCacheMeta(updated);
     updated = stripGoogleAnalytics(updated);
+    updated = stripManagedSeo(updated);
     updated = ensureFaviconLinks(updated);
+    updated = ensureManagedSeo(updated, seo);
     updated = updated.replace(
         /((?:href|src)=["'])(?!https?:\/\/|\/\/|mailto:|#)([^"']+\.(?:css|js))(?:\?v=[^"']*)?(["'])/g,
         `$1$2?v=${version}$3`
@@ -357,15 +432,83 @@ function updateHtml(source) {
     return updated;
 }
 
-function ensureMeta(source, name, content) {
-    const tag = `<meta name="${name}" content="${content}">`;
-    const pattern = new RegExp(`<meta name="${name}" content="[^"]*">`);
+async function renderMarkdownBackedContent(source) {
+    let updated = source;
+    const articlePattern = /<article\b[^>]*\bdata-story-file="([^"]+)"[^>]*>[\s\S]*?<\/article>/g;
+    const articles = [...source.matchAll(articlePattern)];
 
-    if (pattern.test(source)) {
-        return source.replace(pattern, tag);
+    for (const articleMatch of articles) {
+        const [article, storyFile] = articleMatch;
+        const markdownPath = resolve(repoRoot, storyFile.replace(/^\//, ""));
+        let markdown = "";
+
+        try {
+            markdown = await readFile(markdownPath, "utf8");
+        } catch {
+            continue;
+        }
+
+        const shouldStripTitle = article.includes("data-strip-leading-title") || article.includes("data-work-story-page");
+        const renderedMarkdown = renderMarkdown(shouldStripTitle ? stripLeadingTitle(markdown) : markdown);
+        const renderedArticle = article.replace(
+            /(<div\b[^>]*\bdata-(?:work-story|project-markdown)-prose\b[^>]*>\n)([\s\S]*?)(\n\s*<\/div>)/,
+            (_match, openTag, _content, closeTag) => `${openTag}${indentMultiline(renderedMarkdown, 20)}${closeTag}`
+        );
+
+        updated = updated.replace(article, renderedArticle);
     }
 
-    return source.replace(/(<meta name="author" content="[^"]*">\n)/, `$1    ${tag}\n`);
+    return updated;
+}
+
+function ensureTitle(source, title) {
+    const tag = `<title>${escapeHtml(title)}</title>`;
+
+    if (/<title>[^<]*<\/title>/.test(source)) {
+        return source.replace(/<title>[^<]*<\/title>/, tag);
+    }
+
+    return source.replace(/(<head>\n)/, `$1    ${tag}\n`);
+}
+
+function ensureMeta(source, name, content) {
+    const tag = `<meta name="${name}" content="${escapeHtml(content)}">`;
+    const withoutExisting = stripMetaByName(source, name);
+    const preferredAnchor =
+        name === "description"
+            ? /(<meta name="viewport" content="[^"]*">\n)/
+            : /(<meta name="author" content="[^"]*">\n)/;
+    const anchors = [
+        preferredAnchor,
+        /(<meta name="viewport" content="[^"]*">\n)/,
+        /(<meta charset="utf-8">\n)/,
+        /(<head>\n)/,
+    ];
+
+    for (const anchor of anchors) {
+        if (anchor.test(withoutExisting)) {
+            return withoutExisting.replace(anchor, `$1    ${tag}\n`);
+        }
+    }
+
+    return withoutExisting;
+}
+
+function stripMetaByName(source, name) {
+    const pattern = new RegExp(`^\\s*<meta\\b(?=[^>]*\\bname="${escapeRegExp(name)}")[^>]*>\\n?`, "gm");
+    return source.replace(pattern, "");
+}
+
+function escapeRegExp(value) {
+    return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function ensureRobotsMeta(source, route) {
+    if (shouldNoindex(route)) {
+        return ensureMeta(source, "robots", "noindex");
+    }
+
+    return source.replace(/^\s*<meta name="robots" content="[^"]*">\n/gm, "");
 }
 
 function stripCacheMeta(source) {
@@ -381,6 +524,12 @@ function stripGoogleAnalytics(source) {
         );
 }
 
+function stripManagedSeo(source) {
+    return source
+        .replace(/^\s*<(?:link|meta)\b(?=[^>]*\bdata-managed-seo\b)[^>]*>\n/gm, "")
+        .replace(/^\s*<script type="application\/ld\+json" data-site-schema>[\s\S]*?<\/script>\n/gm, "");
+}
+
 function ensureFaviconLinks(source) {
     const assetPrefix = source.match(/<link href="([^"]*)img\/favicon(?:\/[^"]+|\.[^"]+)"/)?.[1] ||
         source.match(/<link href="([^"]*)css\/style\.css/)?.[1] ||
@@ -390,6 +539,200 @@ function ensureFaviconLinks(source) {
         .replace(/^\s*<meta name="(?:theme-color|msapplication-TileColor|msapplication-config)" content="[^"]*">\n/gm, "");
 
     return withoutFavicons.replace(/(<title>[^<]*<\/title>\n)/, `$1${buildFaviconLinks(assetPrefix)}\n`);
+}
+
+function ensureManagedSeo(source, seo) {
+    const tags = buildManagedSeoTags(seo);
+    return source.replace(/(<title>[^<]*<\/title>\n)/, `$1${tags}\n`);
+}
+
+function buildManagedSeoTags(seo) {
+    const schema = buildStructuredData(seo);
+    const tags = [
+        `<link rel="canonical" href="${escapeHtml(seo.canonicalUrl)}" data-managed-seo>`,
+        `<meta property="og:site_name" content="${escapeHtml(SITE_NAME)}" data-managed-seo>`,
+        `<meta property="og:type" content="${seo.schemaType === "creativeWork" ? "article" : "website"}" data-managed-seo>`,
+        `<meta property="og:title" content="${escapeHtml(seo.title)}" data-managed-seo>`,
+        `<meta property="og:description" content="${escapeHtml(seo.description)}" data-managed-seo>`,
+        `<meta property="og:url" content="${escapeHtml(seo.canonicalUrl)}" data-managed-seo>`,
+        `<meta property="og:image" content="${escapeHtml(SITE_IMAGE)}" data-managed-seo>`,
+        `<meta name="twitter:card" content="summary_large_image" data-managed-seo>`,
+        `<meta name="twitter:title" content="${escapeHtml(seo.title)}" data-managed-seo>`,
+        `<meta name="twitter:description" content="${escapeHtml(seo.description)}" data-managed-seo>`,
+        `<meta name="twitter:image" content="${escapeHtml(SITE_IMAGE)}" data-managed-seo>`,
+        `<script type="application/ld+json" data-site-schema>${JSON.stringify(schema).replace(/</g, "\\u003c")}</script>`,
+    ];
+
+    return tags.map((tag) => `    ${tag}`).join("\n");
+}
+
+function buildStructuredData(seo) {
+    const person = {
+        "@type": "Person",
+        "@id": `${SITE_ORIGIN}/#prasann-iyer`,
+        name: "Prasann Iyer",
+        alternateName: "prasann",
+        url: `${SITE_ORIGIN}/`,
+        sameAs: SOCIAL_LINKS,
+        knowsAbout: [
+            "Quantitative trading",
+            "Mathematics",
+            "Music",
+            "Bollywoodle",
+            "CloudScript",
+            "Web projects",
+        ],
+    };
+    const webSite = {
+        "@type": "WebSite",
+        "@id": `${SITE_ORIGIN}/#website`,
+        name: SITE_NAME,
+        url: `${SITE_ORIGIN}/`,
+        publisher: {
+            "@id": person["@id"],
+        },
+    };
+    const webPage = {
+        "@type": seo.schemaType === "creativeWork" ? "CreativeWork" : "WebPage",
+        "@id": `${seo.canonicalUrl}#webpage`,
+        url: seo.canonicalUrl,
+        name: seo.title,
+        description: seo.description,
+        isPartOf: {
+            "@id": webSite["@id"],
+        },
+        author: {
+            "@id": person["@id"],
+        },
+    };
+
+    if (seo.schemaType === "home") {
+        return {
+            "@context": "https://schema.org",
+            "@graph": [
+                person,
+                webSite,
+                {
+                    ...webPage,
+                    mainEntity: {
+                        "@id": person["@id"],
+                    },
+                },
+            ],
+        };
+    }
+
+    return {
+        "@context": "https://schema.org",
+        "@graph": [
+            person,
+            webSite,
+            webPage,
+        ],
+    };
+}
+
+function buildSeoForPage(route, source) {
+    const title = SEO_OVERRIDES[route]?.title || extractTagContent(source, "title") || SITE_NAME;
+    const description =
+        SEO_OVERRIDES[route]?.description ||
+        extractMetaContent(source, "description") ||
+        "Personal website of Prasann Iyer.";
+    const schemaType = SEO_OVERRIDES[route]?.schemaType || "webPage";
+
+    return {
+        route,
+        title,
+        description,
+        schemaType,
+        canonicalUrl: buildCanonicalUrl(route),
+    };
+}
+
+function routeFromFile(filePath) {
+    const relativePath = relative(repoRoot, filePath).replaceAll("\\", "/");
+
+    if (relativePath === "index.html") {
+        return "/";
+    }
+
+    if (relativePath.endsWith("/index.html")) {
+        return `/${relativePath.replace(/\/index\.html$/, "/")}`;
+    }
+
+    return `/${relativePath}`;
+}
+
+function buildCanonicalUrl(route) {
+    return `${SITE_ORIGIN}${route}`;
+}
+
+function extractTagContent(source, tagName) {
+    const match = source.match(new RegExp(`<${tagName}>([^<]*)<\\/${tagName}>`));
+    return match ? match[1].trim() : "";
+}
+
+function extractMetaContent(source, name) {
+    const match = source.match(new RegExp(`<meta\\b(?=[^>]*\\bname="${escapeRegExp(name)}")[^>]*\\bcontent="([^"]*)"[^>]*>`));
+    return match ? match[1].trim() : "";
+}
+
+function shouldNoindex(route) {
+    return route.startsWith("/puzzles/") || NOINDEX_ROUTES.has(route);
+}
+
+function shouldIncludeInSitemap(route) {
+    return route.endsWith("/") && !shouldNoindex(route);
+}
+
+async function writeRobotsTxt() {
+    const contents = [
+        "User-agent: *",
+        "Allow: /",
+        "Disallow: /private/",
+        "Disallow: /data/love-letters.enc.json",
+        "",
+        `Sitemap: ${SITE_ORIGIN}/sitemap.xml`,
+        "",
+    ].join("\n");
+
+    await writeFile(resolve(repoRoot, "robots.txt"), contents, "utf8");
+}
+
+async function writeSitemapXml(htmlFiles) {
+    const routes = htmlFiles
+        .map(routeFromFile)
+        .filter(shouldIncludeInSitemap)
+        .sort((left, right) => {
+            if (left === "/") {
+                return -1;
+            }
+            if (right === "/") {
+                return 1;
+            }
+            return left.localeCompare(right);
+        });
+    const lastmod = generatedAt.slice(0, 10);
+    const urls = routes.map((route) => {
+        const priority = route === "/" ? "1.0" : route.startsWith("/projects/") || route === "/work/" ? "0.8" : "0.6";
+
+        return [
+            "  <url>",
+            `    <loc>${escapeXml(buildCanonicalUrl(route))}</loc>`,
+            `    <lastmod>${lastmod}</lastmod>`,
+            `    <priority>${priority}</priority>`,
+            "  </url>",
+        ].join("\n");
+    });
+    const contents = [
+        '<?xml version="1.0" encoding="UTF-8"?>',
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+        ...urls,
+        "</urlset>",
+        "",
+    ].join("\n");
+
+    await writeFile(resolve(repoRoot, "sitemap.xml"), contents, "utf8");
 }
 
 async function collectFiles(directory, predicate) {
