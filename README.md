@@ -1,6 +1,8 @@
 # notprsn.github.io
 
-Static personal site.
+Personal website for Prasann Iyer: work, projects, essays, Bollywoodle, and CloudScript.
+
+Live at https://notprsn.github.io/.
 
 Current sections
 - `/`, `/about/`, `/work/`, `/projects/`, `/fun/`, `/essays/`, and `/love-letters/` are all live.
