@@ -162,6 +162,12 @@ body.page-love::after {
   color: #11110f;
 }
 
+.page-love .site-nav a[aria-current="page"],
+.page-love .site-nav a:hover,
+.page-love .site-nav a:focus-visible {
+  color: #11110f;
+}
+
 .page-main--love {
   position: relative;
   z-index: 1;

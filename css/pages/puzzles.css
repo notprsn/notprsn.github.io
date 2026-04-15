@@ -171,7 +171,6 @@ input {
 
 .instruction-line,
 .status-line,
-.hover-hint,
 .progress-note {
   margin-top: 1rem;
   color: var(--muted);

@@ -3,19 +3,20 @@ const onReady = window.Site?.onReady ?? ((callback) => callback());
 onReady(initWorkLedgerAccordion);
 
 function initWorkLedgerAccordion() {
-    const rows = document.querySelectorAll("[data-ledger-item]");
-    if (!rows.length) {
+    const items = Array.from(document.querySelectorAll("[data-ledger-item]"))
+        .map((row) => ({
+            row,
+            toggle: row.querySelector(".paper-ledger__toggle"),
+        }))
+        .filter((item) => item.toggle);
+
+    if (!items.length) {
         return;
     }
 
     const mobileQuery = window.matchMedia("(max-width: 940px)");
 
-    rows.forEach((row) => {
-        const toggle = row.querySelector(".paper-ledger__toggle");
-        if (!toggle) {
-            return;
-        }
-
+    items.forEach(({ row, toggle }) => {
         toggle.addEventListener("click", () => {
             if (!mobileQuery.matches) {
                 return;
@@ -28,12 +29,9 @@ function initWorkLedgerAccordion() {
 
     function syncLedgerState() {
         if (!mobileQuery.matches) {
-            rows.forEach((row) => {
+            items.forEach(({ row, toggle }) => {
                 row.classList.remove("is-open");
-                const toggle = row.querySelector(".paper-ledger__toggle");
-                if (toggle) {
-                    toggle.setAttribute("aria-expanded", "false");
-                }
+                toggle.setAttribute("aria-expanded", "false");
             });
         }
     }

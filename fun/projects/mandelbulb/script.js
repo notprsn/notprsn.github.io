@@ -1,27 +1,3 @@
-const DETAIL_PRESETS = [
-    {
-        label: "Fluid",
-        interaction: { scale: 0.10, maxSteps: 34, aoSamples: 0, epsilon: 0.0048, idleRows: 24 },
-        motion: { scale: 0.13, maxSteps: 42, aoSamples: 0, epsilon: 0.0041, idleRows: 20 },
-        idle: { scale: 0.18, maxSteps: 54, aoSamples: 1, epsilon: 0.0032, idleRows: 18 },
-        caps: { desktop: 228, mobile: 164 },
-    },
-    {
-        label: "Balanced",
-        interaction: { scale: 0.12, maxSteps: 40, aoSamples: 0, epsilon: 0.0043, idleRows: 22 },
-        motion: { scale: 0.16, maxSteps: 50, aoSamples: 1, epsilon: 0.0036, idleRows: 18 },
-        idle: { scale: 0.24, maxSteps: 64, aoSamples: 2, epsilon: 0.0027, idleRows: 15 },
-        caps: { desktop: 288, mobile: 208 },
-    },
-    {
-        label: "Crisp",
-        interaction: { scale: 0.14, maxSteps: 46, aoSamples: 1, epsilon: 0.0039, idleRows: 18 },
-        motion: { scale: 0.20, maxSteps: 58, aoSamples: 1, epsilon: 0.0031, idleRows: 15 },
-        idle: { scale: 0.30, maxSteps: 76, aoSamples: 2, epsilon: 0.0023, idleRows: 12 },
-        caps: { desktop: 392, mobile: 256 },
-    },
-];
-
 const CPU_TIER_SETTINGS = {
     interaction: {
         scale: window.innerWidth < 960 ? 0.25 : 0.2,
@@ -58,40 +34,16 @@ const GRAPHITE_PALETTE_ANCHORS = new Float32Array([
     0.68, 0.7, 0.74,
     0.92, 0.94, 0.96,
 ]);
+const GRAPHITE_PALETTE = {
+    anchorCount: GRAPHITE_PALETTE_ANCHORS.length / 3,
+    anchors: GRAPHITE_PALETTE_ANCHORS,
+    glow: [0.74, 0.76, 0.8],
+};
 const REFERENCE_DISTANCE = window.innerWidth < 960 ? 5.35 : 4.8;
 const REFERENCE_PITCH_RANGE = {
     min: -0.62,
     max: 0.62,
 };
-
-const WEBGL_TIER_SETTINGS = {
-    interaction: {
-        scale: window.innerWidth < 960 ? 0.48 : 0.62,
-        maxSteps: 52,
-        aoSamples: 0,
-        epsilon: 0.0031,
-        caps: { desktop: 1280, mobile: 780 },
-        tier: "interaction",
-    },
-    motion: {
-        scale: window.innerWidth < 960 ? 0.68 : 0.82,
-        maxSteps: 64,
-        aoSamples: 1,
-        epsilon: 0.0028,
-        caps: { desktop: 1500, mobile: 980 },
-        tier: "motion",
-    },
-    idle: {
-        scale: window.innerWidth < 960 ? 0.88 : 1.0,
-        maxSteps: 78,
-        aoSamples: 2,
-        epsilon: 0.0025,
-        caps: { desktop: 1920, mobile: 1280 },
-        tier: "idle",
-    },
-};
-
-const DEFAULT_PARAMS = {};
 
 const VIEW_LIMITS = {
     pitchMin: -1.05,
@@ -111,67 +63,8 @@ const CAMERA_LENS = 1.65;
 const LIGHT_DIR_X = 0.7909116;
 const LIGHT_DIR_Y = 0.5461068;
 const LIGHT_DIR_Z = -0.3012997;
-const WEBGL_CONTEXT_ATTRIBUTES = {
-    alpha: false,
-    antialias: false,
-    depth: false,
-    stencil: false,
-    premultipliedAlpha: false,
-    preserveDrawingBuffer: false,
-    powerPreference: "high-performance",
-};
-const WEBGL_RELAXED_CONTEXT_ATTRIBUTES = {
-    alpha: false,
-    antialias: false,
-    depth: false,
-    stencil: false,
-    premultipliedAlpha: false,
-    preserveDrawingBuffer: false,
-};
-const WEBGL_CONTEXT_ATTEMPTS = [
-    {
-        label: "webgl-preferred",
-        contextName: "webgl",
-        attributes: WEBGL_CONTEXT_ATTRIBUTES,
-    },
-    {
-        label: "webgl-relaxed",
-        contextName: "webgl",
-        attributes: WEBGL_RELAXED_CONTEXT_ATTRIBUTES,
-    },
-    {
-        label: "webgl-default",
-        contextName: "webgl",
-        attributes: undefined,
-    },
-    {
-        label: "experimental-webgl-preferred",
-        contextName: "experimental-webgl",
-        attributes: WEBGL_CONTEXT_ATTRIBUTES,
-    },
-    {
-        label: "experimental-webgl-relaxed",
-        contextName: "experimental-webgl",
-        attributes: WEBGL_RELAXED_CONTEXT_ATTRIBUTES,
-    },
-    {
-        label: "experimental-webgl-default",
-        contextName: "experimental-webgl",
-        attributes: undefined,
-    },
-];
-const WEBGL_SHADER_PATHS = {
-    vertex: new URL("mandelbulb.vert", window.location.href).href,
-    fragment: new URL("mandelbulb.frag", window.location.href).href,
-};
-const WEBGL_LOG_PREFIX = "[mandelbulb-gl]";
-const CPU_LOG_PREFIX = "[mandelbulb-cpu]";
-
 const state = {
-    params: { ...DEFAULT_PARAMS },
     view: buildReferenceView(),
-    palette: createGraphitePalette(),
-    paletteVersion: 0,
     displaySize: { width: 0, height: 0 },
     renderSize: { width: 0, height: 0 },
     stageHost: null,
@@ -186,16 +79,6 @@ const state = {
     rafId: 0,
     fallbackShown: false,
     renderTask: null,
-    rendererKind: null,
-    gl: null,
-    diagnostics: {
-        attemptedWebGL: false,
-        activeRenderer: "uninitialized",
-        fallbackReason: null,
-        lastError: null,
-        environment: null,
-        attempts: [],
-    },
     rasterCache: {
         width: 0,
         height: 0,
@@ -209,93 +92,39 @@ const elements = {
     resetButton: document.querySelector("[data-reset-view]"),
 };
 
-const outputNodes = new Map(
-    Array.from(document.querySelectorAll("[data-output-for]")).map((node) => [node.dataset.outputFor, node])
-);
-
-const controlNodes = new Map(
-    Array.from(document.querySelectorAll("input[name]")).map((node) => [node.name, node])
-);
-
 const sampleScratch = new Float32Array(4);
 const normalScratch = new Float32Array(3);
 const paletteScratch = new Float32Array(3);
 const shadowScratch = new Float32Array(3);
 const accentScratch = new Float32Array(3);
 
-bindControls();
-updateControlUI();
+bindResetControl();
 initialize();
 
-window.addEventListener("pageshow", () => {
-    updateControlUI();
-    requestRender();
-});
+window.addEventListener("pageshow", requestRender);
 
 window.addEventListener("beforeunload", () => {
     state.resizeObserver?.disconnect();
     if (state.rafId) {
         window.cancelAnimationFrame(state.rafId);
     }
-    cleanupWebGLRenderer();
 });
 
-function bindControls() {
-    controlNodes.forEach((node, name) => {
-        const eventName = node.type === "checkbox" ? "change" : "input";
-        node.addEventListener(eventName, () => {
-            state.params[name] = readControlValue(node);
-            updateControlOutput(name);
-            markInteraction();
-            requestRender();
-        });
-    });
-
+function bindResetControl() {
     elements.resetButton?.addEventListener("click", () => {
-        state.palette = createGraphitePalette();
-        state.paletteVersion += 1;
         state.view = buildReferenceView();
         markInteraction();
         requestRender();
     });
 }
 
-function readControlValue(node) {
-    if (node.type === "checkbox") {
-        return node.checked;
-    }
-
-    return Number(node.value);
-}
-
-function updateControlUI() {
-    controlNodes.forEach((node, name) => {
-        const value = state.params[name];
-        if (node.type === "checkbox") {
-            node.checked = Boolean(value);
-        } else {
-            node.value = `${value}`;
-        }
-        updateControlOutput(name);
-    });
-}
-
-function updateControlOutput(name) {
-    const output = outputNodes.get(name);
-    if (!output) {
-        return;
-    }
-
-    output.textContent = `${state.params[name]}`;
-}
-
-async function initialize() {
+function initialize() {
     if (!elements.stage) {
         return;
     }
 
     state.stageHost = elements.stage;
-    initializeCpuRenderer("startup");
+    initializeRenderer();
 }
 
 function createStageCanvas() {
@@ -307,9 +136,7 @@ function createStageCanvas() {
     return canvas;
 }
 
-function initializeCpuRenderer(startReason = "startup", details = state.diagnostics.lastError) {
-    logCpu("Initializing CPU fallback renderer", { reason: startReason, details });
-
+function initializeRenderer() {
     try {
         const canvas = createStageCanvas();
 
@@ -325,18 +152,15 @@ function initializeCpuRenderer(startReason = "startup", details = state.diagnost
         ctx.imageSmoothingEnabled = true;
         state.stageHost.innerHTML = "";
         state.stageHost.append(canvas);
-        state.rendererKind = "cpu";
         state.canvas = canvas;
         state.ctx = ctx;
-        state.gl = null;
-        recordRendererStatus("cpu", startReason, details);
         state.displaySize = getStageSize(state.stageHost);
         syncCanvasResolution(getTierSettings(getQualityTier(performance.now())));
         bindStageInteractions(canvas);
         bindResizeObserver();
         requestRender();
     } catch (error) {
-        logCpu("CPU renderer startup failed", error);
+        console.error(error);
         showFallback("This browser could not start the Mandelbulb renderer.");
     }
 }
@@ -398,428 +222,6 @@ function bindStageInteractions(canvas) {
     }, { passive: false });
 }
 
-function logWebGL(message, details) {
-    if (details === undefined) {
-        console.info(WEBGL_LOG_PREFIX, message);
-        return;
-    }
-
-    console.info(WEBGL_LOG_PREFIX, message, details);
-}
-
-function logCpu(message, details) {
-    if (details === undefined) {
-        console.info(CPU_LOG_PREFIX, message);
-        return;
-    }
-
-    console.info(CPU_LOG_PREFIX, message, details);
-}
-
-function summarizeContextAttributes(attributes) {
-    if (!attributes) {
-        return "default";
-    }
-
-    return {
-        alpha: Boolean(attributes.alpha),
-        antialias: Boolean(attributes.antialias),
-        depth: Boolean(attributes.depth),
-        stencil: Boolean(attributes.stencil),
-        premultipliedAlpha: Boolean(attributes.premultipliedAlpha),
-        preserveDrawingBuffer: Boolean(attributes.preserveDrawingBuffer),
-        powerPreference: attributes.powerPreference || "default",
-    };
-}
-
-function recordRendererStatus(activeRenderer, reason, details = null) {
-    state.diagnostics.activeRenderer = activeRenderer;
-    state.diagnostics.fallbackReason = activeRenderer === "cpu" ? reason : null;
-    state.diagnostics.lastError = details;
-    window.__mandelbulbRendererDiagnostics = {
-        ...state.diagnostics,
-        details,
-        timestamp: new Date().toISOString(),
-    };
-}
-
-function probeWebGLEnvironment(canvas) {
-    const support = {
-        userAgent: navigator.userAgent,
-        language: navigator.language,
-        platform: navigator.userAgentData?.platform || navigator.platform || "unknown",
-        devicePixelRatio: window.devicePixelRatio,
-        hardwareConcurrency: navigator.hardwareConcurrency ?? null,
-        isSecureContext: window.isSecureContext,
-        protocol: window.location.protocol,
-        webglRenderingContext: typeof window.WebGLRenderingContext !== "undefined",
-        webgl2RenderingContext: typeof window.WebGL2RenderingContext !== "undefined",
-    };
-
-    try {
-        const webgl2 = canvas.getContext("webgl2");
-        support.webgl2ContextAttempt = Boolean(webgl2);
-        if (webgl2?.getContextAttributes) {
-            support.webgl2ContextAttributes = webgl2.getContextAttributes();
-        }
-        if (webgl2?.getExtension) {
-            const loseContext = webgl2.getExtension("WEBGL_lose_context");
-            loseContext?.loseContext();
-        }
-    } catch (error) {
-        support.webgl2ContextAttempt = false;
-        support.webgl2Error = String(error);
-    }
-
-    state.diagnostics.environment = support;
-    recordRendererStatus(state.diagnostics.activeRenderer, state.diagnostics.fallbackReason, state.diagnostics.lastError);
-    logWebGL("Environment probe", support);
-    return support;
-}
-
-function getWebGLContext(canvas) {
-    state.diagnostics.attempts = [];
-
-    for (const attempt of WEBGL_CONTEXT_ATTEMPTS) {
-        const attemptSummary = {
-            label: attempt.label,
-            contextName: attempt.contextName,
-            attributes: summarizeContextAttributes(attempt.attributes),
-        };
-
-        try {
-            const context = attempt.attributes === undefined
-                ? canvas.getContext(attempt.contextName)
-                : canvas.getContext(attempt.contextName, attempt.attributes);
-
-            if (context) {
-                attemptSummary.success = true;
-                attemptSummary.actualAttributes = context.getContextAttributes?.() || null;
-                state.diagnostics.attempts.push(attemptSummary);
-                logWebGL("Acquired rendering context", attemptSummary);
-                return context;
-            }
-        } catch (error) {
-            attemptSummary.error = String(error);
-        }
-
-        attemptSummary.success = false;
-        state.diagnostics.attempts.push(attemptSummary);
-        logWebGL("Context acquisition attempt failed", attemptSummary);
-
-        if (state.diagnostics.attempts.length >= 1) {
-            recordRendererStatus(
-                state.diagnostics.activeRenderer,
-                state.diagnostics.fallbackReason,
-                {
-                    environment: state.diagnostics.environment,
-                    attempts: state.diagnostics.attempts,
-                }
-            );
-        }
-    }
-
-    return null;
-}
-
-async function loadShaderSource(label, url) {
-    logWebGL("Loading shader source", { label, url });
-
-    try {
-        const response = await fetch(url, { cache: "no-store" });
-        if (!response.ok) {
-            throw new Error(`HTTP ${response.status}`);
-        }
-
-        const source = await response.text();
-        logWebGL("Shader source loaded", { label, bytes: source.length });
-        return source;
-    } catch (error) {
-        logWebGL("Shader source load failed", { label, url, error: String(error) });
-        return null;
-    }
-}
-
-function compileWebGLShader(gl, type, source, label) {
-    const shader = gl.createShader(type);
-    if (!shader) {
-        logWebGL("Shader allocation failed", { label });
-        return null;
-    }
-
-    gl.shaderSource(shader, source);
-    gl.compileShader(shader);
-
-    const compiled = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
-    const infoLog = gl.getShaderInfoLog(shader) || "";
-    if (!compiled) {
-        logWebGL("Shader compile failed", { label, infoLog });
-        gl.deleteShader(shader);
-        return null;
-    }
-
-    logWebGL("Shader compile succeeded", {
-        label,
-        infoLog: infoLog || "(empty)",
-    });
-    return shader;
-}
-
-function linkWebGLProgram(gl, vertexShader, fragmentShader) {
-    const program = gl.createProgram();
-    if (!program) {
-        logWebGL("Program allocation failed");
-        return null;
-    }
-
-    gl.attachShader(program, vertexShader);
-    gl.attachShader(program, fragmentShader);
-    gl.linkProgram(program);
-
-    const linked = gl.getProgramParameter(program, gl.LINK_STATUS);
-    const infoLog = gl.getProgramInfoLog(program) || "";
-    if (!linked) {
-        logWebGL("Program link failed", { infoLog });
-        gl.deleteProgram(program);
-        return null;
-    }
-
-    logWebGL("Program link succeeded", {
-        infoLog: infoLog || "(empty)",
-    });
-    return program;
-}
-
-function buildWebGLUniformMap(gl, program) {
-    const names = [
-        "u_resolution",
-        "u_time",
-        "u_cameraPos",
-        "u_cameraTarget",
-        "u_paletteA",
-        "u_paletteB",
-        "u_paletteC",
-        "u_glowColor",
-        "u_bgTop",
-        "u_bgBottom",
-        "u_lightDir",
-        "u_maxSteps",
-        "u_aoSamples",
-        "u_surfaceEpsilon",
-    ];
-
-    const uniforms = {};
-    for (const name of names) {
-        uniforms[name] = gl.getUniformLocation(program, name);
-        if (uniforms[name] === null) {
-            logWebGL("Uniform missing or optimized out", { name });
-        }
-    }
-
-    return uniforms;
-}
-
-function cleanupWebGLRenderer() {
-    if (!state.gl) {
-        return;
-    }
-
-    const glState = state.gl;
-    const gl = glState.context;
-    try {
-        if (glState.quadBuffer) {
-            gl.deleteBuffer(glState.quadBuffer);
-        }
-        if (glState.program) {
-            gl.deleteProgram(glState.program);
-        }
-        if (glState.vertexShader) {
-            gl.deleteShader(glState.vertexShader);
-        }
-        if (glState.fragmentShader) {
-            gl.deleteShader(glState.fragmentShader);
-        }
-    } catch (error) {
-        logWebGL("Cleanup encountered an error", String(error));
-    }
-
-    state.gl = null;
-    if (state.rendererKind === "gl") {
-        state.rendererKind = null;
-        state.canvas = null;
-        state.ctx = null;
-    }
-}
-
-function switchToCpuRenderer(reason, details = null) {
-    if (state.rendererKind === "cpu" || state.fallbackShown) {
-        return;
-    }
-
-    logWebGL("Switching to CPU fallback", { reason, details });
-    state.dragging = false;
-    state.stageHost?.classList.remove("is-dragging");
-    recordRendererStatus("cpu", reason, details);
-    cleanupWebGLRenderer();
-    initializeCpuRenderer(reason, details);
-}
-
-async function initializeWebGLRenderer() {
-    if (!state.stageHost) {
-        return false;
-    }
-
-    state.diagnostics.attemptedWebGL = true;
-    logWebGL("Attempting WebGL renderer startup");
-
-    try {
-        const canvas = createStageCanvas();
-        probeWebGLEnvironment(canvas);
-        const gl = getWebGLContext(canvas);
-        if (!gl) {
-            state.diagnostics.fallbackReason = "context-unavailable";
-            state.diagnostics.lastError = {
-                environment: state.diagnostics.environment,
-                attempts: state.diagnostics.attempts,
-            };
-            recordRendererStatus("cpu", "context-unavailable", state.diagnostics.lastError);
-            logWebGL("WebGL context unavailable", state.diagnostics.lastError);
-            return false;
-        }
-
-        canvas.addEventListener("webglcontextlost", (event) => {
-            event.preventDefault();
-            switchToCpuRenderer("context-lost");
-        }, { once: true });
-        canvas.addEventListener("webglcontextrestored", () => {
-            logWebGL("Context restored event fired");
-        });
-
-        const precision = gl.getShaderPrecisionFormat
-            ? gl.getShaderPrecisionFormat(gl.FRAGMENT_SHADER, gl.HIGH_FLOAT)
-            : null;
-        logWebGL("Fragment highp precision report", precision
-            ? { precision: precision.precision, rangeMin: precision.rangeMin, rangeMax: precision.rangeMax }
-            : { precision: 0, rangeMin: 0, rangeMax: 0 });
-
-        if (!precision || precision.precision === 0) {
-            state.diagnostics.fallbackReason = "fragment-highp-unavailable";
-            state.diagnostics.lastError = {
-                environment: state.diagnostics.environment,
-                attempts: state.diagnostics.attempts,
-                precision: precision
-                    ? { precision: precision.precision, rangeMin: precision.rangeMin, rangeMax: precision.rangeMax }
-                    : null,
-            };
-            logWebGL("Fragment highp float unavailable; refusing WebGL path");
-            return false;
-        }
-
-        const [vertexSource, fragmentSource] = await Promise.all([
-            loadShaderSource("vertex", WEBGL_SHADER_PATHS.vertex),
-            loadShaderSource("fragment", WEBGL_SHADER_PATHS.fragment),
-        ]);
-
-        if (!vertexSource || !fragmentSource) {
-            state.diagnostics.fallbackReason = "shader-fetch-failed";
-            return false;
-        }
-
-        const vertexShader = compileWebGLShader(gl, gl.VERTEX_SHADER, vertexSource, "vertex");
-        if (!vertexShader) {
-            state.diagnostics.fallbackReason = "vertex-compile-failed";
-            return false;
-        }
-
-        const fragmentShader = compileWebGLShader(gl, gl.FRAGMENT_SHADER, fragmentSource, "fragment");
-        if (!fragmentShader) {
-            gl.deleteShader(vertexShader);
-            state.diagnostics.fallbackReason = "fragment-compile-failed";
-            return false;
-        }
-
-        const program = linkWebGLProgram(gl, vertexShader, fragmentShader);
-        if (!program) {
-            gl.deleteShader(vertexShader);
-            gl.deleteShader(fragmentShader);
-            state.diagnostics.fallbackReason = "program-link-failed";
-            return false;
-        }
-
-        const quadBuffer = gl.createBuffer();
-        if (!quadBuffer) {
-            gl.deleteProgram(program);
-            gl.deleteShader(vertexShader);
-            gl.deleteShader(fragmentShader);
-            state.diagnostics.fallbackReason = "quad-buffer-failed";
-            return false;
-        }
-
-        gl.bindBuffer(gl.ARRAY_BUFFER, quadBuffer);
-        gl.bufferData(
-            gl.ARRAY_BUFFER,
-            new Float32Array([
-                -1, -1,
-                1, -1,
-                -1, 1,
-                -1, 1,
-                1, -1,
-                1, 1,
-            ]),
-            gl.STATIC_DRAW
-        );
-
-        const positionLocation = gl.getAttribLocation(program, "a_position");
-        if (positionLocation < 0) {
-            gl.deleteBuffer(quadBuffer);
-            gl.deleteProgram(program);
-            gl.deleteShader(vertexShader);
-            gl.deleteShader(fragmentShader);
-            state.diagnostics.fallbackReason = "missing-position-attribute";
-            logWebGL("Required attribute a_position is missing");
-            return false;
-        }
-
-        state.stageHost.innerHTML = "";
-        state.stageHost.append(canvas);
-        state.rendererKind = "gl";
-        state.canvas = canvas;
-        state.ctx = null;
-        state.gl = {
-            context: gl,
-            program,
-            vertexShader,
-            fragmentShader,
-            quadBuffer,
-            positionLocation,
-            uniforms: buildWebGLUniformMap(gl, program),
-            firstFrameComplete: false,
-        };
-        recordRendererStatus("webgl", "startup-success", {
-            precision: precision.precision,
-            contextAttributes: WEBGL_CONTEXT_ATTRIBUTES,
-        });
-
-        state.displaySize = getStageSize(state.stageHost);
-        syncCanvasResolution(getTierSettings(getQualityTier(performance.now())));
-        bindStageInteractions(canvas);
-        bindResizeObserver();
-        requestRender();
-
-        logWebGL("WebGL renderer ready", {
-            width: state.displaySize.width,
-            height: state.displaySize.height,
-        });
-        return true;
-    } catch (error) {
-        state.diagnostics.fallbackReason = "startup-exception";
-        state.diagnostics.lastError = String(error);
-        logWebGL("WebGL startup threw", String(error));
-        cleanupWebGLRenderer();
-        return false;
-    }
-}
-
 function bindResizeObserver() {
     const host = state.stageHost;
     if (!host) {
@@ -869,10 +271,7 @@ function markInteraction() {
 }
 
 function hasActiveRenderer() {
-    return Boolean(
-        (state.rendererKind === "gl" && state.gl?.context && state.canvas)
-        || (state.rendererKind === "cpu" && state.ctx && state.canvas)
-    );
+    return Boolean(state.ctx && state.canvas);
 }
 
 function requestRender() {
@@ -894,9 +293,7 @@ function renderLoop(now) {
 
     syncCanvasResolution(tierSettings);
 
-    if (state.rendererKind === "gl") {
-        renderWebGLFrame(tierSettings, now);
-    } else if (tierSettings.tier === "idle") {
+    if (tierSettings.tier === "idle") {
         renderIdleFrame(tierSettings, now);
     } else {
         state.renderTask = null;
@@ -906,7 +303,7 @@ function renderLoop(now) {
     if (
         state.dragging
         || now - state.lastInteractionAt < IDLE_SETTLE_WINDOW_MS
-        || (state.rendererKind === "cpu" && state.renderTask)
+        || state.renderTask
     ) {
         requestRender();
     }
@@ -933,11 +330,6 @@ function syncCanvasResolution(tierSettings) {
         return;
     }
 
-    if (state.rendererKind === "gl") {
-        syncWebGLResolution(tierSettings);
-        return;
-    }
-
     if (!state.ctx) {
         return;
     }
@@ -961,31 +353,6 @@ function syncCanvasResolution(tierSettings) {
     state.canvas.height = nextRenderSize.height;
     state.frameBuffer = state.ctx.createImageData(nextRenderSize.width, nextRenderSize.height);
     syncRasterCache(nextRenderSize.width, nextRenderSize.height);
-    state.renderTask = null;
-}
-
-function syncWebGLResolution(tierSettings) {
-    if (!state.canvas || !state.gl?.context) {
-        return;
-    }
-
-    const displaySize = state.displaySize.width > 0 ? state.displaySize : getStageSize(state.stageHost);
-    state.displaySize = displaySize;
-    const nextRenderSize = getRenderSize(displaySize.width, displaySize.height, tierSettings);
-
-    if (
-        state.renderSize.width === nextRenderSize.width
-        && state.renderSize.height === nextRenderSize.height
-        && state.activeTier === tierSettings.tier
-    ) {
-        return;
-    }
-
-    state.activeTier = tierSettings.tier;
-    state.renderSize = nextRenderSize;
-    state.canvas.width = nextRenderSize.width;
-    state.canvas.height = nextRenderSize.height;
-    state.gl.context.viewport(0, 0, nextRenderSize.width, nextRenderSize.height);
     state.renderTask = null;
 }
 
@@ -1017,109 +384,11 @@ function renderIdleFrame(tierSettings, now) {
     }
 }
 
-function renderWebGLFrame(tierSettings, now) {
-    if (!state.gl?.context || !state.canvas) {
-        return;
-    }
-
-    const glState = state.gl;
-    const gl = glState.context;
-    const frameConfig = createFrameConfig(tierSettings, now);
-    const paletteUniforms = buildWebGLPaletteUniforms(frameConfig.palette);
-
-    gl.useProgram(glState.program);
-    gl.bindBuffer(gl.ARRAY_BUFFER, glState.quadBuffer);
-    gl.enableVertexAttribArray(glState.positionLocation);
-    gl.vertexAttribPointer(glState.positionLocation, 2, gl.FLOAT, false, 0, 0);
-    gl.viewport(0, 0, state.renderSize.width, state.renderSize.height);
-    gl.disable(gl.DEPTH_TEST);
-    gl.disable(gl.BLEND);
-
-    setWebGLUniformVec2(gl, glState.uniforms.u_resolution, state.renderSize.width, state.renderSize.height);
-    setWebGLUniformFloat(gl, glState.uniforms.u_time, frameConfig.time);
-    setWebGLUniformVec3(gl, glState.uniforms.u_cameraPos, frameConfig.cameraPos);
-    setWebGLUniformVec3(gl, glState.uniforms.u_cameraTarget, frameConfig.target);
-    setWebGLUniformVec3(gl, glState.uniforms.u_paletteA, paletteUniforms.paletteA);
-    setWebGLUniformVec3(gl, glState.uniforms.u_paletteB, paletteUniforms.paletteB);
-    setWebGLUniformVec3(gl, glState.uniforms.u_paletteC, paletteUniforms.paletteC);
-    setWebGLUniformVec3(gl, glState.uniforms.u_glowColor, paletteUniforms.glow);
-    setWebGLUniformVec3(gl, glState.uniforms.u_bgTop, paletteUniforms.bgTop);
-    setWebGLUniformVec3(gl, glState.uniforms.u_bgBottom, paletteUniforms.bgBottom);
-    setWebGLUniformVec3(gl, glState.uniforms.u_lightDir, [LIGHT_DIR_X, LIGHT_DIR_Y, LIGHT_DIR_Z]);
-    setWebGLUniformInt(gl, glState.uniforms.u_maxSteps, tierSettings.maxSteps);
-    setWebGLUniformInt(gl, glState.uniforms.u_aoSamples, tierSettings.aoSamples);
-    setWebGLUniformFloat(gl, glState.uniforms.u_surfaceEpsilon, tierSettings.epsilon);
-
-    gl.drawArrays(gl.TRIANGLES, 0, 6);
-
-    const errorCode = glState.firstFrameComplete ? gl.NO_ERROR : gl.getError();
-    if (errorCode !== gl.NO_ERROR) {
-        switchToCpuRenderer("draw-error", {
-            errorCode,
-            tier: tierSettings.tier,
-            width: state.renderSize.width,
-            height: state.renderSize.height,
-        });
-        return;
-    }
-
-    if (!glState.firstFrameComplete) {
-        glState.firstFrameComplete = true;
-        logWebGL("First frame drawn", {
-            tier: tierSettings.tier,
-            width: state.renderSize.width,
-            height: state.renderSize.height,
-            maxSteps: tierSettings.maxSteps,
-            aoSamples: tierSettings.aoSamples,
-        });
-    }
-}
-
-function buildWebGLPaletteUniforms(palette) {
-    samplePalette(0.08, palette, paletteScratch);
-    samplePalette(0.42, palette, shadowScratch);
-    samplePalette(0.78, palette, accentScratch);
-
-    return {
-        paletteA: [paletteScratch[0], paletteScratch[1], paletteScratch[2]],
-        paletteB: [shadowScratch[0], shadowScratch[1], shadowScratch[2]],
-        paletteC: [accentScratch[0], accentScratch[1], accentScratch[2]],
-        glow: [palette.glow[0], palette.glow[1], palette.glow[2]],
-        bgTop: [0.018, 0.019, 0.022],
-        bgBottom: [0, 0, 0],
-    };
-}
-
-function setWebGLUniformFloat(gl, location, value) {
-    if (location !== null) {
-        gl.uniform1f(location, value);
-    }
-}
-
-function setWebGLUniformInt(gl, location, value) {
-    if (location !== null) {
-        gl.uniform1i(location, value);
-    }
-}
-
-function setWebGLUniformVec2(gl, location, x, y) {
-    if (location !== null) {
-        gl.uniform2f(location, x, y);
-    }
-}
-
-function setWebGLUniformVec3(gl, location, vector) {
-    if (location !== null) {
-        gl.uniform3f(location, vector[0], vector[1], vector[2]);
-    }
-}
-
 function createFrameSignature(tierSettings) {
     return [
         tierSettings.tier,
         state.renderSize.width,
         state.renderSize.height,
-        state.paletteVersion,
         Number(state.view.yaw).toFixed(3),
         Number(state.view.pitch).toFixed(3),
         Number(state.view.distance).toFixed(3),
@@ -1450,12 +719,7 @@ function ambientOcclusion(x, y, z, nx, ny, nz, samples) {
 }
 
 function buildThemePalette() {
-    const palette = state.palette || createGraphitePalette();
-    return {
-        anchorCount: palette.anchors.length / 3,
-        anchors: palette.anchors,
-        glow: palette.glow,
-    };
+    return GRAPHITE_PALETTE;
 }
 
 function samplePalette(signal, palette, out) {
@@ -1520,13 +784,6 @@ function syncRasterCache(width, height) {
     }
 }
 
-function createGraphitePalette() {
-    return {
-        anchors: new Float32Array(GRAPHITE_PALETTE_ANCHORS),
-        glow: [0.74, 0.76, 0.8],
-    };
-}
-
 function buildReferenceView() {
     return {
         yaw: randomBetween(-Math.PI, Math.PI),
@@ -1575,30 +832,6 @@ function dot3(ax, ay, az, bx, by, bz) {
     return ax * bx + ay * by + az * bz;
 }
 
-function hsvToRgb(h, s, v) {
-    const hue = wrap01(h) * 6;
-    const sector = Math.floor(hue);
-    const f = hue - sector;
-    const p = v * (1 - s);
-    const q = v * (1 - f * s);
-    const t = v * (1 - (1 - f) * s);
-
-    switch (sector % 6) {
-        case 0:
-            return [v, t, p];
-        case 1:
-            return [q, v, p];
-        case 2:
-            return [p, v, t];
-        case 3:
-            return [p, q, v];
-        case 4:
-            return [t, p, v];
-        default:
-            return [v, p, q];
-    }
-}
-
 function mix(a, b, t) {
     return a + (b - a) * t;
 }
@@ -1623,8 +856,6 @@ function showFallback(message) {
     }
 
     state.fallbackShown = true;
-    cleanupWebGLRenderer();
-    state.rendererKind = null;
     state.resizeObserver?.disconnect();
     if (state.rafId) {
         window.cancelAnimationFrame(state.rafId);

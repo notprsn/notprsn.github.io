@@ -218,8 +218,25 @@
 
 @media (min-width: 961px) {
   .fun-project-main {
-    height: calc(100dvh - var(--site-header-height) - 5.35rem);
-    max-height: calc(100dvh - var(--site-header-height) - 5.35rem);
+    height: calc(100dvh - var(--site-header-height) - var(--fun-project-footer-space, 3.65rem));
+    max-height: calc(100dvh - var(--site-header-height) - var(--fun-project-footer-space, 3.65rem));
+  }
+
+  .fun-project-sidebar {
+    grid-template-rows: minmax(var(--fun-project-copy-min-height, 10rem), auto) minmax(0, 1fr);
+    height: 100%;
+  }
+
+  .fun-project-copy-card {
+    min-height: var(--fun-project-copy-min-height, 10rem);
+  }
+
+  .fun-project-controls-card {
+    display: flex;
+    flex-direction: column;
+    align-self: stretch;
+    min-height: 0;
+    overflow: auto;
   }
 }
 

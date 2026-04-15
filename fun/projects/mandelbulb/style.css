@@ -7,6 +7,7 @@ body.mandelbulb-page {
   background: #030406;
   --fun-project-shell-max-width: 1360px;
   --fun-project-sidebar-width: 352px;
+  --fun-project-copy-min-height: 15rem;
   --fun-project-page-text: #edf4f6;
   --fun-project-copy-text: rgba(237, 244, 246, 0.8);
   --fun-project-card-border: rgba(200, 204, 210, 0.2);

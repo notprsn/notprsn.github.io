@@ -7,6 +7,7 @@ body.fern-page {
   background: #10170f;
   --fun-project-shell-max-width: 1360px;
   --fun-project-sidebar-width: 336px;
+  --fun-project-copy-min-height: 15.5rem;
   --fun-project-page-text: #eef6ec;
   --fun-project-copy-text: rgba(238, 246, 236, 0.82);
   --fun-project-card-border: rgba(143, 189, 91, 0.22);

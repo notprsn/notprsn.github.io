@@ -7,6 +7,7 @@ body.tree-page {
   background: #17130d;
   --fun-project-shell-max-width: 1340px;
   --fun-project-sidebar-width: 324px;
+  --fun-project-copy-min-height: 10.5rem;
   --fun-project-page-text: #f5efe8;
   --fun-project-copy-text: rgba(245, 239, 232, 0.82);
   --fun-project-card-border: rgba(185, 135, 76, 0.26);
