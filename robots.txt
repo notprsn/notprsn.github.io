@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /private/
+Disallow: /data/love-letters.enc.json
+
+Sitemap: https://notprsn.github.io/sitemap.xml

@@ -39,13 +39,13 @@ Publish an essay
 
 Update a single-note project page
 1. Edit `projects/<slug>/content.md`.
-2. Keep the page shell in `projects/<slug>/index.html` and let `js/pages/content-entry.js` render the markdown.
-3. Run `node scripts/sync-site.mjs` so shared asset versions and HTML cleanup stay current.
+2. Keep the page shell in `projects/<slug>/index.html`.
+3. Run `node scripts/sync-site.mjs` so static markdown HTML, SEO metadata, shared asset versions, and HTML cleanup stay current.
 
 Update a multi-note project page
 1. Edit `projects/<slug>/<note>/content.md`.
 2. Keep the matching shell in `projects/<slug>/<note>/index.html`.
-3. Reuse `js/pages/content-entry.js` for markdown rendering unless the page genuinely needs custom behavior.
+3. Reuse the markdown-backed shell pattern unless the page genuinely needs custom behavior.
 4. Bollywoodle is the current example of this pattern.
 5. Run `node scripts/sync-site.mjs` after updating the content or shell.
 

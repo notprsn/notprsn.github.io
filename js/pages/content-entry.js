@@ -31,6 +31,8 @@ async function initMarkdownPage({ rootSelector, proseSelector, errorMessage, sho
         return;
     }
 
+    const hasStaticContent = !/^Loading (?:work story|project writing)\.$/.test(proseTarget.textContent.trim());
+
     try {
         const response = await fetchVersionedResource(storyFile);
         if (!response.ok) {
@@ -43,7 +45,9 @@ async function initMarkdownPage({ rootSelector, proseSelector, errorMessage, sho
         enhance?.(root, proseTarget);
     } catch (error) {
         console.error(error);
-        proseTarget.innerHTML = `<p>${escapeHtml(errorMessage)}</p>`;
+        if (!hasStaticContent) {
+            proseTarget.innerHTML = `<p>${escapeHtml(errorMessage)}</p>`;
+        }
     }
 }
 

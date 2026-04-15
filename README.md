@@ -15,5 +15,5 @@ Structure notes
 - Mini projects under `fun/projects/<slug>/` keep their own local `style.css`, `script.js`, and `index.html`.
 - Shared behavior lives in `js/site.js`, with page-owned entrypoints under `js/pages/`.
 - Markdown-backed writing currently lives in `work/stories/<slug>/story.md`, `projects/<slug>/content.md`, `projects/<slug>/<note>/content.md`, and `essays/<theme>/<slug>/content.md`.
-- `scripts/sync-site.mjs` updates cache-busting metadata and generates essay detail pages from non-empty essay `content.md` files.
+- `scripts/sync-site.mjs` updates cache-busting metadata, SEO metadata, `robots.txt`, `sitemap.xml`, static markdown HTML, and generated essay detail pages from non-empty essay `content.md` files.
 - Contributor workflows live in `docs/section-workflows.md`.
