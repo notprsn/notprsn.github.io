@@ -14,6 +14,7 @@ Structure notes
 - Top-level page-family styling lives in `css/pages/`, for example `home.css`, `work.css`, `projects.css`, `essays.css`, and `love.css`.
 - Mini projects under `fun/projects/<slug>/` keep their own local `style.css`, `script.js`, and `index.html`.
 - Shared behavior lives in `js/site.js`, with page-owned entrypoints under `js/pages/`.
+- Firebase-backed analytics are disabled until `js/firebase-config.js` is filled in; setup details live in `docs/analytics-setup.md`.
 - Markdown-backed writing currently lives in `work/stories/<slug>/story.md`, `projects/<slug>/content.md`, `projects/<slug>/<note>/content.md`, and `essays/<theme>/<slug>/content.md`.
 - `scripts/sync-site.mjs` updates cache-busting metadata, SEO metadata, `robots.txt`, `sitemap.xml`, static markdown HTML, and generated essay detail pages from non-empty essay `content.md` files.
 - Contributor workflows live in `docs/section-workflows.md`.
