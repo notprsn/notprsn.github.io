@@ -297,9 +297,16 @@ body.page-love::after {
 }
 
 .page-love .lock-submit-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  width: 3.2rem;
+  height: 3.2rem;
   min-width: 3.2rem;
   min-height: 3.2rem;
   padding: 0;
+  line-height: 1;
   border-radius: 8px;
   border-color: rgba(21, 23, 16, 0.18);
   background: rgba(255, 255, 255, 0.72);
@@ -350,46 +357,6 @@ body.page-love::after {
 .page-love .status-text,
 .page-love .letter-body p {
   color: var(--love-muted);
-}
-
-.letter-shell--stats {
-  margin-bottom: 1rem;
-}
-
-.love-stats__status {
-  margin-top: 0.4rem;
-}
-
-.love-stats__grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr));
-  gap: 0.75rem;
-  margin: 1rem 0 0;
-}
-
-.love-stats__grid div {
-  border-top: 1px solid var(--love-line);
-  padding-top: 0.65rem;
-}
-
-.love-stats__grid dt {
-  color: var(--love-muted);
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.love-stats__grid dd {
-  margin: 0.25rem 0 0;
-  font-size: 1.16rem;
-}
-
-.love-stats__actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.65rem;
-  margin-top: 1rem;
 }
 
 .love-modal {
@@ -478,7 +445,10 @@ body.page-love::after {
   }
 
   .page-love .lock-submit-button {
+    width: 3rem;
+    height: 3rem;
     min-width: 3rem;
+    min-height: 3rem;
   }
 }
 

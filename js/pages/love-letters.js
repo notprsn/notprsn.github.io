@@ -209,7 +209,7 @@ function initLoveLetters() {
             updateSubmitVisibility();
             setStatus("", "success");
             showModal("oh, you made it. i thought someone was indifferent");
-            trackSuccessfulUnlock(output);
+            trackSuccessfulUnlock();
         } catch (error) {
             console.error(error);
             output.hidden = true;
@@ -222,12 +222,9 @@ function initLoveLetters() {
     });
 }
 
-function trackSuccessfulUnlock(output) {
+function trackSuccessfulUnlock() {
     void loadAnalyticsModule()
-        .then(async (analytics) => {
-            await analytics.trackLoveLettersUnlock();
-            await analytics.mountLoveLettersStatsPanel(output);
-        })
+        .then((analytics) => analytics.trackLoveLettersUnlock())
         .catch((error) => {
             console.debug("[site analytics] Love-letter unlock analytics did not start.", error);
         });
