@@ -39,7 +39,7 @@ The site does not store IP addresses, full referrer URLs, user agents, or plaint
    REPLACE_WITH_YOUR_GOOGLE_ACCOUNT_EMAIL
    ```
 
-   with the Google account that should be allowed to read private stats.
+   with the Google account that should be allowed to read private stats in the Firebase console.
 
 9. Deploy the rules:
 
@@ -53,7 +53,12 @@ The site does not store IP addresses, full referrer URLs, user agents, or plaint
 
 ## Viewing stats
 
-After the love-letter archive unlocks successfully, the page creates a private stats panel. It asks for Google sign-in before reading stats. Firestore rules allow reads only for the admin email configured in `firestore.rules`.
+Stats are intentionally not shown on the public site. View them in Firebase Console under Firestore:
+
+- `analytics/site`
+- `visitors/{uid}`
+
+Firestore rules allow reads only for the admin email configured in `firestore.rules`.
 
 ## Static-site limits
 
