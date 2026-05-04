@@ -33,7 +33,7 @@ Section map
 - `/gallery/` future photo gallery placeholder
 - `/glossary/` future glossary placeholder
 - `/essays/<theme>/<slug>/` generated essay pages for non-empty `content.md`
-- `/puzzles/` hidden noindex puzzle trail
+- `/secret/` private-source noindex puzzle trail injected by the Pages workflow; do not commit puzzle source here
 
 Before shipping
 - Search for stale usernames and dead links.

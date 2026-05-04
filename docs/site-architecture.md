@@ -10,7 +10,7 @@ Primary sections
 - `/love-letters/`
 - `/gallery/`
 - `/glossary/`
-- `/puzzles/` hidden noindex trail outside the main nav
+- `/secret/` private-source puzzle trail deployed into GitHub Pages
 
 Structure principles
 - Each section owns its own content and future assets.
@@ -33,7 +33,6 @@ Current page-family CSS
 - `/about/` uses `css/pages/about.css`.
 - `/fun/` uses `css/pages/fun.css`.
 - All six current math mini-projects share `css/pages/fun-projects.css` plus their local project styles.
-- `/puzzles/` uses `css/pages/puzzles.css`.
 
 Patterns
 - Work: resume-backed, factual, low-interpretation.
@@ -41,7 +40,7 @@ Patterns
 - Fun: hub page plus self-contained project directories.
 - Essays: theme hubs plus theme-local `content.md` files that publish when they have prose.
 - Gallery and glossary: placeholders now, fuller structures later.
-- Puzzles: intentionally off-nav, noindex, and self-contained.
+- Secret puzzle: intentionally off-nav, noindex, and injected from a private repo during Pages deployment.
 - Shared style language: see `docs/style-language.md`.
 
 Current content inventory
@@ -62,8 +61,8 @@ Current content inventory
   - The decryption flow is live and `data/love-letters.enc.json` is initialized with a real encrypted bundle.
 - Gallery and Glossary:
   - Both routes are still placeholders.
-- Puzzles:
-  - `puzzles/` contains an entry page, 5 levels, and a final page.
+- Secret:
+  - `/secret/` is served from the deployed Pages artifact, but its source lives outside this public repo.
 
 Current self-contained directories
 - `fun/projects/<slug>/`

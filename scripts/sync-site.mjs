@@ -688,7 +688,7 @@ function extractMetaContent(source, name) {
 }
 
 function shouldNoindex(route) {
-    return route.startsWith("/puzzles/") || NOINDEX_ROUTES.has(route);
+    return NOINDEX_ROUTES.has(route);
 }
 
 function shouldIncludeInSitemap(route) {

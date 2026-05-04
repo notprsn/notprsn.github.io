@@ -66,8 +66,12 @@ Love Letters
 - [x] Generate a real encrypted bundle
 - [x] Choose a long passphrase and share it off-platform only
 
+Secret Puzzle
+- [ ] Create the private `notprsn/site-private-puzzle` repo with standalone puzzle files
+- [ ] Add `PUZZLE_REPO_PAT` to this repo's Actions secrets
+- [ ] Switch GitHub Pages source to GitHub Actions in repository settings
+
 Later
 - [ ] Design glossary taxonomy
 - [ ] Plan first gallery album
 - [ ] Add image optimisation pipeline before large photo uploads
-- [ ] Decide whether the hidden `/puzzles/` trail should stay off-nav or be surfaced somewhere on-site
