@@ -7,7 +7,7 @@ Live at https://notprsn.github.io/.
 Current sections
 - `/`, `/about/`, `/work/`, `/projects/`, `/fun/`, `/essays/`, and `/love-letters/` are all live.
 - `/gallery/` and `/glossary/` are still placeholders.
-- `/puzzles/` is a hidden noindex trail outside the main nav.
+- `/secret/` is deployed by GitHub Actions from a private puzzle source repo.
 
 Structure notes
 - Shared primitives and global chrome live in `css/style.css`.
@@ -17,4 +17,5 @@ Structure notes
 - Firebase-backed analytics are disabled until `js/firebase-config.js` is filled in; setup details live in `docs/analytics-setup.md`.
 - Markdown-backed writing currently lives in `work/stories/<slug>/story.md`, `projects/<slug>/content.md`, `projects/<slug>/<note>/content.md`, and `essays/<theme>/<slug>/content.md`.
 - `scripts/sync-site.mjs` updates cache-busting metadata, SEO metadata, `robots.txt`, `sitemap.xml`, static markdown HTML, and generated essay detail pages from non-empty essay `content.md` files.
+- `.github/workflows/pages.yml` builds the public Pages artifact and injects `/secret/` from the private puzzle repo at deploy time.
 - Contributor workflows live in `docs/section-workflows.md`.
