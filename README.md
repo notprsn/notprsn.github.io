@@ -19,3 +19,4 @@ Structure notes
 - `scripts/sync-site.mjs` updates cache-busting metadata, SEO metadata, `robots.txt`, `sitemap.xml`, static markdown HTML, and generated essay detail pages from non-empty essay `content.md` files.
 - `.github/workflows/pages.yml` builds the public Pages artifact and injects `/secret/` from the private puzzle repo at deploy time.
 - Contributor workflows live in `docs/section-workflows.md`.
+- Private puzzle deployment steps live in `docs/private-puzzle-deploy.md`.
