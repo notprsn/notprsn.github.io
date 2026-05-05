@@ -5,7 +5,13 @@ node scripts/sync-site.mjs
 
 # Stage tracked data outputs, including deletions for removed generated files.
 git add -A -- data
+git add -A -- sitemap.xml robots.txt
 
 # Stage tracked HTML updates and deletions, then add any newly generated HTML files.
 git ls-files -z -- '*.html' | xargs -0 git add -u --
-find . -type f -name '*.html' -not -path './.git/*' -print0 | xargs -0 git add --
+find . \
+  -type f \
+  -name '*.html' \
+  -not -path './.git/*' \
+  -not -path './private/*' \
+  -print0 | xargs -0 git add --
