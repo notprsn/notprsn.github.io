@@ -34,6 +34,10 @@ service cloud.firestore {
       return !(key in data) || isCounter(data[key]);
     }
 
+    function isPuzzleLevel(value) {
+      return value is int && value >= 0 && value <= 11;
+    }
+
     function isValidVisitor(data, visitorId) {
       return data.keys().hasOnly([
           "visitorId",
@@ -113,6 +117,83 @@ service cloud.firestore {
         && counterDoesNotJump(data, "loveLettersUnlocks");
     }
 
+    function isValidPuzzleProgress(data, visitorId) {
+      return data.keys().hasOnly([
+          "visitorId",
+          "createdAt",
+          "updatedAt",
+          "highestLevel",
+          "lastLevel",
+          "lastPath",
+          "hasWon",
+          "wonAt",
+          "lastWinPath"
+        ])
+        && data.visitorId == visitorId
+        && isPuzzleLevel(data.highestLevel)
+        && isPuzzleLevel(data.lastLevel)
+        && data.lastLevel <= data.highestLevel
+        && data.hasWon is bool
+        && data.updatedAt == request.time
+        && isOptionalTimestamp(data, "createdAt")
+        && isShortString(data.lastPath, 240)
+        && (
+          data.hasWon == false
+          || (
+            data.hasWon == true
+            && data.wonAt is timestamp
+            && isOptionalShortString(data, "lastWinPath", 240)
+          )
+        )
+        && (
+          data.hasWon == true
+          || (!("wonAt" in data) && !("lastWinPath" in data))
+        );
+    }
+
+    function isNewPuzzleProgress(data, visitorId) {
+      return isValidPuzzleProgress(data, visitorId)
+        && data.createdAt == request.time
+        && (
+          data.hasWon == false
+          || data.wonAt == request.time
+        );
+    }
+
+    function puzzleCreatedAtDidNotChange(data) {
+      return data.createdAt == resource.data.createdAt;
+    }
+
+    function puzzleHighestLevelDoesNotGoBack(data) {
+      return data.highestLevel >= resource.data.highestLevel;
+    }
+
+    function puzzleWinStateDoesNotGoBack(data) {
+      return (
+          resource.data.hasWon == false
+          && (
+            data.hasWon == false
+            || (
+              data.hasWon == true
+              && data.wonAt == request.time
+            )
+          )
+        )
+        || (
+          resource.data.hasWon == true
+          && data.hasWon == true
+          && data.wonAt == resource.data.wonAt
+        );
+    }
+
+    function isPuzzleProgressUpdate(data, visitorId) {
+      return isValidPuzzleProgress(data, visitorId)
+        && data.visitorId == resource.data.visitorId
+        && puzzleCreatedAtDidNotChange(data)
+        && puzzleHighestLevelDoesNotGoBack(data)
+        && puzzleWinStateDoesNotGoBack(data);
+    }
+
     match /visitors/{visitorId} {
       allow get, list: if isAdmin();
       allow create: if isSignedIn()
@@ -129,6 +210,18 @@ service cloud.firestore {
       allow list: if false;
       allow create: if isSignedIn() && isValidCounterCreate(request.resource.data);
       allow update: if isSignedIn() && isValidCounterUpdate(request.resource.data);
+      allow delete: if false;
+    }
+
+    match /puzzleProgress/{visitorId} {
+      allow get: if isAdmin() || (isSignedIn() && visitorId == request.auth.uid);
+      allow list: if isAdmin();
+      allow create: if isSignedIn()
+        && visitorId == request.auth.uid
+        && isNewPuzzleProgress(request.resource.data, visitorId);
+      allow update: if isSignedIn()
+        && visitorId == request.auth.uid
+        && isPuzzleProgressUpdate(request.resource.data, visitorId);
       allow delete: if false;
     }
 

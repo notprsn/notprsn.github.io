@@ -66,7 +66,13 @@ jobs:
           mkdir -p _site/secret
           rsync -a private-puzzle/ _site/secret/ \
             --exclude '.git/' \
-            --exclude '.github/'
+            --exclude '.github/' \
+            --exclude 'scripts/' \
+            --exclude 'red-herrings.json'
+
+          if [ -f private-puzzle/scripts/build-red-herrings.mjs ]; then
+            node private-puzzle/scripts/build-red-herrings.mjs private-puzzle/red-herrings.json _site/secret
+          fi
 
           test -f _site/secret/index.html
 
