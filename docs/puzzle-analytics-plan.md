@@ -6,8 +6,9 @@ This plan keeps the public personal site, private puzzle source, and Firebase re
 
 - Track the highest numbered puzzle level reached by each anonymous Firebase user.
 - Keep the future winning state separate from numbered-level progress.
-- Support private red-herring answer routes that show a troll page and then replace the current tab with the Rickroll.
+- Support missing private `/secret/...` answer routes that show a troll page and then replace the current tab with the Rickroll.
 - Avoid publishing the private red-herring answer list in the GitHub Pages artifact.
+- Show a public aggregate solver count on `/secret/` without exposing per-user progress records.
 
 ## Firebase record
 
@@ -26,23 +27,36 @@ Fields:
 - `hasWon`: boolean, independent from `highestLevel`.
 - `wonAt`: timestamp, present only after `hasWon` becomes `true`.
 - `lastWinPath`: optional path for the winner page.
+- `countedAsSolver`: set after the first counted win for that anonymous user.
+- `solverCountedAt`: timestamp for the aggregate count write.
 
 The important constraint is that `highestLevel` is monotonic and bounded to the current numbered puzzle. The final winner page can be added later with `data-puzzle-won="true"` without changing the document shape.
+
+Public aggregate collection: `publicStats/secretPuzzle`
+
+Fields:
+
+- `solverCount`: total counted anonymous users who have reached the winner state.
+- `updatedAt`: latest aggregate update.
+- `lastSolvedAt`: latest counted solve.
 
 ## Public repo implementation
 
 - `js/firebase-analytics.js`
   - `trackPuzzleLevel(level, { path })` records numbered-level progress.
-  - `trackPuzzleWin({ level, path })` marks `hasWon: true`, sets `wonAt` once, and preserves the highest numbered level.
+  - `trackPuzzleWin({ level, path })` marks `hasWon: true`, sets `wonAt` once, preserves the highest numbered level, and increments the public solver count only on that user's first win.
+  - `getSecretPuzzleStats()` reads the public aggregate solver count.
 - `firestore.rules`
   - users can read and write only their own `puzzleProgress/{uid}` document.
   - admin can read/list progress.
   - `highestLevel` cannot decrease.
   - `hasWon` cannot return to `false`.
+  - public users can read only `publicStats/secretPuzzle`.
 - `.github/workflows/pages.yml`
   - copies private puzzle files into `_site/secret/`.
-  - excludes `red-herrings.json` and private puzzle scripts from the deployed artifact.
-  - runs the private red-herring generator when present.
+  - excludes `red-herrings.json` from the deployed artifact.
+- `404.html`
+  - redirects missing `/secret/...` paths to `/secret/fool.html`.
 
 Deploy rules after public changes:
 
@@ -66,22 +80,19 @@ Use `level="11"` until the numbered level setup changes.
 
 The private puzzle source owns:
 
-- `red-herring.html`: shared troll page using `imgs/troll.png`.
-- `red-herrings.json`: private answer-route list, not deployed.
-- `scripts/build-red-herrings.mjs`: generates static fake-404 decoy pages into `_site/secret/`.
+- `fool.html`: shared troll page using `imgs/troll.png`.
+- `red-herrings.json`: private answer-route notes, not deployed.
+- `puzzle-index.js`: reads the public solver count for `/secret/`.
 
-`red-herrings.json` supports either:
+`red-herrings.json` is only a private notes file:
 
 ```json
 {
   "routes": [
-    "wrong-answer",
-    "wrong-answer.html",
-    "nested/wrong-answer/"
-  ]
+    "wrong-answer"
+  ],
+  "customRoutes": []
 }
 ```
 
-For an extensionless route like `wrong-answer`, the generator creates both `wrong-answer.html` and `wrong-answer/index.html`. The generated page shows the troll image, waits briefly, then calls `window.location.replace(...)` so the Rickroll opens in the same tab.
-
-The generator refuses to overwrite existing non-generated puzzle pages, so real levels are protected from accidental red-herring route collisions.
+Runtime behavior is catch-all: real puzzle pages load normally, and missing `/secret/...` paths hit the public `404.html`, which redirects to `/secret/fool.html`. `fool.html` shows the troll image, waits briefly, then calls `window.location.replace(...)` so the Rickroll opens in the same tab.

@@ -18,8 +18,7 @@ Deployment path
 6. The workflow runs `node scripts/sync-site.mjs` in the public repo.
 7. The public artifact excludes `private/`, `docs/`, `scripts/`, `references/`, `.github/`, and other repo-only files.
 8. The workflow copies `private-puzzle/` into `_site/secret/`, excluding repo metadata and private red-herring source files.
-9. The workflow generates any configured red-herring pages into `_site/secret/`.
-10. The workflow fails if any `_site/secret/**/*.html` file is missing `<meta name="robots" content="noindex,nofollow">`.
+9. The workflow fails if any `_site/secret/**/*.html` file is missing `<meta name="robots" content="noindex,nofollow">`.
 
 Puzzle edit checklist
 1. Work inside the private puzzle repo:
@@ -65,9 +64,9 @@ Red-herring checklist
    }
    ```
 
-2. The deploy workflow keeps `red-herrings.json` private and runs `scripts/build-red-herrings.mjs` into the Pages artifact.
-3. The generated pages use `imgs/troll.png`, then call `window.location.replace("https://www.youtube.com/watch?v=dQw4w9WgXcQ")` so the Rickroll opens in the same tab.
-4. The generator refuses to overwrite existing non-generated puzzle pages.
+2. The deploy workflow keeps `red-herrings.json` private.
+3. Missing `/secret/...` routes are caught by the public `404.html`, which redirects to `/secret/fool.html`.
+4. `fool.html` uses `imgs/troll.png`, then calls `window.location.replace("https://www.youtube.com/watch?v=dQw4w9WgXcQ")` so the Rickroll opens in the same tab.
 
 Commit and push order
 1. Commit and push the private puzzle repo first:

@@ -6,6 +6,8 @@ const COUNTERS_COLLECTION = "analytics";
 const COUNTERS_DOCUMENT = "site";
 const VISITORS_COLLECTION = "visitors";
 const PUZZLE_PROGRESS_COLLECTION = "puzzleProgress";
+const PUBLIC_STATS_COLLECTION = "publicStats";
+const SECRET_PUZZLE_STATS_DOCUMENT = "secretPuzzle";
 const PUZZLE_MAX_LEVEL = 11;
 
 let configPromise;
@@ -140,6 +142,7 @@ export async function trackPuzzleWin(options = {}) {
 
     return writePuzzleProgress("Could not track puzzle win.", ({ exists, data, user, now }) => {
         const previousHighest = readStoredPuzzleLevel(data?.highestLevel);
+        const shouldCountSolver = data?.hasWon !== true && data?.countedAsSolver !== true;
         const nextData = {
             visitorId: user.uid,
             updatedAt: now,
@@ -156,9 +159,39 @@ export async function trackPuzzleWin(options = {}) {
         if (data?.hasWon !== true) {
             nextData.wonAt = now;
         }
+        if (shouldCountSolver) {
+            nextData.countedAsSolver = true;
+            nextData.solverCountedAt = now;
+        }
 
-        return nextData;
+        return {
+            data: nextData,
+            incrementSolverCount: shouldCountSolver,
+        };
     });
+}
+
+export async function getSecretPuzzleStats() {
+    const state = await getFirebaseState();
+    if (!state.enabled) {
+        debugAnalytics(state.reason);
+        return { loaded: false, reason: state.reason };
+    }
+
+    try {
+        const { doc, getDoc } = state.firestore;
+        const statsRef = doc(state.db, PUBLIC_STATS_COLLECTION, SECRET_PUZZLE_STATS_DOCUMENT);
+        const snapshot = await getDoc(statsRef);
+        const data = snapshot.exists() ? snapshot.data() : {};
+
+        return {
+            loaded: true,
+            solverCount: readCounter(data.solverCount),
+        };
+    } catch (error) {
+        warnAnalytics("Could not load secret puzzle stats.", error);
+        return { loaded: false, reason: error.message };
+    }
 }
 
 async function writePuzzleProgress(warningMessage, buildData) {
@@ -177,16 +210,33 @@ async function writePuzzleProgress(warningMessage, buildData) {
             const snapshot = await transaction.get(progressRef);
             const now = serverTimestamp();
             const data = snapshot.exists() ? snapshot.data() : {};
+            const update = buildData({
+                exists: snapshot.exists(),
+                data,
+                user,
+                now,
+            });
+            const progressData = update?.data || update;
+
             transaction.set(
                 progressRef,
-                buildData({
-                    exists: snapshot.exists(),
-                    data,
-                    user,
-                    now,
-                }),
+                progressData,
                 { merge: true }
             );
+
+            if (update?.incrementSolverCount) {
+                const { increment } = state.firestore;
+                const statsRef = doc(state.db, PUBLIC_STATS_COLLECTION, SECRET_PUZZLE_STATS_DOCUMENT);
+                transaction.set(
+                    statsRef,
+                    {
+                        solverCount: increment(1),
+                        updatedAt: now,
+                        lastSolvedAt: now,
+                    },
+                    { merge: true }
+                );
+            }
         });
 
         return { tracked: true };
@@ -328,6 +378,10 @@ function normalizePuzzleLevel(level) {
 
 function readStoredPuzzleLevel(level) {
     return Number.isInteger(level) && level >= 0 && level <= PUZZLE_MAX_LEVEL ? level : 0;
+}
+
+function readCounter(value) {
+    return Number.isInteger(value) && value >= 0 ? value : 0;
 }
 
 function currentReferrerHost() {
