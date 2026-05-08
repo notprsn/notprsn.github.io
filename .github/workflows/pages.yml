@@ -70,10 +70,6 @@ jobs:
             --exclude 'scripts/' \
             --exclude 'red-herrings.json'
 
-          if [ -f private-puzzle/scripts/build-red-herrings.mjs ]; then
-            node private-puzzle/scripts/build-red-herrings.mjs private-puzzle/red-herrings.json _site/secret
-          fi
-
           test -f _site/secret/index.html
 
           missing_robots=0

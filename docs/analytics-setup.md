@@ -9,6 +9,7 @@ This site uses Firebase only after `js/firebase-config.js` is filled in and enab
 - The first local visit for an anonymous user increments `analytics/site.uniqueVisitors`.
 - Successful love-letter decrypts increment `analytics/site.loveLettersUnlocks`.
 - Secret puzzle progress is stored in `puzzleProgress/{uid}` with `highestLevel`, `lastLevel`, `lastPath`, `hasWon`, and win timestamps.
+- The public secret puzzle solver count is stored in `publicStats/secretPuzzle.solverCount`.
 - Visitor docs live at `visitors/{uid}` and store only:
   - first path
   - last path
@@ -59,8 +60,9 @@ Stats are intentionally not shown on the public site. View them in Firebase Cons
 - `analytics/site`
 - `visitors/{uid}`
 - `puzzleProgress/{uid}`
+- `publicStats/secretPuzzle`
 
-Firestore rules allow reads only for the admin email configured in `firestore.rules`.
+Firestore rules allow private stat reads only for the admin email configured in `firestore.rules`. The public secret puzzle aggregate is readable by the site.
 
 ## Static-site limits
 

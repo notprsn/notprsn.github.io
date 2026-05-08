@@ -127,7 +127,9 @@ service cloud.firestore {
           "lastPath",
           "hasWon",
           "wonAt",
-          "lastWinPath"
+          "lastWinPath",
+          "countedAsSolver",
+          "solverCountedAt"
         ])
         && data.visitorId == visitorId
         && isPuzzleLevel(data.highestLevel)
@@ -138,6 +140,13 @@ service cloud.firestore {
         && isOptionalTimestamp(data, "createdAt")
         && isShortString(data.lastPath, 240)
         && (
+          !("countedAsSolver" in data)
+          || (
+            data.countedAsSolver == true
+            && data.solverCountedAt is timestamp
+          )
+        )
+        && (
           data.hasWon == false
           || (
             data.hasWon == true
@@ -147,7 +156,12 @@ service cloud.firestore {
         )
         && (
           data.hasWon == true
-          || (!("wonAt" in data) && !("lastWinPath" in data))
+          || (
+            !("wonAt" in data)
+            && !("lastWinPath" in data)
+            && !("countedAsSolver" in data)
+            && !("solverCountedAt" in data)
+          )
         );
     }
 
@@ -186,12 +200,54 @@ service cloud.firestore {
         );
     }
 
+    function puzzleSolverCountStateIsValid(data) {
+      return (
+          !("countedAsSolver" in data)
+          && !("countedAsSolver" in resource.data)
+        )
+        || (
+          !("countedAsSolver" in resource.data)
+          && data.countedAsSolver == true
+          && data.solverCountedAt == request.time
+        )
+        || (
+          "countedAsSolver" in resource.data
+          && data.countedAsSolver == resource.data.countedAsSolver
+          && (
+            !("solverCountedAt" in resource.data)
+            || data.solverCountedAt == resource.data.solverCountedAt
+          )
+        );
+    }
+
     function isPuzzleProgressUpdate(data, visitorId) {
       return isValidPuzzleProgress(data, visitorId)
         && data.visitorId == resource.data.visitorId
         && puzzleCreatedAtDidNotChange(data)
         && puzzleHighestLevelDoesNotGoBack(data)
-        && puzzleWinStateDoesNotGoBack(data);
+        && puzzleWinStateDoesNotGoBack(data)
+        && puzzleSolverCountStateIsValid(data);
+    }
+
+    function isValidPublicSecretPuzzleStats(data) {
+      return data.keys().hasOnly([
+          "solverCount",
+          "updatedAt",
+          "lastSolvedAt"
+        ])
+        && isCounter(data.solverCount)
+        && data.updatedAt == request.time
+        && data.lastSolvedAt == request.time;
+    }
+
+    function isValidPublicSecretPuzzleStatsCreate(data) {
+      return isValidPublicSecretPuzzleStats(data)
+        && data.solverCount == 1;
+    }
+
+    function isValidPublicSecretPuzzleStatsUpdate(data) {
+      return isValidPublicSecretPuzzleStats(data)
+        && data.solverCount == resource.data.solverCount + 1;
     }
 
     match /visitors/{visitorId} {
@@ -222,6 +278,16 @@ service cloud.firestore {
       allow update: if isSignedIn()
         && visitorId == request.auth.uid
         && isPuzzleProgressUpdate(request.resource.data, visitorId);
+      allow delete: if false;
+    }
+
+    match /publicStats/secretPuzzle {
+      allow get: if true;
+      allow list: if false;
+      allow create: if isSignedIn()
+        && isValidPublicSecretPuzzleStatsCreate(request.resource.data);
+      allow update: if isSignedIn()
+        && isValidPublicSecretPuzzleStatsUpdate(request.resource.data);
       allow delete: if false;
     }
 
