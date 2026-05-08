@@ -5,6 +5,8 @@ const VISITOR_STORAGE_KEY = "notprsn.analytics.visitor.v1";
 const COUNTERS_COLLECTION = "analytics";
 const COUNTERS_DOCUMENT = "site";
 const VISITORS_COLLECTION = "visitors";
+const PUZZLE_PROGRESS_COLLECTION = "puzzleProgress";
+const PUZZLE_MAX_LEVEL = 11;
 
 let configPromise;
 let firebasePromise;
@@ -101,6 +103,95 @@ export async function trackLoveLettersUnlock() {
         return { tracked: true };
     } catch (error) {
         warnAnalytics("Could not track love-letter unlock.", error);
+        return { tracked: false, reason: error.message };
+    }
+}
+
+export async function trackPuzzleLevel(level, options = {}) {
+    const normalizedLevel = normalizePuzzleLevel(level);
+    if (normalizedLevel === null) {
+        return { tracked: false, reason: "Invalid puzzle level." };
+    }
+
+    return writePuzzleProgress("Could not track puzzle level.", ({ exists, data, user, now }) => {
+        const previousHighest = readStoredPuzzleLevel(data?.highestLevel);
+        const nextData = {
+            visitorId: user.uid,
+            updatedAt: now,
+            highestLevel: Math.max(previousHighest, normalizedLevel),
+            lastLevel: normalizedLevel,
+            lastPath: normalizeTrackedPath(options.path),
+        };
+
+        if (!exists) {
+            nextData.createdAt = now;
+            nextData.hasWon = false;
+        }
+        if (data?.hasWon === true) {
+            nextData.hasWon = true;
+        }
+
+        return nextData;
+    });
+}
+
+export async function trackPuzzleWin(options = {}) {
+    const winningLevel = normalizePuzzleLevel(options.level ?? PUZZLE_MAX_LEVEL) ?? PUZZLE_MAX_LEVEL;
+
+    return writePuzzleProgress("Could not track puzzle win.", ({ exists, data, user, now }) => {
+        const previousHighest = readStoredPuzzleLevel(data?.highestLevel);
+        const nextData = {
+            visitorId: user.uid,
+            updatedAt: now,
+            highestLevel: Math.max(previousHighest, winningLevel),
+            lastLevel: winningLevel,
+            lastPath: normalizeTrackedPath(options.path),
+            hasWon: true,
+            lastWinPath: normalizeTrackedPath(options.path),
+        };
+
+        if (!exists) {
+            nextData.createdAt = now;
+        }
+        if (data?.hasWon !== true) {
+            nextData.wonAt = now;
+        }
+
+        return nextData;
+    });
+}
+
+async function writePuzzleProgress(warningMessage, buildData) {
+    const state = await getFirebaseState();
+    if (!state.enabled) {
+        debugAnalytics(state.reason);
+        return { tracked: false, reason: state.reason };
+    }
+
+    try {
+        const user = await ensureSignedIn(state);
+        const { doc, runTransaction, serverTimestamp } = state.firestore;
+        const progressRef = doc(state.db, PUZZLE_PROGRESS_COLLECTION, user.uid);
+
+        await runTransaction(state.db, async (transaction) => {
+            const snapshot = await transaction.get(progressRef);
+            const now = serverTimestamp();
+            const data = snapshot.exists() ? snapshot.data() : {};
+            transaction.set(
+                progressRef,
+                buildData({
+                    exists: snapshot.exists(),
+                    data,
+                    user,
+                    now,
+                }),
+                { merge: true }
+            );
+        });
+
+        return { tracked: true };
+    } catch (error) {
+        warnAnalytics(warningMessage, error);
         return { tracked: false, reason: error.message };
     }
 }
@@ -216,6 +307,27 @@ function writeVisitorMarker(visitorId) {
 function currentPagePath() {
     const path = `${window.location.pathname}${window.location.search}`;
     return path.slice(0, 240);
+}
+
+function normalizeTrackedPath(path) {
+    if (typeof path === "string" && path.trim()) {
+        return path.trim().slice(0, 240);
+    }
+
+    return currentPagePath();
+}
+
+function normalizePuzzleLevel(level) {
+    const numericLevel = Number(level);
+    if (!Number.isInteger(numericLevel) || numericLevel < 0 || numericLevel > PUZZLE_MAX_LEVEL) {
+        return null;
+    }
+
+    return numericLevel;
+}
+
+function readStoredPuzzleLevel(level) {
+    return Number.isInteger(level) && level >= 0 && level <= PUZZLE_MAX_LEVEL ? level : 0;
 }
 
 function currentReferrerHost() {
