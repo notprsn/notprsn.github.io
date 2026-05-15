@@ -57,7 +57,7 @@ Fields:
   - excludes `red-herrings.json` from the deployed artifact.
   - runs `scripts/build-secret-red-herrings.mjs` against the private red-herring list to generate noindex redirect stubs.
 - `404.html`
-  - serves the regular not-found page for unlisted missing paths.
+  - serves the `not quite, kiddo :p` not-found page for unlisted missing `/secret/...` paths.
 
 Deploy rules after public changes:
 
@@ -96,4 +96,4 @@ The private puzzle source owns:
 }
 ```
 
-Runtime behavior is explicit: real puzzle pages load normally, listed red-herring routes are generated as redirect stubs to `/secret/fool.html`, and unlisted missing `/secret/...` paths hit the public `404.html`. `fool.html` shows the troll image, waits briefly, then calls `window.location.replace(...)` so the Rickroll opens in the same tab.
+Runtime behavior is explicit: real puzzle pages load normally, listed red-herring routes are generated as redirect stubs to `/secret/fool.html`, and unlisted missing `/secret/...` paths hit the public `404.html` with the `not quite, kiddo :p` message. `fool.html` shows the troll image, waits briefly, then calls `window.location.replace(...)` so the Rickroll opens in the same tab.
