@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="site-version" content="20260508032821073">
+    <meta name="site-version" content="20260515111824956">
     <meta name="description" content="Personal website of Prasann Iyer.">
   <title>not found</title>
     <link rel="canonical" href="https://notprsn.github.io/404.html" data-managed-seo>
@@ -60,16 +60,5 @@
   <main>
     <p data-not-found-message>not found</p>
   </main>
-  <script>
-    const message = document.querySelector("[data-not-found-message]");
-    const path = window.location.pathname;
-
-    if (path.startsWith("/secret/") && path !== "/secret/fool.html") {
-      window.location.replace("/secret/fool.html");
-    } else if (message && path.startsWith("/secret/")) {
-      document.title = "not quite";
-      message.textContent = "not quite, kiddo :p";
-    }
-  </script>
 </body>
 </html>
