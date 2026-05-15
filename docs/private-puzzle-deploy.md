@@ -64,9 +64,10 @@ Red-herring checklist
    }
    ```
 
-2. The deploy workflow keeps `red-herrings.json` private.
-3. Missing `/secret/...` routes are caught by the public `404.html`, which redirects to `/secret/fool.html`.
-4. `fool.html` uses `imgs/troll.png`, then calls `window.location.replace("https://www.youtube.com/watch?v=dQw4w9WgXcQ")` so the Rickroll opens in the same tab.
+2. The deploy workflow keeps `red-herrings.json` private, but reads it during the Pages build.
+3. The Pages build generates noindex redirect stubs only for listed red-herring routes.
+4. Missing `/secret/...` routes that are not listed fall through to the public `404.html`.
+5. `fool.html` uses `imgs/troll.png`, then calls `window.location.replace("https://www.youtube.com/watch?v=dQw4w9WgXcQ")` so the Rickroll opens in the same tab.
 
 Commit and push order
 1. Commit and push the private puzzle repo first:

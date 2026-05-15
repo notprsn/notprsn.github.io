@@ -70,6 +70,8 @@ jobs:
             --exclude 'scripts/' \
             --exclude 'red-herrings.json'
 
+          node public-site/scripts/build-secret-red-herrings.mjs private-puzzle/red-herrings.json _site/secret
+
           test -f _site/secret/index.html
 
           missing_robots=0

@@ -6,7 +6,7 @@ This plan keeps the public personal site, private puzzle source, and Firebase re
 
 - Track the highest numbered puzzle level reached by each anonymous Firebase user.
 - Keep the future winning state separate from numbered-level progress.
-- Support missing private `/secret/...` answer routes that show a troll page and then replace the current tab with the Rickroll.
+- Support private-listed red-herring `/secret/...` answer routes that show a troll page and then replace the current tab with the Rickroll.
 - Avoid publishing the private red-herring answer list in the GitHub Pages artifact.
 - Show a public aggregate solver count on `/secret/` without exposing per-user progress records.
 
@@ -55,8 +55,9 @@ Fields:
 - `.github/workflows/pages.yml`
   - copies private puzzle files into `_site/secret/`.
   - excludes `red-herrings.json` from the deployed artifact.
+  - runs `scripts/build-secret-red-herrings.mjs` against the private red-herring list to generate noindex redirect stubs.
 - `404.html`
-  - redirects missing `/secret/...` paths to `/secret/fool.html`.
+  - serves the regular not-found page for unlisted missing paths.
 
 Deploy rules after public changes:
 
@@ -95,4 +96,4 @@ The private puzzle source owns:
 }
 ```
 
-Runtime behavior is catch-all: real puzzle pages load normally, and missing `/secret/...` paths hit the public `404.html`, which redirects to `/secret/fool.html`. `fool.html` shows the troll image, waits briefly, then calls `window.location.replace(...)` so the Rickroll opens in the same tab.
+Runtime behavior is explicit: real puzzle pages load normally, listed red-herring routes are generated as redirect stubs to `/secret/fool.html`, and unlisted missing `/secret/...` paths hit the public `404.html`. `fool.html` shows the troll image, waits briefly, then calls `window.location.replace(...)` so the Rickroll opens in the same tab.
