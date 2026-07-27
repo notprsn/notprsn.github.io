@@ -424,7 +424,7 @@ async function updateHtml(filePath, source) {
     updated = stripCacheMeta(updated);
     updated = stripGoogleAnalytics(updated);
     updated = stripManagedSeo(updated);
-    updated = ensureFaviconLinks(updated);
+    updated = ensureFaviconLinks(updated, filePath);
     updated = ensureManagedSeo(updated, seo);
     updated = updated.replace(
         /((?:href|src)=["'])(?!https?:\/\/|\/\/|mailto:|#)([^"']+\.(?:css|js))(?:\?v=[^"']*)?(["'])/g,
@@ -540,10 +540,12 @@ function stripManagedSeo(source) {
         .replace(/^\s*<script type="application\/ld\+json" data-site-schema>[\s\S]*?<\/script>\n/gm, "");
 }
 
-function ensureFaviconLinks(source) {
+function ensureFaviconLinks(source, filePath) {
+    const pathToRoot = relative(dirname(filePath), repoRoot).replaceAll("\\", "/");
+    const fallbackPrefix = pathToRoot ? `${pathToRoot}/` : "";
     const assetPrefix = source.match(/<link href="([^"]*)img\/favicon(?:\/[^"]+|\.[^"]+)"/)?.[1] ||
         source.match(/<link href="([^"]*)css\/style\.css/)?.[1] ||
-        "";
+        fallbackPrefix;
     const withoutFavicons = source
         .replace(/^\s*<link\b(?=[^>]*\brel="(?:icon|apple-touch-icon|manifest|mask-icon)")[^>]*>\n/gm, "")
         .replace(/^\s*<meta name="(?:theme-color|msapplication-TileColor|msapplication-config)" content="[^"]*">\n/gm, "");
