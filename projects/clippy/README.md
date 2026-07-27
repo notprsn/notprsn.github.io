@@ -1,42 +1,71 @@
 # 📎 Clippy
 
-Highlight a line of a song's lyrics → get an mp3 of **exactly** that bit.
+Pick the first and last lyric line you want. Clippy gives you an MP3 of exactly
+that part of the song.
 
-A little side-toy in the [Bollywoodle](https://bollywoodle.app) theme.
+## Start here
 
-## How it works
+1. Download [`clippy.zip`](https://notprsn.github.io/projects/clippy/downloads/clippy.zip)
+   and unzip it.
+2. Open the `clippy` folder.
+3. Start Clippy:
+   - **Mac:** double-click `start-clippy.command`
+   - **Windows:** double-click `start-clippy.bat`
+   - **Linux:** run `bash start-clippy.sh`
 
-- The **UI** is a static page (also hosted at `notprsn.github.io/projects/clippy/`).
-- The **helper** (`clippy.py`) runs on *your* laptop only. It:
-  - looks up **synced lyrics** (via [lrclib](https://lrclib.net)) so highlighting a line maps to a real time range,
-  - finds the song on **YouTube** (picking the version whose length matches the lyrics),
-  - cuts the exact slice with **ffmpeg** and hands you the mp3.
+The first launch creates a private `.venv`, installs Clippy's dependencies, and
+opens [the Clippy website](https://notprsn.github.io/projects/clippy/). Keep the
+launcher window open while using Clippy. Later launches are faster.
 
-Nothing is public — the download + cutting happen locally, on your machine.
+Clippy needs Python 3.10 or newer. If the launcher says Python is missing,
+install it from [python.org](https://www.python.org/downloads/) and run the
+launcher again. FFmpeg is included automatically; no system setup is required.
 
-## Run it
+## Use Clippy
+
+1. Search for a song and choose a synced-lyrics result.
+2. Click the first lyric line, then the last lyric line you want.
+3. Click **✂️ cut it**, preview the clip, and download the MP3.
+
+The first cut of a song downloads its audio. Later cuts use `.clippy_cache/` and
+are faster. If Clippy finds the wrong recording, open **wrong recording?** and
+paste the exact YouTube URL.
+
+## Prefer Git?
+
+Clone only the Clippy folder with Git's sparse checkout:
 
 ```bash
-cd projects/clippy
-python3 clippy.py
+git clone --depth 1 --filter=blob:none --sparse https://github.com/notprsn/hacks.git
+cd hacks
+git sparse-checkout set clippy
+cd clippy
 ```
 
-Then open **http://localhost:8765**.
+Then run the launcher for your operating system.
 
-1. **Find the song** — search by name, pick a result (only ones with synced lyrics show up).
-2. **Highlight the bit** — click the first line, then the last line of the part you want.
-3. **Cut it** — hit ✂️. First clip of a song downloads it (a few seconds); later cuts of the same song are instant (cached in `.clippy_cache/`).
+## What runs where?
 
-> Wrong recording auto-picked? Expand *"wrong recording? paste a YouTube link"* and drop in the exact video URL.
+The interface is hosted at
+[`notprsn.github.io/projects/clippy/`](https://notprsn.github.io/projects/clippy/).
+The local `clippy.py` helper looks up synced lyrics through
+[LRCLIB](https://lrclib.net), finds matching audio through `yt-dlp`, and cuts
+the selected range with a private FFmpeg binary.
 
-## The hosted page
+The helper listens only on `127.0.0.1`. Downloaded audio, cached songs, and
+finished clips stay on your laptop.
 
-`notprsn.github.io/projects/clippy/` is the same UI. It only *works* when your local helper
-is running on the same laptop (it calls `http://127.0.0.1:8765`). If the helper is
-off you'll see a "helper offline" pill and instructions. Chrome/Edge/Firefox allow
-an https page to call `localhost`; on Safari, just use `http://localhost:8765`
-directly instead.
+Safari may block the hosted page from reaching the local helper. If that
+happens, open the local interface shown in the launcher window:
+`http://localhost:8765`.
 
-## Requirements
+## Manual start
 
-`yt-dlp` and `ffmpeg` (both already installed on this machine). Nothing to `pip install`.
+The launchers are the supported setup path. After the first launch, the
+equivalent manual command is:
+
+```bash
+.venv/bin/python clippy.py
+```
+
+On Windows, use `.venv\Scripts\python.exe clippy.py`.

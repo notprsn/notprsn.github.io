@@ -2,16 +2,13 @@
 """
 Clippy — the local helper for cutting exact song clips.
 
-The pretty UI lives on notprsn.github.io/clippy (and is also served straight
+The pretty UI lives on notprsn.github.io/projects/clippy/ (and is also served straight
 from this helper at http://localhost:8765). But the heavy lifting — grabbing
 the song off YouTube and cutting the exact slice you selected — happens right
 here on your laptop. Nothing leaves your machine, nothing is public.
 
-Run it:
-    python3 clippy.py
-    # then open http://localhost:8765  (or the hosted page, if the helper is up)
-
-Needs: yt-dlp + ffmpeg (both already on this machine).
+Run start-clippy.command, start-clippy.bat, or start-clippy.sh once. The launcher
+creates a private environment and installs the two Python dependencies.
 """
 
 import glob
@@ -23,13 +20,17 @@ import sys
 import tempfile
 import urllib.parse
 import urllib.request
+import webbrowser
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
+import imageio_ffmpeg
 import yt_dlp
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 CACHE_DIR = os.path.join(HERE, ".clippy_cache")
 PORT = int(os.environ.get("CLIPPY_PORT", "8765"))
+HOSTED_URL = "https://notprsn.github.io/projects/clippy/"
+FFMPEG = imageio_ffmpeg.get_ffmpeg_exe()
 AUDIO_EXTS = ("m4a", "webm", "opus", "mp3", "ogg", "mp4", "aac", "flac", "wav")
 MAX_CLIP_SECONDS = 600  # sanity cap
 
@@ -85,6 +86,7 @@ def resolve_audio(url=None, query=None, target_duration=None, log=print):
         # the default web client frequently gets HTTP 403 on the audio stream;
         # the android client downloads reliably.
         "extractor_args": {"youtube": {"player_client": ["android", "web"]}},
+        "ffmpeg_location": FFMPEG,
     }
 
     if url:
@@ -147,7 +149,7 @@ def cut_to_mp3(src, start, end, fade=True):
     os.close(fd)
 
     cmd = [
-        "ffmpeg", "-y",
+        FFMPEG, "-y",
         "-ss", f"{start:.3f}",
         "-i", src,
         "-t", f"{duration:.3f}",
@@ -296,15 +298,17 @@ class Handler(BaseHTTPRequestHandler):
 
 
 def main():
-    # fail fast if ffmpeg is missing
-    if subprocess.run(["ffmpeg", "-version"], capture_output=True).returncode != 0:
-        sys.exit("ffmpeg not found. Install it (brew install ffmpeg) and try again.")
+    if subprocess.run([FFMPEG, "-version"], capture_output=True).returncode != 0:
+        sys.exit("Clippy's private ffmpeg could not start. Run the launcher again.")
 
     server = ThreadingHTTPServer(("127.0.0.1", PORT), Handler)
     print("📎  Clippy helper is up.")
-    print(f"    Open the UI:  http://localhost:{PORT}")
+    print(f"    Website:      {HOSTED_URL}")
+    print(f"    Local UI:     http://localhost:{PORT}")
     print(f"    Cache:        {CACHE_DIR}")
     print("    Ctrl+C to stop.\n")
+    if os.environ.get("CLIPPY_NO_BROWSER") != "1":
+        webbrowser.open(HOSTED_URL)
     try:
         server.serve_forever()
     except KeyboardInterrupt:

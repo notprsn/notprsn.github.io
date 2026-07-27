@@ -45,10 +45,12 @@ async function checkHelper() {
     if (!r.ok) throw new Error();
     pill.className = "helper helper--online";
     pill.querySelector(".txt").textContent = "helper online";
+    $("#setupCard").classList.add("hidden");
     return true;
   } catch {
     pill.className = "helper helper--offline";
     pill.querySelector(".txt").textContent = "helper offline";
+    $("#setupCard").classList.remove("hidden");
     return false;
   }
 }
@@ -56,10 +58,30 @@ async function checkHelper() {
 function offlineNote() {
   const box = el("div", "offline-note");
   box.innerHTML =
-    "Your local Clippy helper isn't running. Start it on this laptop:<br><br>" +
-    "<code>python3 clippy.py</code><br><br>" +
-    "…then search again. (It downloads the song &amp; cuts the clip locally — nothing is public.)";
+    "Your local helper isn't running. Open your downloaded <code>clippy</code> folder " +
+    "and run its launcher, then search again. <a href=\"#setupCard\">Need the setup steps?</a>";
   return box;
+}
+
+function showPlatformInstructions() {
+  const platform = (
+    navigator.userAgentData?.platform ||
+    navigator.platform ||
+    ""
+  ).toLowerCase();
+  const action = $("#launcherAction");
+  const help = $("#launcherHelp");
+
+  if (platform.includes("win")) {
+    action.textContent = "Double-click start-clippy.bat";
+    help.textContent = "Windows may ask whether to allow the script. Choose Run.";
+  } else if (platform.includes("mac")) {
+    action.textContent = "Double-click start-clippy.command";
+    help.textContent = "A Terminal window will open and finish the setup for you.";
+  } else if (platform.includes("linux")) {
+    action.textContent = "Run bash start-clippy.sh";
+    help.textContent = "Open a terminal in the clippy folder, paste that command, and press Enter.";
+  }
 }
 
 // ---- search ----
@@ -286,6 +308,7 @@ $("#cutBtn").addEventListener("click", async () => {
 
 // boot
 (async () => {
+  showPlatformInstructions();
   await resolveAPI();
   checkHelper();
 })();

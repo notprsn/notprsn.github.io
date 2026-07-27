@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="site-version" content="20260722232333081">
+    <meta name="site-version" content="20260727120125559">
     <meta name="description" content="Highlight a line of lyrics, get an mp3 of exactly that bit of the song. A Bollywoodle side-toy.">
   <title>Clippy — cut the exact bit of the song</title>
     <link rel="canonical" href="https://notprsn.github.io/projects/clippy/" data-managed-seo>
@@ -31,7 +31,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link href="style.css?v=20260722232333081" rel="stylesheet">
+  <link href="style.css?v=20260727120125559" rel="stylesheet">
 </head>
 <body>
   <div class="glow"></div>
@@ -51,12 +51,55 @@
         <p class="tag">highlight a line &rarr; get an mp3 of <em>exactly</em> that bit</p>
       </div>
     </div>
-    <div id="helper" class="helper helper--checking" title="the local helper does the downloading + cutting">
+    <div id="helper" class="helper helper--checking" title="the local helper does the downloading + cutting" aria-live="polite">
       <span class="dot"></span><span class="txt">checking helper…</span>
     </div>
   </header>
 
   <main>
+    <section id="setupCard" class="card setup-card">
+      <label class="step">start here · one-time setup</label>
+      <h2>Get the helper. Run it. Come back here.</h2>
+      <p class="setup-intro">Clippy cuts songs on your laptop, so this page needs one tiny local helper.</p>
+      <ol class="setup-steps">
+        <li>
+          <span class="setup-number">1</span>
+          <div>
+            <a class="setup-download" href="downloads/clippy.zip" download>⬇ Download Clippy</a>
+            <small>Unzip the download, then open the <code>clippy</code> folder.</small>
+          </div>
+        </li>
+        <li>
+          <span class="setup-number">2</span>
+          <div>
+            <strong id="launcherAction">Run the launcher</strong>
+            <small id="launcherHelp">Use the launcher for your operating system.</small>
+          </div>
+        </li>
+        <li>
+          <span class="setup-number">3</span>
+          <div>
+            <strong>Keep the launcher window open.</strong>
+            <small>This page will open automatically and the helper pill will turn green.</small>
+          </div>
+        </li>
+      </ol>
+      <p class="setup-note">First launch: usually 1–3 minutes. Later launches: a few seconds.</p>
+      <p class="python-note">
+        The launcher installs everything except Python 3.10+.
+        <a href="https://www.python.org/downloads/" target="_blank" rel="noopener">Get Python</a>
+        only if it says Python is missing.
+      </p>
+      <details class="other-setup">
+        <summary>prefer Git?</summary>
+        <p>Clone only the Clippy folder:</p>
+        <pre><code>git clone --depth 1 --filter=blob:none --sparse https://github.com/notprsn/hacks.git
+cd hacks
+git sparse-checkout set clippy
+cd clippy</code></pre>
+      </details>
+    </section>
+
     <!-- 1. find the song -->
     <section class="card">
       <label class="step">1 · find the song</label>
@@ -92,9 +135,13 @@
   </main>
 
   <footer>
-    <span>a <a href="https://bollywoodle.app" target="_blank" rel="noopener">Bollywoodle</a> side-toy · runs on your laptop, nothing leaves it</span>
+    <span>
+      a <a href="https://bollywoodle.app" target="_blank" rel="noopener">Bollywoodle</a> side-toy ·
+      <a href="https://github.com/notprsn/hacks/tree/main/clippy" target="_blank" rel="noopener">source</a> ·
+      runs on your laptop
+    </span>
   </footer>
 
-  <script src="script.js?v=20260722232333081"></script>
+  <script src="script.js?v=20260727120125559"></script>
 </body>
 </html>
