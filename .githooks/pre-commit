@@ -2,6 +2,7 @@
 set -euo pipefail
 
 node scripts/sync-site.mjs
+node scripts/check-favicon-links.mjs
 
 # Stage tracked data outputs, including deletions for removed generated files.
 git add -A -- data

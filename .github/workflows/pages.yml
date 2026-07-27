@@ -62,6 +62,10 @@ jobs:
         working-directory: public-site
         run: node scripts/sync-site.mjs
 
+      - name: Check favicon links
+        working-directory: public-site
+        run: node scripts/check-favicon-links.mjs
+
       - name: Build Pages artifact
         shell: bash
         run: |
