@@ -107,6 +107,103 @@ main { position: relative; z-index: 1; max-width: 720px; margin: 0 auto; display
 .hint { margin: 0 0 12px; color: var(--muted); font-size: 0.9rem; font-weight: 300; }
 .hint b { color: var(--mid-warm); font-weight: 600; }
 
+/* ---- setup ---- */
+.setup-card h2 {
+  margin: 0;
+  color: var(--mid-warm);
+  font-size: clamp(1.3rem, 4vw, 1.75rem);
+  line-height: 1.15;
+}
+.setup-intro {
+  margin: 8px 0 18px;
+  color: var(--muted);
+  line-height: 1.45;
+}
+.setup-steps {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.setup-steps li {
+  display: grid;
+  grid-template-columns: 30px 1fr;
+  gap: 11px;
+  align-items: start;
+}
+.setup-number {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--accent);
+  border-radius: 50%;
+  color: var(--accent);
+  font-weight: 700;
+}
+.setup-steps strong {
+  display: block;
+  margin: 4px 0 3px;
+  color: var(--text);
+}
+.setup-steps small {
+  display: block;
+  color: var(--muted);
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+.setup-card code {
+  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  color: var(--mid-warm);
+}
+.setup-download {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  margin-bottom: 5px;
+  padding: 9px 15px;
+  border-radius: 9px;
+  background: var(--accent);
+  color: var(--dark-bg);
+  text-decoration: none;
+  font-weight: 700;
+}
+.setup-download:hover { background: var(--accent-hover); }
+.setup-note {
+  margin: 16px 0 0 41px;
+  color: var(--success);
+  font-size: 0.85rem;
+}
+.python-note {
+  margin: 14px 0 0;
+  padding-top: 12px;
+  border-top: 1px solid var(--deep-neutral);
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+.python-note a,
+.other-setup a,
+.offline-note a {
+  color: var(--accent);
+}
+.other-setup {
+  margin-top: 12px;
+  color: var(--soft-neutral);
+  font-size: 0.82rem;
+}
+.other-setup summary { cursor: pointer; }
+.other-setup p { margin-bottom: 6px; }
+.other-setup pre {
+  overflow-x: auto;
+  margin: 0;
+  padding: 10px;
+  border-radius: 8px;
+  background: #000;
+  line-height: 1.5;
+}
+
 /* ---- search ---- */
 .searchrow { display: flex; gap: 10px; }
 input[type="text"] {
@@ -272,4 +369,10 @@ footer a:hover { text-decoration: underline; }
   border-radius: 6px;
   font-family: 'IBM Plex Mono', ui-monospace, monospace;
   font-size: 0.85rem;
+}
+
+@media (max-width: 520px) {
+  .setup-note { margin-left: 0; }
+  .searchrow { align-items: stretch; }
+  .searchrow button { padding-inline: 14px; }
 }

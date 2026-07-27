@@ -25,12 +25,35 @@ jobs:
         with:
           path: public-site
 
+      - name: Checkout canonical Clippy
+        uses: actions/checkout@v6
+        with:
+          repository: notprsn/hacks
+          path: hacks-source
+
       - name: Checkout private puzzle
         uses: actions/checkout@v6
         with:
           repository: notprsn/site-private-puzzle
           token: ${{ secrets.PUZZLE_REPO_PAT }}
           path: private-puzzle
+
+      - name: Sync Clippy and build its download
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          rsync -a --delete hacks-source/clippy/ public-site/projects/clippy/ \
+            --exclude '.clippy_cache/' \
+            --exclude '.venv/' \
+            --exclude '__pycache__/'
+
+          mkdir -p public-site/projects/clippy/downloads
+          (
+            cd hacks-source
+            zip -qr ../public-site/projects/clippy/downloads/clippy.zip clippy \
+              -x 'clippy/.clippy_cache/*' 'clippy/.venv/*' 'clippy/__pycache__/*' 'clippy/*.pyc'
+          )
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v6
