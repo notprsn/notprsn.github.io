@@ -109,6 +109,7 @@
   }
 
   .about-character {
+    display: block;
     position: relative;
     width: min(340px, 26vw);
     aspect-ratio: 384 / 420;
@@ -119,11 +120,17 @@
     transition: opacity 180ms ease, transform 220ms ease;
     image-rendering: pixelated;
     image-rendering: crisp-edges;
+    text-decoration: none;
   }
 
   .about-character:hover {
     opacity: 0.84;
     transform: translateY(-2px);
+  }
+
+  .about-character:focus-visible {
+    outline: 2px solid rgba(0, 245, 255, 0.9);
+    outline-offset: 6px;
   }
 
   .about-character__frame {
