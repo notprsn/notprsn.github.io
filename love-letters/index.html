@@ -7,7 +7,7 @@
     <meta name="description" content="Client-side encrypted love letters archive.">
     <meta name="author" content="Prasann Iyer">
     <meta name="robots" content="noindex">
-    <meta name="site-version" content="20260923032620905">
+    <meta name="site-version" content="20260923033723216">
     <title>Love Letters | Prasann Iyer</title>
     <link rel="canonical" href="https://notprsn.github.io/love-letters/" data-managed-seo>
     <meta property="og:site_name" content="Prasann Iyer" data-managed-seo>
@@ -36,8 +36,8 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Source+Sans+3:wght@400;600;700&display=swap"
         rel="stylesheet">
-    <link href="../css/style.css?v=20260923032620905" rel="stylesheet">
-    <link href="../css/pages/love.css?v=20260923032620905" rel="stylesheet">
+    <link href="../css/style.css?v=20260923033723216" rel="stylesheet">
+    <link href="../css/pages/love.css?v=20260923033723216" rel="stylesheet">
 </head>
 
 <body class="page-love page-dark">
@@ -56,7 +56,7 @@
     </header>
 
     <main class="page-main page-main--love">
-        <section class="page-intro">
+        <section class="page-intro" data-love-gate>
             <div>
                 <p class="eyebrow">Love Letters</p>
                 <div class="love-hero-row">
@@ -66,7 +66,7 @@
             </div>
         </section>
 
-        <section class="lock-grid lock-grid--single">
+        <section class="lock-grid lock-grid--single" data-love-gate>
             <article class="lock-panel">
                 <form data-love-letters-form>
                     <input class="sr-only" type="text" name="archive-name" value="love-letters" autocomplete="username"
@@ -76,15 +76,6 @@
                         <div class="lock-answer-row">
                             <input class="lock-input" id="love-letters-password" name="password" type="text"
                                 autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" required>
-                            <button class="lock-button lock-submit-button" type="submit" data-love-submit
-                                aria-label="Submit answer" hidden>
-                                <svg viewBox="0 0 24 24" aria-hidden="true">
-                                    <path d="M4.75 12h12.5" fill="none" stroke="currentColor" stroke-linecap="round"
-                                        stroke-width="1.7" />
-                                    <path d="m12.5 5.75 6.75 6.25-6.75 6.25" fill="none" stroke="currentColor"
-                                        stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" />
-                                </svg>
-                            </button>
                         </div>
                     </div>
                 </form>
@@ -93,21 +84,9 @@
         </section>
 
         <section class="letters-output" data-love-letters-output hidden>
-            <article class="letter-shell letter-shell--intro">
-                <p class="panel-label">Archive</p>
-                <h2 data-archive-title>Love Letters</h2>
-                <p data-archive-intro></p>
-            </article>
             <div class="letters-list" data-letters-list></div>
         </section>
     </main>
-
-    <dialog class="love-modal" data-love-modal>
-        <div class="love-modal__body">
-            <p class="love-modal__message" data-love-modal-message></p>
-            <button class="lock-button love-modal__close" type="button" data-love-modal-close>Close</button>
-        </div>
-    </dialog>
 
     <footer class="site-footer site-footer--love">
         <div class="footer-shell">
@@ -120,8 +99,8 @@
         </div>
     </footer>
 
-    <script type="module" src="../js/site.js?v=20260923032620905"></script>
-    <script type="module" src="../js/pages/love-letters.js?v=20260923032620905"></script>
+    <script type="module" src="../js/site.js?v=20260923033723216"></script>
+    <script type="module" src="../js/pages/love-letters.js?v=20260923033723216"></script>
 </body>
 
 </html>
