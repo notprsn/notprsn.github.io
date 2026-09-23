@@ -336,25 +336,21 @@ body.page-love::after {
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
   gap: 0.8rem;
-  padding: clamp(0.8rem, 2vw, 1.25rem);
-  border: 1px solid rgba(21, 23, 16, 0.16);
-  border-radius: 26px;
-  background: rgba(255, 250, 226, 0.58);
-  box-shadow: 0 1rem 3rem rgba(86, 45, 16, 0.12);
+  padding: 0;
   outline: none;
 }
 
 .letter-reader:focus-visible {
-  box-shadow: 0 0 0 3px rgba(240, 130, 45, 0.24), 0 1rem 3rem rgba(86, 45, 16, 0.12);
+  outline: 2px solid rgba(240, 130, 45, 0.5);
+  outline-offset: 6px;
 }
 
 .letter-reader__stage {
   min-width: 0;
+  width: 80%;
+  justify-self: center;
   margin: 0;
-  padding: clamp(0.55rem, 1.4vw, 0.9rem);
-  border: 1px solid rgba(128, 91, 43, 0.16);
-  border-radius: 18px;
-  background: rgba(255, 249, 224, 0.78);
+  padding: 0;
 }
 
 .letter-reader__image {
@@ -363,8 +359,6 @@ body.page-love::after {
   height: auto;
   max-height: min(68svh, 54rem);
   object-fit: contain;
-  border-radius: 8px;
-  box-shadow: 0 0.8rem 1.8rem rgba(86, 45, 16, 0.14);
 }
 
 .letter-reader__text-fallback {
@@ -565,6 +559,7 @@ body.page-love::after {
 
   .letter-reader__stage {
     position: relative;
+    width: 100%;
   }
 }
 
@@ -589,12 +584,12 @@ body.page-love::after {
   }
 
   .letter-reader {
-    padding: 0.55rem;
-    border-radius: 20px;
+    padding: 0;
   }
 
   .letter-reader__stage {
-    padding: 0.4rem;
+    width: 100%;
+    padding: 0;
   }
 
   .letter-reader__nav {
