@@ -102,13 +102,8 @@ function initLoveLetters() {
     const passwordInput = form.querySelector('input[name="password"]');
     const status = document.querySelector("[data-love-letters-status]");
     const output = document.querySelector("[data-love-letters-output]");
-    const archiveTitle = document.querySelector("[data-archive-title]");
-    const archiveIntro = document.querySelector("[data-archive-intro]");
     const lettersList = document.querySelector("[data-letters-list]");
-    const modal = document.querySelector("[data-love-modal]");
-    const modalMessage = document.querySelector("[data-love-modal-message]");
-    const modalClose = document.querySelector("[data-love-modal-close]");
-    const submitButton = form.querySelector("[data-love-submit]");
+    const pageMain = document.querySelector(".page-main--love");
     let bundlePromise;
 
     const setStatus = (message, state = "info") => {
@@ -120,50 +115,6 @@ function initLoveLetters() {
         status.dataset.state = state;
         status.hidden = !message;
     };
-
-    const updateSubmitVisibility = () => {
-        if (!passwordInput || !submitButton) {
-            return;
-        }
-
-        submitButton.hidden = !passwordInput.value.trim();
-    };
-
-    const showModal = (message) => {
-        if (!modal || !modalMessage) {
-            return;
-        }
-
-        modalMessage.textContent = message;
-        if (typeof modal.showModal === "function") {
-            modal.showModal();
-            return;
-        }
-
-        modal.setAttribute("open", "");
-    };
-
-    const closeModal = () => {
-        if (!modal) {
-            return;
-        }
-
-        if (typeof modal.close === "function") {
-            modal.close();
-            return;
-        }
-
-        modal.removeAttribute("open");
-    };
-
-    modalClose?.addEventListener("click", closeModal);
-    modal?.addEventListener("click", (event) => {
-        if (event.target === modal) {
-            closeModal();
-        }
-    });
-    passwordInput?.addEventListener("input", updateSubmitVisibility);
-    updateSubmitVisibility();
 
     const getBundle = async () => {
         if (!bundlePromise) {
@@ -180,7 +131,7 @@ function initLoveLetters() {
 
     form.addEventListener("submit", async (event) => {
         event.preventDefault();
-        if (!passwordInput || !lettersList || !archiveTitle || !archiveIntro || !output || !submitButton) {
+        if (!passwordInput || !lettersList || !output) {
             return;
         }
 
@@ -190,7 +141,6 @@ function initLoveLetters() {
             return;
         }
 
-        submitButton.disabled = true;
         setStatus(STATUS_COPY.pending, "pending");
 
         try {
@@ -203,25 +153,20 @@ function initLoveLetters() {
 
             const plaintext = await decryptArchive(bundle, passphrase);
             const archive = JSON.parse(plaintext);
-            renderArchive(archive, { archiveTitle, archiveIntro, lettersList });
+            renderArchive(archive, { lettersList });
             output.hidden = false;
+            pageMain?.classList.add("is-unlocked");
             window.requestAnimationFrame(() => {
                 output.scrollIntoView({ behavior: "smooth", block: "start" });
                 output.querySelector("[data-letter-reader]")?.focus({ preventScroll: true });
             });
             form.reset();
-            updateSubmitVisibility();
             setStatus("", "success");
-            showModal("oh, you made it. i thought someone was indifferent");
             trackSuccessfulUnlock();
         } catch (error) {
             console.error(error);
             output.hidden = true;
             setStatus(STATUS_COPY.locked, "error");
-            showModal("nice try, kiddo. i guess you'ren't her");
-        } finally {
-            submitButton.disabled = false;
-            updateSubmitVisibility();
         }
     });
 }
@@ -497,14 +442,9 @@ async function decryptArchive(bundle, passphrase) {
 }
 
 function renderArchive(archive, targets) {
-    const { archiveTitle, archiveIntro, lettersList } = targets;
-    const title = typeof archive.archiveTitle === "string" ? archive.archiveTitle : "Love Letters";
-    const intro = typeof archive.intro === "string" ? archive.intro : "";
+    const { lettersList } = targets;
     const letters = Array.isArray(archive.letters) ? archive.letters : [];
 
-    archiveTitle.textContent = title;
-    archiveIntro.textContent = intro;
-    archiveIntro.hidden = !intro.trim();
     lettersList.replaceChildren();
 
     if (!letters.length) {
@@ -528,7 +468,7 @@ function renderArchive(archive, targets) {
     previous.className = "letter-reader__nav letter-reader__nav--previous";
     previous.type = "button";
     previous.setAttribute("aria-label", "Previous letter");
-    previous.innerHTML = "<span aria-hidden=\"true\">&#8592;</span>";
+    previous.innerHTML = '<span class="letter-reader__chevron letter-reader__chevron--previous" aria-hidden="true"></span>';
 
     const stage = document.createElement("figure");
     stage.className = "letter-reader__stage";
@@ -548,7 +488,7 @@ function renderArchive(archive, targets) {
     next.className = "letter-reader__nav letter-reader__nav--next";
     next.type = "button";
     next.setAttribute("aria-label", "Next letter");
-    next.innerHTML = "<span aria-hidden=\"true\">&#8594;</span>";
+    next.innerHTML = '<span class="letter-reader__chevron letter-reader__chevron--next" aria-hidden="true"></span>';
 
     const caption = document.createElement("figcaption");
     caption.className = "letter-reader__caption";
@@ -578,9 +518,7 @@ function renderArchive(archive, targets) {
         thumbnailImage.decoding = "async";
         setLetterImage(thumbnailImage, letter);
 
-        const number = document.createElement("span");
-        number.textContent = String(index + 1).padStart(2, "0");
-        button.append(thumbnailImage, number);
+        button.appendChild(thumbnailImage);
         button.addEventListener("click", () => updateReader(index, true));
         wheelTrack.appendChild(button);
         return button;
@@ -613,24 +551,10 @@ function renderArchive(archive, targets) {
         }
         textFallback.hidden = Boolean(source);
 
-        const metaBits = [];
-        if (typeof letter.date === "string" && letter.date) {
-            metaBits.push(letter.date);
-        }
-        if (typeof letter.location === "string" && letter.location) {
-            metaBits.push(letter.location);
-        }
         caption.replaceChildren();
-        const captionTitle = document.createElement("strong");
-        captionTitle.textContent = title;
         const captionCount = document.createElement("span");
-        captionCount.textContent = `${activeIndex + 1} / ${letters.length}`;
-        caption.append(captionTitle, captionCount);
-        if (metaBits.length) {
-            const captionMeta = document.createElement("small");
-            captionMeta.textContent = metaBits.join(" / ");
-            caption.appendChild(captionMeta);
-        }
+        captionCount.textContent = `${activeIndex + 1}/${letters.length}`;
+        caption.appendChild(captionCount);
 
         previous.disabled = letters.length < 2;
         next.disabled = letters.length < 2;
