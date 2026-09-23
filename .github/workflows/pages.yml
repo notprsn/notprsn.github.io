@@ -46,7 +46,10 @@ jobs:
           rsync -a --delete hacks-source/clippy/ public-site/projects/clippy/ \
             --exclude '.clippy_cache/' \
             --exclude '.venv/' \
-            --exclude '__pycache__/'
+            --exclude '__pycache__/' \
+            --exclude 'index.html' \
+            --exclude 'style.css' \
+            --exclude 'script.js'
 
           mkdir -p public-site/projects/clippy/downloads
           (
