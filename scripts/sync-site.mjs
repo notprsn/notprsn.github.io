@@ -20,13 +20,13 @@ const SOCIAL_LINKS = [
 const TRAVEL_ESSAY_CONFIG = {
     directory: resolve(repoRoot, "essays", "travel"),
     backPath: "/essays/travel/",
-    backLabel: "Travel Essays",
-    descriptionLabel: "travel essay",
+    backLabel: "Travel Stories",
+    descriptionLabel: "travel story",
 };
 const SEO_OVERRIDES = {
     "/": {
         title: "Prasann Iyer",
-        description: "Personal website of Prasann Iyer: work, projects, essays, Bollywoodle, CloudScript, math, music, and small web experiments.",
+        description: "Personal website of Prasann Iyer: work, projects, stories, Bollywoodle, CloudScript, math, music, and small web experiments.",
         schemaType: "home",
     },
     "/about/": {
@@ -42,26 +42,20 @@ const SEO_OVERRIDES = {
         description: "How Prasann Iyer built Bollywoodle, a daily Bollywood music guessing game, and the story behind it.",
         schemaType: "creativeWork",
     },
-    "/projects/bollywoodle/humming/": {
-        description: "The humming algorithm behind Bollywoodle Musicle, explained by Prasann Iyer.",
-        schemaType: "creativeWork",
-    },
     "/projects/cloudscript/story/": {
         description: "The story behind CloudScript, a cloud-message web app by Prasann Iyer.",
-        schemaType: "creativeWork",
-    },
-    "/projects/cloudscript/message/": {
-        description: "A CloudScript message by Prasann Iyer.",
         schemaType: "creativeWork",
     },
     "/fun/": {
         description: "Pretty math experiments and visual toys by Prasann Iyer.",
     },
     "/essays/": {
-        description: "Essay themes and writing queues for Prasann Iyer.",
+        title: "Stories | Prasann Iyer",
+        description: "Story themes and writing queues for Prasann Iyer.",
     },
     "/essays/travel/": {
-        description: "Travel atlas and essay index for Prasann Iyer.",
+        title: "Travel Stories | Prasann Iyer",
+        description: "Travel atlas and story index for Prasann Iyer.",
     },
 };
 const NOINDEX_ROUTES = new Set([
@@ -188,7 +182,7 @@ ${buildFaviconLinks(assetPrefix)}
                 <a href="/work/">Work</a>
                 <a href="/projects/">Projects</a>
                 <a href="/fun/">Fun Stuff</a>
-                <a href="/essays/" aria-current="page">Essays</a>
+                <a href="/essays/" aria-current="page">Stories</a>
             </nav>
             </div>
         </div>
@@ -203,9 +197,8 @@ ${articleMarkup}
         <div class="footer-shell">
             <span>${backLabel}</span>
             <div class="footer-links">
-                <a href="/essays/">Essays</a>
+                <a href="/essays/">Stories</a>
                 <span class="footer-link-placeholder">Gallery</span>
-                <span class="footer-link-placeholder">Glossary</span>
                 <a href="https://github.com/notprsn" target="_blank" rel="noreferrer">GitHub</a>
             </div>
             <span>&copy; <span data-current-year>${currentYear}</span> PI - All rights reversed</span>
@@ -416,6 +409,8 @@ async function updateHtml(filePath, source) {
     const seo = buildSeoForPage(route, updated);
 
     updated = await renderMarkdownBackedContent(updated);
+    updated = renameEssayLabels(updated);
+    updated = normalizeFooterLinks(updated);
     updated = ensureTitle(updated, seo.title);
     updated = ensureMeta(updated, "description", seo.description);
     updated = ensureMeta(updated, "site-version", version);
@@ -432,6 +427,26 @@ async function updateHtml(filePath, source) {
     );
 
     return updated;
+}
+
+function renameEssayLabels(source) {
+    return source
+        .replaceAll(">Essays<", ">Stories<")
+        .replaceAll("Travel Essays", "Travel Stories")
+        .replaceAll("travel essays", "travel stories")
+        .replaceAll("travel essay", "travel story")
+        .replaceAll("Essay themes", "Story themes")
+        .replaceAll("essays, Bollywoodle", "stories, Bollywoodle");
+}
+
+function normalizeFooterLinks(source) {
+    return source.replace(
+        /<div class="footer-links">[\s\S]*?<\/div>/g,
+        `<div class="footer-links">
+                <span class="footer-link-placeholder">Gallery</span>
+                <a href="https://github.com/notprsn" target="_blank" rel="noreferrer">GitHub</a>
+            </div>`
+    );
 }
 
 async function renderMarkdownBackedContent(source) {

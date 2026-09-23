@@ -1,5 +1,5 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
-import { dirname, resolve } from "node:path";
+import { dirname, extname, resolve } from "node:path";
 import { pbkdf2Sync, randomBytes, createCipheriv } from "node:crypto";
 
 const DEFAULT_INPUT = "private/love-letters.json";
@@ -15,9 +15,10 @@ async function main() {
         throw new Error("Set LOVE_LETTERS_PASSWORD in the environment before running this script.");
     }
 
-    const plaintext = await readArchive(inputPath);
-    const parsed = JSON.parse(plaintext);
+    const source = await readArchive(inputPath);
+    const parsed = JSON.parse(source);
     validateArchive(parsed);
+    const plaintext = JSON.stringify(await inlineArchiveImages(parsed, dirname(inputPath)));
 
     const salt = randomBytes(16);
     const iv = randomBytes(12);
@@ -47,6 +48,37 @@ async function main() {
     await mkdir(dirname(outputPath), { recursive: true });
     await writeFile(outputPath, `${JSON.stringify(bundle, null, 2)}\n`, "utf8");
     console.log(`Wrote encrypted archive to ${outputPath}`);
+}
+
+async function inlineArchiveImages(archive, inputDirectory) {
+    const letters = await Promise.all(archive.letters.map(async (letter) => {
+        if (typeof letter.imagePath !== "string" || !letter.imagePath.trim()) {
+            return letter;
+        }
+
+        const imagePath = resolve(inputDirectory, letter.imagePath);
+        const image = await readFile(imagePath);
+        const mimeType = mimeTypeFor(imagePath);
+        const hydratedLetter = { ...letter, image: `data:${mimeType};base64,${image.toString("base64")}` };
+        delete hydratedLetter.imagePath;
+        return hydratedLetter;
+    }));
+
+    return { ...archive, letters };
+}
+
+function mimeTypeFor(filePath) {
+    switch (extname(filePath).toLowerCase()) {
+        case ".webp":
+            return "image/webp";
+        case ".jpg":
+        case ".jpeg":
+            return "image/jpeg";
+        case ".png":
+            return "image/png";
+        default:
+            throw new Error(`Unsupported love-letter image format: ${filePath}`);
+    }
 }
 
 async function readArchive(inputPath) {
@@ -80,8 +112,10 @@ function validateArchive(archive) {
             throw new Error(`Letter ${index + 1} is missing a non-empty title.`);
         }
 
-        if (typeof letter.body !== "string" && !Array.isArray(letter.body)) {
-            throw new Error(`Letter ${index + 1} must include a body string or array of paragraphs.`);
+        const hasBody = typeof letter.body === "string" || Array.isArray(letter.body);
+        const hasImage = typeof letter.image === "string" || typeof letter.imagePath === "string";
+        if (!hasBody && !hasImage) {
+            throw new Error(`Letter ${index + 1} must include body text or an image.`);
         }
     });
 }

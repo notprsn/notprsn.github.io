@@ -1,11 +1,25 @@
-# Metripping Technologies Pvt. Ltd.
+# metripping technologies pvt. ltd.
 
-During lockdown there was a Software Engineer Intern role whose screening test was basically JavaScript syntax fill-in-the-blanks. The interface was hackable, so I googled my way through far too many answers. I still knew zero JavaScript. Good thing the role was remote and the company was small enough not to care. All they really wanted was cheap labour from IITB. That is how I got an internship meant for third years as a sophomore.
+during lockdown, there was a software engineer intern role whose screening test was basically javascript syntax fill-in-the-blanks. the interface was hackable, so i googled my way through far too many answers.
 
-They first asked me to build a scraper for weather data across 20,000 destinations. Without AI coding, can you imagine? I suffered through Stack Overflow and hacked it together. It worked. Maybe I should take that as a sign and work on that Polymarket weather-markets desk next.
+i still knew zero javascript.
 
-Next I had to build something in Django. I was very "I've never done this before, what if I can't?" coded back then. I think I pestered the engineer guiding me at every step. She even snapped at me once. The lesson here is that ego beats fear. Neither is sustainable, but ego is more likely to save some face.
+good thing the role was remote and the company was small enough not to care. all they really wanted was cheap labour from iitb. that's how i got an internship meant for third-years as a sophomore.
 
-The "ML insights" part was mostly data logging into SQL and querying it cleanly enough for downstream modeling. I'm not sure how ML-able the data actually was. Startups love buzzwords because the masses fall for them. Imagine how fun it must be to hang out with real friends and make fun of fake resume points.
+they first asked me to build a scraper for weather data across 20,000 destinations. without ai coding, can you imagine? i suffered through stack overflow and hacked it together.
 
-Anyway, I made a quick buck, got my first bank account, started my first SIP of 5000, and bought shoes I thought looked cool online. I wore them exactly once.
+it worked.
+
+maybe i should take that as a sign and work on that polymarket weather-markets desk next.
+
+next i had to build something in django. i was very “i've never done this before, what if i can't?” coded back then. i think i pestered the engineer guiding me at every step. she even snapped at me once.
+
+the lesson here is that ego beats fear. neither is sustainable, but ego is more likely to save some face.
+
+the “ml insights” part was mostly data logging into sql and querying it cleanly enough for downstream modelling. i'm not sure how ml-able the data actually was. startups love buzzwords because people fall for them.
+
+resumes do too, apparently.
+
+anyway, i made a quick buck, opened my first bank account, started my first ₹5,000 sip, and bought shoes i thought looked cool online.
+
+i wore them exactly once.

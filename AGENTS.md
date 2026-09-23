@@ -31,12 +31,11 @@ Section map
 - `/essays/` hub for themes
 - `/love-letters/` encrypted archive
 - `/gallery/` future photo gallery placeholder
-- `/glossary/` future glossary placeholder
 - `/essays/<theme>/<slug>/` generated essay pages for non-empty `content.md`
 - `/secret/` private-source noindex puzzle trail injected by the Pages workflow; do not commit puzzle source here
 
 Before shipping
 - Search for stale usernames and dead links.
-- Check that nav order stays `Work`, `Projects`, `Fun Stuff`, `Essays`.
+- Check that nav order stays `Work`, `Projects`, `Fun Stuff`, `Stories`.
 - Verify mobile layout for new pages.
 - Run `node scripts/sync-site.mjs` if hooks are unavailable.

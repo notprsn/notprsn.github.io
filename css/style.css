@@ -41,9 +41,7 @@ body {
   flex-direction: column;
   font-family: var(--font-body);
   color: var(--ink);
-  background:
-    radial-gradient(circle at top left, rgba(217, 230, 216, 0.5), transparent 24%),
-    linear-gradient(180deg, var(--paper-strong) 0%, var(--paper) 100%);
+  background: linear-gradient(180deg, var(--paper-strong) 0%, var(--paper) 100%);
 }
 
 .page-dark {
@@ -423,12 +421,6 @@ input {
   transform: translateX(4px);
 }
 
-.project-writing-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
 .project-card-action {
   display: inline-flex;
   align-items: center;
@@ -467,15 +459,6 @@ input {
   outline-offset: 3px;
 }
 
-.project-card-action--live {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  z-index: 3;
-  min-height: 1.85rem;
-  padding: 0.28rem 0.68rem;
-}
-
 .chip-cloud span {
   display: inline-flex;
   align-items: center;
@@ -488,9 +471,7 @@ input {
 
 body.page-paper {
   color-scheme: dark;
-  --paper-tone-bg:
-    radial-gradient(circle at 84% 10%, rgba(255, 255, 255, 0.04), transparent 16%),
-    linear-gradient(180deg, #111111 0%, #060606 100%);
+  --paper-tone-bg: linear-gradient(180deg, #111111 0%, #060606 100%);
   --paper-tone-header: rgba(14, 14, 14, 0.76);
   --paper-tone-surface: rgba(20, 20, 20, 0.8);
   --paper-tone-surface-strong: rgba(14, 14, 14, 0.94);
@@ -770,27 +751,28 @@ body.page-paper {
 }
 
 .landing-copy {
+  --landing-copy-fade: linear-gradient(
+    90deg,
+    rgba(5, 7, 10, 0.78) 0%,
+    rgba(5, 7, 10, 0.58) 62%,
+    rgba(5, 7, 10, 0) 100%
+  );
   position: relative;
   width: min(720px, 100%);
   padding: clamp(1.1rem, 2.4vw, 1.8rem);
   margin-left: calc(clamp(1.1rem, 2.4vw, 1.8rem) * -1);
   border-radius: 28px;
+  isolation: isolate;
 }
 
 .landing-copy::before {
   content: "";
   position: absolute;
-  inset: 0;
+  inset: -1.5rem -1.75rem;
   z-index: -1;
   pointer-events: none;
-  border-radius: inherit;
-  background:
-    radial-gradient(circle at 18% 18%, rgba(112, 184, 136, 0.12), transparent 34%),
-    linear-gradient(135deg, rgba(6, 10, 12, 0.34), rgba(6, 10, 12, 0.54));
-  opacity: 0.9;
-  backdrop-filter: blur(1px);
-  -webkit-backdrop-filter: blur(1px);
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.04);
+  border-radius: 32px;
+  background: var(--landing-copy-fade);
 }
 
 .landing-title {
@@ -963,10 +945,6 @@ body.page-paper {
   .paper-hero,
   .paper-grid--halves {
     grid-template-columns: 1fr;
-  }
-
-  .project-writing-actions {
-    justify-content: flex-start;
   }
 
   .lab-card {

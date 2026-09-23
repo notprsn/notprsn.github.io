@@ -1,8 +1,5 @@
 .page-about {
-  background:
-    radial-gradient(circle at 12% 12%, rgba(93, 169, 255, 0.12), transparent 22%),
-    radial-gradient(circle at 84% 16%, rgba(255, 46, 136, 0.14), transparent 24%),
-    linear-gradient(180deg, #0f1422 0%, #0b0f1a 100%);
+  background: linear-gradient(180deg, #0f1422 0%, #0b0f1a 100%);
 }
 
 .page-about .site-header--transparent {
@@ -31,9 +28,7 @@
 .about-veil {
   z-index: 1;
   pointer-events: none;
-  background:
-    linear-gradient(180deg, rgba(93, 169, 255, 0.06) 0%, rgba(11, 15, 26, 0.04) 36%, rgba(11, 15, 26, 0.5) 76%, rgba(11, 15, 26, 0.9) 100%),
-    radial-gradient(circle at 75% 120%, rgba(212, 20, 90, 0.16), transparent 36%);
+  background: transparent;
 }
 
 .about-grid {
@@ -56,20 +51,18 @@
 }
 
 .about-copy {
+  --landing-copy-fade: linear-gradient(
+    90deg,
+    rgba(11, 15, 26, 0.78) 0%,
+    rgba(11, 15, 26, 0.56) 62%,
+    rgba(11, 15, 26, 0) 100%
+  );
   width: min(840px, 100%);
   position: relative;
 }
 
 .about-copy::before {
   content: "";
-  position: absolute;
-  inset: -2rem -2.5rem;
-  z-index: -1;
-  border-radius: 40px;
-  background:
-    radial-gradient(circle at 30% 42%, rgba(11, 15, 26, 0.72) 0%, rgba(11, 15, 26, 0.52) 42%, rgba(11, 15, 26, 0.16) 72%, transparent 100%);
-  filter: blur(12px);
-  pointer-events: none;
 }
 
 .page-about .landing-eyebrow {
@@ -199,9 +192,6 @@
     padding-top: 1.2rem;
   }
 
-  .about-copy::before {
-    inset: -1.5rem -1.2rem;
-  }
 }
 
 @media (max-width: 720px) {

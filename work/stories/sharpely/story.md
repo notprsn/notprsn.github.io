@@ -1,15 +1,37 @@
-# Sharpely (Neam Caps Pvt. Ltd.)
+# sharpely (neam caps pvt. ltd.)
 
-I joined Sharpely in September 2023. I'd spent a two-month dissociative depression stretch applying to jobs, writing to professors, giving the GRE, and travelling around India with my family after not getting a permanent offer at Optiver. No one was hiring, and the LinkedIn algorithm, seeing my desperation, knew I'd bite.
+i joined sharpely in september 2023. i'd just spent two months mildly dissociated and deeply unemployed: applying to jobs, writing to professors, giving the gre, and travelling around india with my family after not getting a permanent offer at optiver. nobody was hiring. linkedin, sensing weakness, knew i'd bite.
 
-They were a tiny team: a CEO, a CTO, a frontend engineer, a backend engineer, and the money guy. The hiring project was to build a backtester and run a simple Bollinger-band crossover strategy on it with visuals. Fun project.
+they were tiny: ceo, cto, frontend engineer, backend engineer, money guy.
 
-My first assignment as an intern was to improve the performance of a stock screener by changing the existing Pandas logic to Polars. Polars is awesome. It is so much faster it isn't even funny. The syntax is a nightmare though. I would isolate logical blocks in Pandas, rewrite them in Polars, and then test the input and output DataFrames until they matched. ChatGPT still sucked at ingesting documentation and giving correct syntax back then, so I had to do it the old-fashioned way.
+the hiring project was to build a backtester, run a simple bollinger-band crossover strategy on it and add visuals. fun project.
 
-Next I was tasked with integrating dx-charts, an open-source charting library, to replace their paid TradingView components. The funny part was that their frontend engineer thought it was a dead end because dx-charts had terrible documentation and he had already tried and given up. I wasn't aware of that when I started, so I just kept going and eventually got it in place. It was a breath of fresh air when he admitted afterwards that he hadn't been able to do what I'd done.
+my first assignment as an intern was to speed up a stock screener by replacing its pandas logic with polars. polars is awesome. absurdly fast. the syntax, unfortunately, is a nightmare.
 
-I also worked on data pipelines for bulk deals, block deals, insider trades, and corporate actions directly from NSE and BSE endpoints. I would pull the data, clean it up, make it consistent with the existing database schema, and push it to the production servers. One pipeline a day, test it, ship it.
+i'd isolate logical blocks in pandas, rewrite them in polars, then keep comparing input and output dataframes until they matched. chatgpt still sucked at ingesting documentation and returning reliable syntax back then, so this involved considerably more reading than prompting.
 
-The last point on the resume is basically a gimmick. I didn't do anything that created real value there. I pushed a bunch of PDFs through some Hugging Face models and got unusable garbage back. I also tried to integrate the Lean backtester as a potential front-facing framework, but that didn't go anywhere. There was some C# and .NET code I had no idea how to work with, and I think I eventually ended up forking the repository and setting up a toy backtest for buying at end of day and selling at market open on S&P 500 components. I'm drawing a blank even thinking about it.
+next came dx-charts, an open-source charting library meant to replace their paid tradingview components. the funny part was that their frontend engineer had already tried integrating it, decided the documentation was hopeless and given up.
 
-Because this role wasn't all-consuming, I kept myself busy by simultaneously working on a proof of concept for a startup idea, CarSeekho, with Vineet. Standardising driving schools in India, starting with Mumbai. I also applied to E-Cell at IITB. They killed the idea at the idea stage. I did a 6000-piece jigsaw puzzle in this window too.
+nobody told me.
+
+so i kept going until it worked.
+
+him admitting afterwards that he hadn't managed to do it himself was a much-needed little ego refill.
+
+i also built data pipelines for bulk deals, block deals, insider trades and corporate actions directly from nse and bse endpoints. pull the data, clean it, map it to the existing database schema, push it to production.
+
+roughly one pipeline a day. test it. ship it.
+
+the last bullet on my resume from sharpely is mostly a gimmick.
+
+i pushed a bunch of pdfs through hugging face models and got unusable garbage back. i also explored integrating lean as a possible front-facing backtesting framework, which went nowhere. there was c# and .net code i barely understood, and i think i eventually forked the repository and set up a toy strategy that bought s&p 500 components at close and sold them at the next open.
+
+i'm drawing a blank even trying to remember why.
+
+the role wasn't all-consuming, which left me enough spare brain to do other things. vineet and i worked on a proof of concept for carseekho: standardising driving schools in india, starting with mumbai.
+
+we also applied to e-cell at iitb. they killed the idea at the idea stage.
+
+somewhere in this window, i also completed a 6000-piece jigsaw puzzle.
+
+productive quarter.

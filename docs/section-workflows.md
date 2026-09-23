@@ -57,10 +57,6 @@ Restyle an existing section
 5. If a second page starts using the same pattern, promote it into the shared style layer.
 6. Update `docs/style-language.md` when the shared language changes.
 
-Add a new glossary page
-1. Add the term page under `glossary/`.
-2. Link back to the section that motivated the term.
-
 Add a gallery later
 1. Decide album directories first.
 2. Generate optimized image variants before committing.

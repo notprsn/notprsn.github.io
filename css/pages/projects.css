@@ -1,9 +1,6 @@
 body.page-paper.page-project-bollywoodle {
   color-scheme: dark;
-  --paper-tone-bg:
-    radial-gradient(circle at 16% 12%, rgba(223, 161, 104, 0.08), transparent 24%),
-    radial-gradient(circle at 88% 8%, rgba(241, 200, 155, 0.05), transparent 18%),
-    linear-gradient(180deg, #151515 0%, #080808 100%);
+  --paper-tone-bg: linear-gradient(180deg, #151515 0%, #080808 100%);
   --paper-tone-header: rgba(14, 14, 14, 0.84);
   --paper-tone-surface: rgba(20, 20, 20, 0.82);
   --paper-tone-surface-strong: rgba(14, 14, 14, 0.96);
@@ -48,6 +45,171 @@ body.page-paper.page-project-cloudscript .site-nav {
   margin-top: 0.3rem;
 }
 
+.project-writing-page__app-link {
+  display: block;
+  width: fit-content;
+  color: inherit;
+  text-decoration: none;
+  transform-origin: left center;
+  transition: transform 180ms ease;
+}
+
+.project-writing-page__app-link:hover,
+.project-writing-page__app-link:focus-visible {
+  transform: scale(1.035);
+}
+
+.project-writing-page__back {
+  display: block;
+  width: fit-content;
+}
+
+.project-notes-section {
+  margin-top: clamp(5rem, 10vw, 8rem);
+}
+
+.project-notes-section .paper-section__head h2 {
+  font-size: clamp(3.2rem, 8vw, 5.8rem);
+  line-height: 0.92;
+  max-width: none;
+  white-space: nowrap;
+}
+
+.project-notes-section .paper-section__head p {
+  max-width: 42rem;
+  margin-top: 1rem;
+  font-size: clamp(1.08rem, 2vw, 1.28rem);
+  line-height: 1.55;
+}
+
+.project-notes-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.project-note-link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 6.8rem;
+  padding: 1.35rem 1.5rem;
+  overflow: hidden;
+  text-align: center;
+  text-decoration: none;
+  transition: border-color 180ms ease, background 180ms ease, transform 180ms ease;
+}
+
+.project-note-link:hover,
+.project-note-link:focus-visible {
+  transform: translateY(-2px);
+}
+
+.project-note-link__title {
+  position: relative;
+  z-index: 1;
+  line-height: 0.95;
+}
+
+.project-note-link--bollywoodle {
+  --bwdl-accent: #dfa168;
+  --bwdl-accent-light: #f1c89b;
+  --bwdl-hover: #d9a6a0;
+  --bwdl-text: #f7f5f2;
+  border: 2px solid var(--bwdl-accent);
+  border-radius: 28px;
+  background: linear-gradient(180deg, rgba(26, 26, 26, 0.7) 0%, rgba(15, 15, 15, 0.8) 100%);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  color: var(--bwdl-text);
+  font-family: "Josefin Sans", var(--font-body);
+}
+
+.project-note-link--bollywoodle::before,
+.project-note-link--bollywoodle::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.project-note-link--bollywoodle::before {
+  opacity: 0.45;
+  background:
+    repeating-linear-gradient(115deg, rgba(255, 255, 255, 0.015) 0 1px, transparent 1px 4px),
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.012) 0 1px, transparent 1px 5px);
+  mix-blend-mode: screen;
+}
+
+.project-note-link--bollywoodle::after {
+  opacity: 0;
+  transform: translateX(-24%);
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, rgba(223, 161, 104, 0.1) 50%, rgba(0, 0, 0, 0) 100%);
+  transition: opacity 500ms ease, transform 500ms ease;
+}
+
+.project-note-link--bollywoodle:hover,
+.project-note-link--bollywoodle:focus-visible {
+  border-color: var(--bwdl-hover);
+  background: linear-gradient(180deg, rgba(35, 35, 35, 0.78) 0%, rgba(18, 18, 18, 0.88) 100%);
+  box-shadow: 0 12px 32px rgba(223, 161, 104, 0.2);
+}
+
+.project-note-link--bollywoodle:hover::after,
+.project-note-link--bollywoodle:focus-visible::after {
+  opacity: 1;
+  transform: translateX(18%);
+}
+
+.project-note-link--bollywoodle .project-note-link__title {
+  color: var(--bwdl-accent);
+  font-size: clamp(1.35rem, 3.1vw, 2.15rem);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  line-height: 0.96;
+}
+
+.project-note-link--cloudscript {
+  --note-cs-ink: #0f172a;
+  --note-cs-border: rgba(15, 23, 42, 0.08);
+  border: 1px solid var(--note-cs-border);
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.86) 0%, rgba(241, 247, 255, 0.92) 100%);
+  box-shadow: 0 18px 30px -20px rgba(15, 23, 42, 0.35);
+  color: var(--note-cs-ink);
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.project-note-link--cloudscript::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.24), transparent 62%);
+  transform: translate(0, 0);
+  transition: transform 420ms ease;
+}
+
+.project-note-link--cloudscript:hover,
+.project-note-link--cloudscript:focus-visible {
+  transform: translateY(-2px);
+}
+
+.project-note-link--cloudscript:hover::before,
+.project-note-link--cloudscript:focus-visible::before {
+  transform: translate(0.45rem, -0.15rem);
+}
+
+.project-note-link--cloudscript .project-note-link__title {
+  color: var(--note-cs-ink);
+  font-family: inherit;
+  font-size: clamp(1.5rem, 3.3vw, 2.3rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+}
+
 .paper-project-card h3,
 .paper-panel h3 {
   font-size: clamp(1.95rem, 4vw, 2.5rem);
@@ -66,15 +228,6 @@ body.page-paper.page-project-cloudscript .site-nav {
 
 .paper-project-card--shelf h2 {
   margin-top: 0;
-}
-
-.project-card-action--live {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  z-index: 3;
-  min-height: 1.85rem;
-  padding: 0.28rem 0.68rem;
 }
 
 .project-shelf-card {
@@ -117,9 +270,6 @@ body.page-paper.page-project-cloudscript .site-nav {
 .project-shelf-card--bollywoodle::before {
   opacity: 0.45;
   background:
-    radial-gradient(circle at 14% 18%, rgba(223, 161, 104, 0.08), transparent 24%),
-    radial-gradient(circle at 82% 18%, rgba(241, 200, 155, 0.06), transparent 22%),
-    radial-gradient(circle at 22% 74%, rgba(255, 255, 255, 0.05), transparent 18%),
     repeating-linear-gradient(115deg, rgba(255, 255, 255, 0.015) 0 1px, transparent 1px 4px),
     repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.012) 0 1px, transparent 1px 5px);
   mix-blend-mode: screen;
@@ -236,36 +386,6 @@ body.page-paper.page-project-cloudscript .site-nav {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
-.project-card-action--bollywoodle-live {
-  min-height: 1.68rem;
-  padding: 0.24rem 0.62rem;
-  border-color: transparent;
-  background: var(--bwdl-accent);
-  color: #0f0f0f;
-  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  font-size: 0.62rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.22);
-}
-
-.project-card-action--bollywoodle-live:hover,
-.project-card-action--bollywoodle-live:focus-visible {
-  background: var(--bwdl-accent-light);
-  color: #0f0f0f;
-}
-
-.project-card-action--bollywoodle-live-desktop {
-  position: absolute;
-  top: clamp(1.2rem, 2vw, 1.45rem);
-  right: clamp(1.25rem, 2.6vw, 1.7rem);
-  z-index: 2;
-}
-
-.project-card-action--bollywoodle-live-mobile {
-  display: none;
-}
-
 /* Clippy — a Bollywoodle side-toy, so it shares the warm palette */
 .project-shelf-card--clippy {
   --clp-bg: #1a1a1a;
@@ -307,7 +427,6 @@ body.page-paper.page-project-cloudscript .site-nav {
 
 .clippy-card__copy {
   min-width: 0;
-  padding-right: clamp(4rem, 12vw, 5.5rem);
 }
 
 .clippy-card__meta {
@@ -326,11 +445,13 @@ body.page-paper.page-project-cloudscript .site-nav {
   font-weight: 700;
   letter-spacing: 0.12em;
   line-height: 0.96;
+  white-space: nowrap;
   color: var(--clp-accent);
 }
 
 .clippy-card__clip {
   display: inline-block;
+  white-space: nowrap;
   transform: rotate(-12deg);
   font-size: 0.8em;
 }
@@ -338,6 +459,9 @@ body.page-paper.page-project-cloudscript .site-nav {
 .clippy-card__chips {
   display: flex;
   flex-wrap: wrap;
+  justify-content: flex-end;
+  align-self: center;
+  justify-self: end;
   gap: 0.5rem;
 }
 
@@ -357,73 +481,17 @@ body.page-paper.page-project-cloudscript .site-nav {
   text-transform: uppercase;
 }
 
+.clippy-card__chips span:first-child,
+.clippy-card__chips span:last-child {
+  border-color: rgba(223, 161, 104, 0.45);
+  background: rgba(223, 161, 104, 0.14);
+  color: var(--clp-accent-light);
+}
+
 .clippy-card__chips .is-cut {
   border-color: rgba(143, 174, 92, 0.45);
   background: rgba(143, 174, 92, 0.14);
   color: var(--clp-success);
-}
-
-.clippy-card__aside {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  justify-items: end;
-}
-
-.clippy-card__wave {
-  display: flex;
-  align-items: flex-end;
-  gap: 0.28rem;
-  height: 2.6rem;
-}
-
-.clippy-card__wave span {
-  width: 0.34rem;
-  border-radius: 999px;
-  background: linear-gradient(180deg, var(--clp-accent-light), var(--clp-accent));
-  animation: clippy-eq 1.1s ease-in-out infinite;
-}
-
-.clippy-card__wave span:nth-child(1) { height: 40%; animation-delay: -0.9s; }
-.clippy-card__wave span:nth-child(2) { height: 70%; animation-delay: -0.2s; }
-.clippy-card__wave span:nth-child(3) { height: 95%; animation-delay: -0.6s; }
-.clippy-card__wave span:nth-child(4) { height: 55%; animation-delay: -0.35s; }
-.clippy-card__wave span:nth-child(5) { height: 80%; animation-delay: -0.75s; }
-.clippy-card__wave span:nth-child(6) { height: 45%; animation-delay: -0.15s; }
-.clippy-card__wave span:nth-child(7) { height: 88%; animation-delay: -0.5s; }
-.clippy-card__wave span:nth-child(8) { height: 60%; animation-delay: -0.85s; }
-.clippy-card__wave span:nth-child(9) { height: 35%; animation-delay: -0.3s; }
-
-@keyframes clippy-eq {
-  0%, 100% { transform: scaleY(0.5); opacity: 0.7; }
-  50% { transform: scaleY(1); opacity: 1; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .clippy-card__wave span { animation: none; }
-}
-
-.project-card-action--clippy-live {
-  position: absolute;
-  top: clamp(1.2rem, 2vw, 1.45rem);
-  right: clamp(1.25rem, 2.6vw, 1.7rem);
-  z-index: 2;
-  min-height: 1.68rem;
-  padding: 0.24rem 0.72rem;
-  border-color: transparent;
-  background: var(--clp-accent);
-  color: #0f0f0f;
-  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  font-size: 0.62rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.22);
-}
-
-.project-card-action--clippy-live:hover,
-.project-card-action--clippy-live:focus-visible {
-  background: var(--clp-accent-light);
-  color: #0f0f0f;
 }
 
 .project-shelf-card--cloudscript {
@@ -513,24 +581,6 @@ body.page-paper.page-project-cloudscript .site-nav {
   width: 66%;
 }
 
-.project-card-action--cloudscript-live {
-  border-color: var(--cs-border-soft);
-  background: rgba(255, 255, 255, 0.68);
-  color: var(--cs-muted-strong);
-  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  font-size: 0.62rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  box-shadow: 0 6px 14px -10px rgba(15, 23, 42, 0.35);
-}
-
-.project-card-action--cloudscript-live:hover,
-.project-card-action--cloudscript-live:focus-visible {
-  border-color: rgba(59, 130, 246, 0.24);
-  background: rgba(255, 255, 255, 0.92);
-  color: var(--cs-ink);
-}
-
 .project-shelf-card--quant-desk {
   --qd-bg: #10141d;
   --qd-panel: #171d29;
@@ -552,7 +602,6 @@ body.page-paper.page-project-cloudscript .site-nav {
   border: 1px solid var(--qd-border);
   border-radius: var(--qd-radius);
   background:
-    radial-gradient(circle at top right, rgba(96, 165, 250, 0.08) 0%, rgba(96, 165, 250, 0) 28%),
     linear-gradient(180deg, rgba(245, 158, 11, 0.08) 0%, rgba(245, 158, 11, 0) 18%),
     var(--qd-bg);
   box-shadow: none;
@@ -768,7 +817,7 @@ body.page-paper.page-project-cloudscript .site-nav {
   font-weight: 700;
   letter-spacing: clamp(0.08em, 0.7vw, 0.14em);
   line-height: 0.9;
-  margin-top: 0.65rem;
+  margin-top: 1.2rem;
   text-transform: uppercase;
   color: #dfa168;
 }
@@ -815,8 +864,6 @@ body.page-paper.page-project-cloudscript .site-nav {
   inset: 0;
   pointer-events: none;
   background:
-    radial-gradient(circle at 14% 16%, rgba(223, 161, 104, 0.08), transparent 24%),
-    radial-gradient(circle at 82% 14%, rgba(241, 200, 155, 0.06), transparent 20%),
     repeating-linear-gradient(115deg, rgba(255, 255, 255, 0.015) 0 1px, transparent 1px 4px),
     repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.012) 0 1px, transparent 1px 5px);
   opacity: 0.46;
@@ -963,11 +1010,6 @@ body.page-paper.page-project-cloudscript .site-nav {
   position: relative;
   width: clamp(11rem, 28vw, 17.5rem);
   height: clamp(5.8rem, 12vw, 8.4rem);
-}
-
-.page-project-cloudscript .project-writing-actions {
-  grid-column: 1;
-  grid-row: 2;
 }
 
 .page-project-cloudscript .project-writing-page__cloud-word {
@@ -1204,18 +1246,6 @@ body.page-paper.page-project-cloudscript .site-nav {
     gap: 0.9rem;
   }
 
-  .project-card-action--bollywoodle-live-desktop {
-    display: none;
-  }
-
-  .project-card-action--bollywoodle-live-mobile {
-    display: inline-flex;
-    flex-shrink: 0;
-    min-height: 1.5rem;
-    padding: 0.2rem 0.5rem;
-    font-size: 0.5rem;
-  }
-
   .bollywoodle-card__aside,
   .bollywoodle-card__modes {
     justify-items: start;
@@ -1227,6 +1257,22 @@ body.page-paper.page-project-cloudscript .site-nav {
     border-radius: 28px;
   }
 
+  .project-shelf-card--clippy {
+    grid-template-columns: 1fr;
+    align-content: center;
+    justify-items: center;
+    text-align: center;
+  }
+
+  .project-shelf-card--clippy .clippy-card__chips {
+    justify-content: center;
+    justify-self: center;
+  }
+
+  .project-note-link--cloudscript {
+    border-radius: 28px;
+  }
+
   .cloudscript-card__aside {
     justify-items: start;
   }
@@ -1234,11 +1280,6 @@ body.page-paper.page-project-cloudscript .site-nav {
   .cloudscript-card__art {
     width: min(100%, 12rem);
     height: 5.9rem;
-  }
-
-  .project-card-action--live {
-    top: 0.9rem;
-    right: 0.9rem;
   }
 
   .project-shelf-card--quant-desk {
@@ -1277,14 +1318,17 @@ body.page-paper.page-project-cloudscript .site-nav {
 }
 
 @media (max-width: 720px) {
+  .project-notes-grid {
+    grid-template-columns: 1fr;
+  }
+
   .page-project-cloudscript .project-writing-page__hero {
     grid-template-columns: 1fr;
     gap: 1rem;
     position: relative;
   }
 
-  .page-project-cloudscript .project-writing-page__copy,
-  .page-project-cloudscript .project-writing-actions {
+  .page-project-cloudscript .project-writing-page__copy {
     position: relative;
     z-index: 1;
   }
@@ -1313,19 +1357,6 @@ body.page-paper.page-project-cloudscript .site-nav {
     right: -0.25rem;
     bottom: 0.2rem;
     width: 80%;
-  }
-
-  .page-project-cloudscript .project-writing-actions {
-    grid-column: 1 / -1;
-    grid-row: 2;
-    flex-wrap: nowrap;
-    gap: 0.42rem;
-  }
-
-  .page-project-cloudscript .project-card-action {
-    min-height: 1.9rem;
-    padding: 0.32rem 0.62rem;
-    font-size: 0.58rem;
   }
 
   .page-project-cloudscript .project-writing-page__panel-title {

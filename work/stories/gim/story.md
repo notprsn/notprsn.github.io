@@ -1,17 +1,35 @@
-# Greenland Investment Management LLP
+# greenland investment management llp
 
-I joined Greenland in November 2023 when they were the only firm willing to take me. That did nothing good for my identity or self-esteem. But the office was nice and I got to take Cityflo to and fro, so my routine became impeccable. Wake up, go to the gym, get ready, have breakfast, catch the bus, solve NYT puzzles, read a book, get to work, read pricing theory, implement it in code, do side-quests for the rest of the team, optimize existing code, catch the bus back home, read a book, get home, have dinner, sleep, repeat.
+i joined greenland in november 2023 when they were the only firm willing to take me. this did nothing good for my identity or self-esteem. the office was nice, though, and i got to take cityflo to and fro, so my routine became impeccable.
 
-I had no time to think. I was just executing like a robot. I never felt existential or self-reflective. Every part of the day was planned out. I dated on weekends. Robot life was great.
+wake up. gym. breakfast. bus. nyt puzzles. book. work. pricing theory. code. side quests for the team. optimise existing code. bus home. another book. dinner. sleep. repeat.
 
-Gold quanto pricing theory is actually beautiful math. I probably spent too much time on it, but building on rigorous mathematical foundations rarely goes to waste. People will apply pressure on you to move faster, but it is worth remembering that they assigned you the problem because they couldn't solve it themselves. That's all the leverage you need.
+i had no time to think. i was just executing like a robot. never existential, barely self-reflective. every part of the day was accounted for. i dated on weekends.
 
-I also learned how to use Excel. Excel is fine, but once you've done analysis in Python it is hard not to treat spreadsheet-heavy work as a retirement hobby. I worked with Bloomberg too. Same story. Useful tool, old interface, and exactly the kind of thing that feels magical until one good prompt replaces half the workflow.
+robot life was great.
 
-I also got to work on Chinese index ETFs: lots of data pulling, data cleaning, and corporate-event price adjustments. Most of it should be one-shottable now, but architecting a reliable system is still a fun problem. I don't expect the people at Greenland to be AI-native yet, because it's hard for an elephant codebase to look inward and admit its habits might be obsolete. I'd love to be proved wrong though.
+gold quanto pricing theory is actually beautiful math. i probably spent too much time on it, but building from rigorous mathematical foundations rarely feels wasted. people will pressure you to move faster. useful thing to remember: if the problem were already easy, you probably wouldn't have been assigned it.
 
-I learned a lot about fair value and EV-based strategy thinking there. First-principles pricing, trading the deviations. Usually works well in priceable things like commodities. Not so much in equities. There you have to be creative to the extent that other people just don't get it, I think.
+i also learned how to use excel. excel is fine, but once you've done analysis in python it's hard not to treat spreadsheet-heavy work as a retirement hobby. i worked with bloomberg too. same story. useful tool, old interface, and exactly the kind of workflow that increasingly makes you wonder how much of it should still be manual.
 
-Anyway, within a month the role conversation turned into a small power game. "Write 10 things you did that created impact and then we'll give you an offer." Imagine that: 22 working days and I was supposed to produce 10 impact points on demand. I had anticipated something like that, so I kept a running log of everything I did that was useful, with human witnesses for each point. I showed up five minutes later with the write-up. My manager stifled his surprise. I grinned. Please don't mess with me.
+i also worked on chinese index etfs: lots of data pulling, cleaning and corporate-event price adjustments. much of that feels one-shottable now, but architecting the reliable system around it is still an interesting problem. large old codebases have inertia; getting them to become ai-native is less a tooling problem than an organisational one. i'd be curious to see how far greenland has pushed it since.
 
-The place was a parking spot anyway. Who wants to trade commodity spreads all day? Six to twelve percent annualized was too boring to be sustainable. I worked on getting another offer, got one, said I wanted to study further, and quit. They deleted my system before I got the last word in. Egos were bruised. I walked out.
+i learnt a lot there about fair value and ev-based strategy thinking. price something from first principles, then trade the deviation. this works beautifully when the thing is reasonably priceable, commodities being the obvious example. equities are messier. there, the edge often seems to require seeing something other people haven't framed the same way yet.
+
+about a month in, the role conversation turned into a small power game.
+
+“write 10 things you did that created impact and then we'll give you an offer.”
+
+22 working days. 10 impact points. alright.
+
+fortunately, i'd anticipated something like this and kept a running log of everything useful i'd done, with human witnesses attached to each point. i came back five minutes later with the write-up. my manager tried not to look surprised. i grinned.
+
+please don't mess with me.
+
+the role had always been something of a parking spot for me. commodity-spread trading was interesting intellectually, but six to twelve percent annualised wasn't a game i could see myself caring about for very long.
+
+so i started looking for what came next, got another offer and left.
+
+the ending was slightly theatrical. the system i'd built was deleted before i could properly close the loop on it. not how i'd have chosen to wrap things up, but perhaps fitting for a chapter neither side expected to last very long.
+
+then i walked out.
