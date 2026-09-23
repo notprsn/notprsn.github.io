@@ -22,10 +22,7 @@ body.page-home {
   top: var(--scene-header-offset);
   z-index: 1;
   pointer-events: none;
-  background:
-    radial-gradient(circle at 12% 18%, rgba(78, 132, 97, 0.18), transparent 24%),
-    radial-gradient(circle at 88% 12%, rgba(255, 255, 255, 0.06), transparent 18%),
-    linear-gradient(180deg, rgba(5, 7, 10, 0.24) 0%, rgba(5, 7, 10, 0.62) 68%, rgba(5, 7, 10, 0.84) 100%);
+  background: transparent;
 }
 
 .pi-mascot {

@@ -6,9 +6,9 @@ Current snapshot
 - [x] About page is written
 - [x] Fun hub is live with 6 mini projects
 - [x] All 6 work experience blocks have public long-form story pages
-- [x] Bollywoodle has public project writing (`story` and `humming`)
+- [x] Bollywoodle has public project writing (`story`)
 - [ ] Essays are still unpublished
-- [x] CloudScript has the intentionally minimal public-facing note you want for now
+- [x] CloudScript has a public story page
 - [ ] Polymarket Crypto Desk still needs a public detail page
 - [x] Love letters archive is initialized
 
@@ -72,6 +72,5 @@ Secret Puzzle
 - [ ] Switch GitHub Pages source to GitHub Actions in repository settings
 
 Later
-- [ ] Design glossary taxonomy
 - [ ] Plan first gallery album
 - [ ] Add image optimisation pipeline before large photo uploads

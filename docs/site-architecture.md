@@ -9,7 +9,6 @@ Primary sections
 - `/essays/`
 - `/love-letters/`
 - `/gallery/`
-- `/glossary/`
 - `/secret/` private-source puzzle trail deployed into GitHub Pages
 
 Structure principles
@@ -39,7 +38,7 @@ Patterns
 - Projects: current build shelf plus selective project-specific detail pages.
 - Fun: hub page plus self-contained project directories.
 - Essays: theme hubs plus theme-local `content.md` files that publish when they have prose.
-- Gallery and glossary: placeholders now, fuller structures later.
+- Gallery: placeholder now, fuller structure later.
 - Secret puzzle: intentionally off-nav, noindex, and injected from a private repo during Pages deployment.
 - Shared style language: see `docs/style-language.md`.
 
@@ -49,8 +48,8 @@ Current content inventory
   - `work/stories/` has 6 public long-form story pages.
 - Projects:
   - `/projects/` has 3 shelf cards.
-  - Bollywoodle has 2 public detail pages: `story` and `humming`.
-  - CloudScript has a public detail page shell with an intentionally minimal public note.
+  - Bollywoodle has 1 public detail page: `story`.
+  - CloudScript has 1 public detail page: `story`.
   - Polymarket Crypto Desk has a shelf card and sample data, but no linked public detail page yet.
 - Fun:
   - `/fun/` links to 6 live mini-projects.
@@ -59,8 +58,8 @@ Current content inventory
   - All 22 essay `content.md` files are currently blank, so there are 0 generated public essay detail pages.
 - Love Letters:
   - The decryption flow is live and `data/love-letters.enc.json` is initialized with a real encrypted bundle.
-- Gallery and Glossary:
-  - Both routes are still placeholders.
+- Gallery:
+  - The route is still a placeholder.
 - Secret:
   - `/secret/` is served from the deployed Pages artifact, but its source lives outside this public repo.
 

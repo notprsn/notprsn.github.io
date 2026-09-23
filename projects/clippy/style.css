@@ -109,7 +109,7 @@ main { position: relative; z-index: 1; max-width: 720px; margin: 0 auto; display
 
 /* ---- setup ---- */
 .setup-card h2 {
-  margin: 0;
+  margin: 0 0 22px;
   color: var(--mid-warm);
   font-size: clamp(1.3rem, 4vw, 1.75rem);
   line-height: 1.15;
@@ -193,7 +193,22 @@ main { position: relative; z-index: 1; max-width: 720px; margin: 0 auto; display
   color: var(--soft-neutral);
   font-size: 0.82rem;
 }
-.other-setup summary { cursor: pointer; }
+.other-setup summary {
+  cursor: pointer;
+}
+.other-setup.prefer-git {
+  margin-top: 18px;
+  padding: 13px 14px 14px;
+  border: 1px solid rgba(223, 161, 104, 0.42);
+  border-radius: 10px;
+  background: rgba(223, 161, 104, 0.08);
+}
+.other-setup.prefer-git summary {
+  color: var(--mid-warm);
+  font-size: 0.94rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
 .other-setup p { margin-bottom: 6px; }
 .other-setup pre {
   overflow-x: auto;

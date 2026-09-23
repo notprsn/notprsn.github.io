@@ -1,11 +1,39 @@
-# Optiver Services B.V.
+# optiver services b.v.
 
-Optiver is a psychological battle. You walk in hyper-aware of the talent density and can't help but feel like you're the dumbest person in the room. All the time.
+optiver is a psychological battle. you walk in hyper-aware of the talent density and can't help feeling like the dumbest person in the room.
 
-I spent most of theory trying hard to stay alert and understand what was going on while knowing I had no clue. Solving exercises with the others was fun. Playing trading games was fun. Picking the minds of literal geniuses was fun. But staying awake in class was absolutely not it. They should hand out nootropics and three cans of Red Bull a day to interns if they want to sustain the same training model.
+all the time.
 
-Simulated trading was fun. I had no idea what to do on the first day because I fell asleep during the briefing. My eyes were open, but I was asleep. I clicked a bunch of buttons thinking, fuck it, we ball. I caught up on what it all meant with my friends that evening. After that, trading was just make money, don't lose money, don't fake the money by manipulating the vol estimate, and glaze Prateek Prateek partly because his name was Prateek Prateek and partly because he was a good trader. I mostly did what felt sensible in my gut. Did I mention I had no idea what I was doing? Apparently I made a lot of fake money.
+i spent most of theory trying very hard to stay alert and understand what was going on while knowing i had no clue. solving exercises with the others was fun. trading games were fun. picking the minds of literal geniuses was fun.
 
-The research project was alright. It was open-ended, and if something is open-ended and the deadline is three weeks, I tend to freeze. Especially when I'm already dealing with impostor syndrome, terrible sleep from trying things legal in Amsterdam, and a consciousness stuck in survival mode. I wrote a lot of code, made a lot of charts, and still didn't understand much. My project guide came over on the last day, looked at the data and charts, told me the insights, and said I should be proud. Lies. I also broke my "whee-up-down desk" because I pushed down when it couldn't go further down.
+staying awake in class was absolutely not it.
 
-The breakfast spread is world-class, the game area is sick, and the people are terrifying and awe-inspiring. Friday evening drinks are fun. Amsterdam is really cool and lives up to the hype. I didn't indulge in red-light activities, and if I did I would still deny it. I visited Belgium too. Made some friends, who may or may not remain so, though we aren't really in touch.
+they should probably hand interns three cans of red bull a day if they want to keep the same training model.
+
+simulated trading was much more my speed. i had no idea what to do on day one because i'd fallen asleep during the briefing. eyes open. fully asleep.
+
+so i clicked a bunch of buttons thinking, fuck it, we ball.
+
+that evening, my friends caught me up on what everything actually meant. after that the rules felt simple enough: make money, don't lose money, don't manufacture fake pnl by messing with the vol estimate, and glaze prateek prateek, partly because his name was prateek prateek and partly because he was a very good trader.
+
+i mostly did whatever felt sensible in my gut.
+
+apparently this made a lot of fake money.
+
+the research project was harder. it was open-ended, and if something is open-ended with a three-week deadline, i tend to freeze. especially when i'm already dealing with impostor syndrome, terrible sleep from experimenting with things legal in amsterdam, and a consciousness stuck in survival mode.
+
+i wrote a lot of code, made a lot of charts, and spent most of the project unsure whether i understood the thing deeply enough.
+
+on the last day, my project guide came over, looked through the data and charts, pointed out the insights, and told me i should be proud.
+
+suspicious.
+
+i also broke my whee-up-down desk because i pushed down when it couldn't go any further down.
+
+the breakfast spread is world-class. the game area is sick. the people are terrifying and awe-inspiring. friday evening drinks are fun. amsterdam is really cool and completely lives up to the hype.
+
+i didn't indulge in any red-light activities, and if i did i would still deny it.
+
+i visited belgium too. made some friends, who may or may not remain so. we aren't really in touch.
+
+unforgettable summer.

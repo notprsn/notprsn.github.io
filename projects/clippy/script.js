@@ -77,7 +77,7 @@ function showPlatformInstructions() {
     help.textContent = "Windows may ask whether to allow the script. Choose Run.";
   } else if (platform.includes("mac")) {
     action.textContent = "Double-click start-clippy.command";
-    help.textContent = "A Terminal window will open and finish the setup for you.";
+    help.textContent = "Keep the helper open.";
   } else if (platform.includes("linux")) {
     action.textContent = "Run bash start-clippy.sh";
     help.textContent = "Open a terminal in the clippy folder, paste that command, and press Enter.";

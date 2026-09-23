@@ -7,7 +7,6 @@ Directories
 - `work/stories/<slug>/story.md`: finalized work-story markdown rendered directly on dedicated `work/stories/*` pages.
 
 Path format
-- `projects/cloudscript/message/content.md`
 - `projects/cloudscript/story/content.md`
 - `projects/bollywoodle/story/content.md`
 - `essays/travel/uk/content.md`
@@ -25,9 +24,9 @@ Website wiring
 - Theme queue cards wire their `Open essay` link from `data-essay-slot` and `data-essay-link` during sync.
 - Work stories live on dedicated routes like `/work/stories/qicap/` and are linked directly from `/work/`.
 - Work and project markdown pages are static-rendered by `scripts/sync-site.mjs`; `js/pages/content-entry.js` remains as a browser enhancement that can refresh the prose from the markdown source.
-- The repo currently has 3 kinds of project writing state:
-  - public multi-note pages for Bollywoodle
-  - public message and story windows for CloudScript under sibling note directories
+- The repo currently has 2 kinds of project writing state:
+  - a public story page for Bollywoodle
+  - a public story page for CloudScript
   - an empty unpublished draft for Polymarket Crypto Desk
 - Work-story markdown should contain the narrative only:
   - keep the `# Company` title in `story.md`

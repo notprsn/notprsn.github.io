@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Work story from Sharpely by Prasann Iyer.">
     <meta name="author" content="Prasann Iyer">
-    <meta name="site-version" content="20260729021007287">
+    <meta name="site-version" content="20260923030824256">
     <title>Sharpely | Prasann Iyer</title>
     <link rel="canonical" href="https://notprsn.github.io/work/stories/sharpely/" data-managed-seo>
     <meta property="og:site_name" content="Prasann Iyer" data-managed-seo>
@@ -32,8 +32,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
-    <link href="../../../css/style.css?v=20260729021007287" rel="stylesheet">
-    <link href="../../../css/pages/work.css?v=20260729021007287" rel="stylesheet">
+    <link href="../../../css/style.css?v=20260923030824256" rel="stylesheet">
+    <link href="../../../css/pages/work.css?v=20260923030824256" rel="stylesheet">
 </head>
 <body class="page-paper">
     <header class="site-header">
@@ -44,7 +44,7 @@
                     <a href="/work/" aria-current="page">Work</a>
                     <a href="/projects/">Projects</a>
                     <a href="/fun/">Fun Stuff</a>
-                    <a href="/essays/">Essays</a>
+                    <a href="/essays/">Stories</a>
                 </nav>
             </div>
         </div>
@@ -62,13 +62,24 @@
         <section class="paper-section">
             <article class="paper-panel work-story-page__panel" data-work-story-page data-story-file="/work/stories/sharpely/story.md">
                 <div class="writing-prose work-story-page__prose" data-work-story-prose>
-                    <p>I joined Sharpely in September 2023. I&#39;d spent a two-month dissociative depression stretch applying to jobs, writing to professors, giving the GRE, and travelling around India with my family after not getting a permanent offer at Optiver. No one was hiring, and the LinkedIn algorithm, seeing my desperation, knew I&#39;d bite.</p>
-                    <p>They were a tiny team: a CEO, a CTO, a frontend engineer, a backend engineer, and the money guy. The hiring project was to build a backtester and run a simple Bollinger-band crossover strategy on it with visuals. Fun project.</p>
-                    <p>My first assignment as an intern was to improve the performance of a stock screener by changing the existing Pandas logic to Polars. Polars is awesome. It is so much faster it isn&#39;t even funny. The syntax is a nightmare though. I would isolate logical blocks in Pandas, rewrite them in Polars, and then test the input and output DataFrames until they matched. ChatGPT still sucked at ingesting documentation and giving correct syntax back then, so I had to do it the old-fashioned way.</p>
-                    <p>Next I was tasked with integrating dx-charts, an open-source charting library, to replace their paid TradingView components. The funny part was that their frontend engineer thought it was a dead end because dx-charts had terrible documentation and he had already tried and given up. I wasn&#39;t aware of that when I started, so I just kept going and eventually got it in place. It was a breath of fresh air when he admitted afterwards that he hadn&#39;t been able to do what I&#39;d done.</p>
-                    <p>I also worked on data pipelines for bulk deals, block deals, insider trades, and corporate actions directly from NSE and BSE endpoints. I would pull the data, clean it up, make it consistent with the existing database schema, and push it to the production servers. One pipeline a day, test it, ship it.</p>
-                    <p>The last point on the resume is basically a gimmick. I didn&#39;t do anything that created real value there. I pushed a bunch of PDFs through some Hugging Face models and got unusable garbage back. I also tried to integrate the Lean backtester as a potential front-facing framework, but that didn&#39;t go anywhere. There was some C# and .NET code I had no idea how to work with, and I think I eventually ended up forking the repository and setting up a toy backtest for buying at end of day and selling at market open on S&amp;P 500 components. I&#39;m drawing a blank even thinking about it.</p>
-                    <p>Because this role wasn&#39;t all-consuming, I kept myself busy by simultaneously working on a proof of concept for a startup idea, CarSeekho, with Vineet. Standardising driving schools in India, starting with Mumbai. I also applied to E-Cell at IITB. They killed the idea at the idea stage. I did a 6000-piece jigsaw puzzle in this window too.</p>
+                    <p>i joined sharpely in september 2023. i&#39;d just spent two months mildly dissociated and deeply unemployed: applying to jobs, writing to professors, giving the gre, and travelling around india with my family after not getting a permanent offer at optiver. nobody was hiring. linkedin, sensing weakness, knew i&#39;d bite.</p>
+                    <p>they were tiny: ceo, cto, frontend engineer, backend engineer, money guy.</p>
+                    <p>the hiring project was to build a backtester, run a simple bollinger-band crossover strategy on it and add visuals. fun project.</p>
+                    <p>my first assignment as an intern was to speed up a stock screener by replacing its pandas logic with polars. polars is awesome. absurdly fast. the syntax, unfortunately, is a nightmare.</p>
+                    <p>i&#39;d isolate logical blocks in pandas, rewrite them in polars, then keep comparing input and output dataframes until they matched. chatgpt still sucked at ingesting documentation and returning reliable syntax back then, so this involved considerably more reading than prompting.</p>
+                    <p>next came dx-charts, an open-source charting library meant to replace their paid tradingview components. the funny part was that their frontend engineer had already tried integrating it, decided the documentation was hopeless and given up.</p>
+                    <p>nobody told me.</p>
+                    <p>so i kept going until it worked.</p>
+                    <p>him admitting afterwards that he hadn&#39;t managed to do it himself was a much-needed little ego refill.</p>
+                    <p>i also built data pipelines for bulk deals, block deals, insider trades and corporate actions directly from nse and bse endpoints. pull the data, clean it, map it to the existing database schema, push it to production.</p>
+                    <p>roughly one pipeline a day. test it. ship it.</p>
+                    <p>the last bullet on my resume from sharpely is mostly a gimmick.</p>
+                    <p>i pushed a bunch of pdfs through hugging face models and got unusable garbage back. i also explored integrating lean as a possible front-facing backtesting framework, which went nowhere. there was c# and .net code i barely understood, and i think i eventually forked the repository and set up a toy strategy that bought s&amp;p 500 components at close and sold them at the next open.</p>
+                    <p>i&#39;m drawing a blank even trying to remember why.</p>
+                    <p>the role wasn&#39;t all-consuming, which left me enough spare brain to do other things. vineet and i worked on a proof of concept for carseekho: standardising driving schools in india, starting with mumbai.</p>
+                    <p>we also applied to e-cell at iitb. they killed the idea at the idea stage.</p>
+                    <p>somewhere in this window, i also completed a 6000-piece jigsaw puzzle.</p>
+                    <p>productive quarter.</p>
                 </div>
             </article>
         </section>
@@ -78,16 +89,14 @@
         <div class="footer-shell">
             <span>Work</span>
             <div class="footer-links">
-                <a href="/projects/">Projects</a>
                 <span class="footer-link-placeholder">Gallery</span>
-                <span class="footer-link-placeholder">Glossary</span>
                 <a href="https://github.com/notprsn" target="_blank" rel="noreferrer">GitHub</a>
             </div>
             <span>&copy; <span data-current-year>2026</span> PI - All rights reversed</span>
         </div>
     </footer>
 
-    <script type="module" src="../../../js/site.js?v=20260729021007287"></script>
-    <script type="module" src="../../../js/pages/content-entry.js?v=20260729021007287"></script>
+    <script type="module" src="../../../js/site.js?v=20260923030824256"></script>
+    <script type="module" src="../../../js/pages/content-entry.js?v=20260923030824256"></script>
 </body>
 </html>

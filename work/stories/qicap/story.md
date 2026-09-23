@@ -1,23 +1,45 @@
-# QiCAP.Ai
+# qicap.ai
 
-I joined QiCAP.Ai in June 2024 as a Quant Trader. The initial problem statement was simple to describe and solve: design a profitable strategy to buy ATM straddles on index options on expiry day. I was given about 750 high-frequency signals sampled every five seconds as usable input.
+i joined qicap.ai in june 2024 as a quant trader. the first problem was satisfyingly contained: build a profitable strategy for buying atm straddles on index-option expiry days. i was handed roughly 750 high-frequency signals, sampled every five seconds, and told to have at it.
 
-I wrote a backtesting script that simulated buying and closing ATM straddles while tracking the relevant metrics. Buy when the decision is 2, exit when it is 0, hold when it is 1. Keep it simple.
+first i built the simulator. buy when the decision is 2, exit when it's 0, hold when it's 1. track the relevant metrics. keep it simple.
 
-My first trading idea was to take the edge values of each signal and see whether a 0, 1, -1 style Bayesian update model would work. Two problems killed it. First, the code was too slow and I couldn't make it fast enough. Second, collapsing real values into discrete buckets threw away too much information. Scrapped.
+my first idea was less simple. take the edge values of each signal and try a 0, 1, -1-style bayesian update model. two things killed it. the code was too slow and i couldn't make it fast enough; worse, discretising real-valued signals threw away too much information. scrapped.
 
-Next I generated forward returns for ATM straddles across different look-aheads. I studied their distributions in statistically significant regions of the input signals. Because the number of signals was large, I defined different kinds of statistical shapes and labelled signals accordingly.
+next i generated forward atm-straddle returns across different look-aheads and studied their distributions in statistically significant regions of each signal. 750 signals is an annoying number of graphs to stare at, so i defined statistical shapes, classified signals by shape, and kept the classes that showed predictive power across horizons.
 
-I chose the classes of shapes that had predictive power across different look-aheads. I looked at daily ATM-straddle charts and concluded that regimes tend to stay consistent for quarters or half-years at a time. So I trained random forests, XGBoost, and linear models on the chosen signals for each look-ahead. I then tried the simplest possible deployment logic: hold for exactly the forward duration the model was trained on and check performance. Linear models outperformed everything else. Good reminder that simplicity is underrated in trading. I ended up trading the edges of the model distribution using z-score and percentile levels.
+looking through daily atm-straddle charts, i noticed regimes seemed to persist for quarters or half-years at a time. i trained random forests, xgboost and linear models on the selected signals for each look-ahead, then tried an almost offensively simple deployment rule: if a model predicts a horizon, hold for exactly that long.
 
-That whole exercise took about a month and a half. We started trading the strategy and it worked. Buying options and being right means your money can double, triple, or quadruple. It is exhilarating. We were making money hand over fist. Then SEBI changed the rules and BANKNIFTY, MIDCPNIFTY, and FINNIFTY weekly expiries went kaput. That meant I had only a fraction of the trading days left and only a fraction of the data to train on. In hindsight, that should have been the sign to start afresh. Instead, like most humans, I tried to keep something alive just because it had once worked beautifully.
+linear models won. (surprise!)
 
-My first pivot was to keep buying and closing straddles on expiry day using my strategy plus other ML black-box signals. That involved a lot of Rust binaries, optimized parallel code for faster sims, dashboards for performance monitoring, and box-plot-style techniques to mathematically justify chosen approaches. A lot of it felt like hokum. It was still unprofitable. The lesson was about systems: how do you know when to stop exploring an idea space and when to restart from first principles?
+i ended up trading the edges of their output distributions using z-scores and percentile levels. the whole thing took about a month and a half. then we put it live.
 
-I also spent time managing ML black-box trading strategies across the firm. That mostly meant making sure live runs matched what we expected to see in sim. It looked like grunt work on the surface, but it was where I started getting comfortable with AI-assisted coding and with the research-to-execution QA loop.
+it worked.
 
-The second pivot came when a new set of signals arrived, built on some natural extensions of our statistical thinking. The space improved, but by then I had lost some grip on the original idea. I did not fully rework the system around the new signals and I regret that. I kept busy with side-quests instead of committing to a clean rebuild.
+buying options on expiry while being right is ridiculously fun. your money can double, triple, quadruple. for a while we were making it hand over fist.
 
-I also learned that sharing fully formed trading strategies is somewhat futile. The consciousness you build while designing your own strategy is too much of the edge; another person rarely absorbs it by inheritance. It is better to trade observations and mental models than finished strategies. By late 2025 I had also realized that buying straddles profitably was basically impossible from January to June. That reinforced a more basic lesson: test a strategy against first principles on the most recent data before you fall in love with it. And never assume one profitable style will make money forever.
+then sebi changed the rules. banknifty, midcpnifty and finnifty weekly expiries went kaput. overnight, i had a fraction of the trading days and a fraction of the useful training data.
 
-By then I was comfortable coding in English and increasingly aware that I wanted to move closer to AI than discretionary strategy research. I explored that direction seriously and started thinking harder about what I wanted the next phase of work to look like. It's said your prefrontal-cortex gets close to full development when you turn 25 so a year to sprint on other skills felt like a good idea. Let's see if this bet pays off.
+in hindsight, this was probably the part where i had to understand the game has changed.
+
+instead i tried to keep it alive.
+
+the first pivot kept the expiry-day straddle framework alive while adding other ml black-box signals. this spawned rust binaries, aggressively parallel sims, performance dashboards and box-plot-style machinery to mathematically justify various choices. a lot of it felt like hokum. importantly, it was also still unprofitable.
+
+there's a systems question buried in there that i care about much more now: when are you exploring a promising idea space, and when are you merely refusing to restart?
+
+around the same time, i was managing ml black-box strategies across the firm, mostly making sure live behaviour matched sim. it looked like grunt work. it ended up being useful exposure to the research-to-execution qa loop, and was where i first became comfortable coding with ai.
+
+the second pivot came when we got a new family of signals built from natural extensions of the statistical ideas we'd started with. the space was better. my research wasn't. by then i'd lost some grip on the original thesis, didn't properly rebuild the system around the new information, and kept myself occupied with side quests instead.
+
+i regret that.
+
+i also became increasingly convinced that handing someone a fully formed trading strategy is futile. the edge lives in the consciousness you build while creating it: what you've tested, what you've ruled out, which assumptions bother you, what looks wrong before you can quite prove why. observations and mental models transfer. finished strategies mostly don't. does this mean i agree with [tao](https://mathstodon.xyz/@tao/117207849921390904)?
+
+by late 2025 i'd also learnt that buying straddles profitably was basically impossible for us from january through june. another embarrassingly basic lesson: test the idea against first principles on recent data before falling in love with its historical pnl. one profitable style is not a law of nature.
+
+somewhere through all this, i got really comfortable coding in english and increasingly interested in what i could do without being told what to.
+
+so i left myself a year to sprint in that direction.
+
+let's see if this bet pays off.

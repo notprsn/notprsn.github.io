@@ -31,10 +31,7 @@
 .fun-starfield-veil {
   z-index: 1;
   pointer-events: none;
-  background:
-    radial-gradient(circle at 18% 16%, rgba(255, 255, 255, 0.02), transparent 18%),
-    radial-gradient(circle at 82% 12%, rgba(160, 190, 255, 0.05), transparent 18%),
-    linear-gradient(180deg, rgba(0, 0, 0, 0.18) 0%, rgba(0, 0, 0, 0.04) 34%, rgba(0, 0, 0, 0.28) 100%);
+  background: transparent;
 }
 
 .page-fun-space .site-header {
@@ -70,19 +67,7 @@
 }
 
 .page-fun-space .fun-intro-copy::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  border-radius: 2rem;
-  pointer-events: none;
-  background:
-    radial-gradient(circle at 18% 18%, rgba(255, 255, 255, 0.06), transparent 34%),
-    linear-gradient(135deg, rgba(6, 10, 12, 0.22), rgba(6, 10, 12, 0.38));
-  opacity: 0.9;
-  backdrop-filter: blur(1px);
-  -webkit-backdrop-filter: blur(1px);
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.04);
+  content: none;
 }
 
 .page-fun-space .lab-card {
@@ -250,8 +235,7 @@
 
 @media (max-width: 760px) {
   .fun-starfield-veil {
-    background:
-      linear-gradient(180deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.06) 28%, rgba(0, 0, 0, 0.3) 100%);
+    background: transparent;
   }
 
   .page-fun-space .fun-intro-copy {

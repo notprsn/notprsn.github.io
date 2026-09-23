@@ -1,9 +1,43 @@
-# Alphagrep Securities Pvt. Ltd.
+# alphagrep securities pvt. ltd.
 
-I joined Alphagrep Securities Pvt. Ltd. in May 2022 as a Quantitative Research Intern. I was supposed to go to Optiver that summer, but my visa got rejected. Funny story, actually. I still have no idea why. I messed up the police-verification process because GOI websites are atrocious, especially when you already have impaired executive functioning. But I managed to get the documents together in time, made the appointment, and thought it had gone smoothly. The visa kept getting delayed as my flight date approached. Dad literally went to the Dutch Embassy in Delhi to press them. I missed the flight, then another, and then a couple of us got our visas rejected a few days later. I still couldn't pattern-recognize the reason. Shoot three random ducks in the bucket, I guess. Or the three ugliest ducks in the pond. I don't know. I'm not a duck person.
+i joined alphagrep in may 2022 as a quantitative research intern.
 
-Luckily, Alphagrep bit when I started mass-applying on LinkedIn to quant firms that hadn't come for internships. They asked me if I could write code in Python and I said, sure, I guess. I should have known. The internship was fun. There was just the right amount of impostor syndrome to keep me on my toes. I could also sense I wasn't a cultural fit whenever I made the occasional social-cue blunder. And I'm not outrageously gifted enough to be hired on pure talent, so that was that.
+i was supposed to spend that summer at optiver, but my visa got rejected. funny story, actually. i still have no idea why.
 
-I must have tried the most random trading strategies imaginable there. The idea was to take a bunch of historical data, simulate the most random buy-sell ideas, and then flip buys for sells and sells for buys across a universe of conditions that was equally random. If you have that setup and play around with the condition space like a monkey with a typewriter, you'll land on 8-Sharpe and 14-Sharpe ideas. The best part is that this outrageous trading-strategy setup actually printed in live too.
+i'd already messed up the police-verification process because goi websites are atrocious, especially when you have impaired executive functioning. somehow i got everything together in time, made the appointment and thought it had gone fine.
 
-In other things, during the internship I unexpectedly became friends with someone from my department. We did an escape room together and hung out. My Alphagrep football team also won the Alphagrep Cup. I got a medal and everything. This was also my first real income, with tax implications and all that.
+then the visa just... didn't arrive.
+
+my flight got closer. dad literally went to the dutch embassy in delhi to press them. i missed one flight, then another. a few days later, a couple of us got rejected.
+
+i still couldn't pattern-recognise the reason.
+
+shoot three random ducks in the bucket, i guess. or the three ugliest ducks in the pond. i don't know. i'm not a duck person.
+
+luckily, alphagrep bit when i started mass-applying on linkedin to quant firms that hadn't come to campus for internships.
+
+they asked if i could write code in python.
+
+sure, i guess.
+
+i should have known.
+
+the internship was fun. there was just enough impostor syndrome to keep me on my toes. i could also tell i wasn't quite a cultural fit whenever i committed the occasional social-cue blunder. and i wasn't outrageously gifted enough for that not to matter.
+
+so that was that.
+
+research itself was great. i must have tried some of the most random trading strategies imaginable.
+
+the setup was basically: take historical data, simulate arbitrary buy-sell ideas, then flip buys to sells and sells to buys across an equally arbitrary universe of conditions.
+
+if you search a large enough condition space like a monkey with a typewriter, eventually you discover an 8-sharpe strategy.
+
+sometimes a 14-sharpe one.
+
+the ridiculous part is that some of this stuff actually printed live too.
+
+outside work, i unexpectedly became friends with someone from my department. we did an escape room together and hung out.
+
+my alphagrep football team also won the alphagrep cup. i got a medal and everything. very sports.
+
+this was also my first real income. taxes and all. very adult.

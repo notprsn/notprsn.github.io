@@ -6,7 +6,7 @@ Live at https://notprsn.github.io/.
 
 Current sections
 - `/`, `/about/`, `/work/`, `/projects/`, `/fun/`, `/essays/`, and `/love-letters/` are all live.
-- `/gallery/` and `/glossary/` are still placeholders.
+- `/gallery/` is still a placeholder.
 - `/secret/` is deployed by GitHub Actions from a private puzzle source repo.
 
 Structure notes

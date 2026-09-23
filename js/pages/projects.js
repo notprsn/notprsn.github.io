@@ -20,7 +20,7 @@ function initProjectCardLinks() {
                 return;
             }
 
-            window.location.href = href;
+            openProjectCardLink(card, href);
         });
 
         card.addEventListener("keydown", (event) => {
@@ -29,9 +29,18 @@ function initProjectCardLinks() {
             }
 
             event.preventDefault();
-            window.location.href = href;
+            openProjectCardLink(card, href);
         });
     });
+}
+
+function openProjectCardLink(card, href) {
+    if (card.hasAttribute("data-project-card-new-window")) {
+        window.open(href, "_blank", "noopener,noreferrer");
+        return;
+    }
+
+    window.location.href = href;
 }
 
 function isInteractiveCardTarget(target, card) {

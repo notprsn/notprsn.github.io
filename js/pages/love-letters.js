@@ -205,6 +205,10 @@ function initLoveLetters() {
             const archive = JSON.parse(plaintext);
             renderArchive(archive, { archiveTitle, archiveIntro, lettersList });
             output.hidden = false;
+            window.requestAnimationFrame(() => {
+                output.scrollIntoView({ behavior: "smooth", block: "start" });
+                output.querySelector("[data-letter-reader]")?.focus({ preventScroll: true });
+            });
             form.reset();
             updateSubmitVisibility();
             setStatus("", "success");
@@ -503,13 +507,111 @@ function renderArchive(archive, targets) {
     archiveIntro.hidden = !intro.trim();
     lettersList.replaceChildren();
 
-    letters.forEach((letter) => {
-        const shell = document.createElement("article");
-        shell.className = "letter-shell";
+    if (!letters.length) {
+        const empty = document.createElement("p");
+        empty.className = "letter-library__empty";
+        empty.textContent = "No letters here yet.";
+        lettersList.appendChild(empty);
+        return;
+    }
 
-        const heading = document.createElement("h2");
-        heading.textContent = typeof letter.title === "string" ? letter.title : "Untitled";
-        shell.appendChild(heading);
+    const library = document.createElement("div");
+    library.className = "letter-library";
+
+    const reader = document.createElement("section");
+    reader.className = "letter-reader";
+    reader.tabIndex = 0;
+    reader.dataset.letterReader = "";
+    reader.setAttribute("aria-label", "Letter reader");
+
+    const previous = document.createElement("button");
+    previous.className = "letter-reader__nav letter-reader__nav--previous";
+    previous.type = "button";
+    previous.setAttribute("aria-label", "Previous letter");
+    previous.innerHTML = "<span aria-hidden=\"true\">&#8592;</span>";
+
+    const stage = document.createElement("figure");
+    stage.className = "letter-reader__stage";
+
+    const image = document.createElement("img");
+    image.className = "letter-reader__image";
+    image.alt = "";
+    image.decoding = "async";
+    image.draggable = false;
+    stage.appendChild(image);
+
+    const textFallback = document.createElement("div");
+    textFallback.className = "letter-reader__text-fallback";
+    stage.appendChild(textFallback);
+
+    const next = document.createElement("button");
+    next.className = "letter-reader__nav letter-reader__nav--next";
+    next.type = "button";
+    next.setAttribute("aria-label", "Next letter");
+    next.innerHTML = "<span aria-hidden=\"true\">&#8594;</span>";
+
+    const caption = document.createElement("figcaption");
+    caption.className = "letter-reader__caption";
+    stage.appendChild(caption);
+    reader.append(previous, stage, next);
+    library.appendChild(reader);
+
+    const wheel = document.createElement("nav");
+    wheel.className = "letter-wheel";
+    wheel.setAttribute("aria-label", "Choose a letter");
+    const wheelTrack = document.createElement("div");
+    wheelTrack.className = "letter-wheel__track";
+    wheel.appendChild(wheelTrack);
+    library.appendChild(wheel);
+
+    const thumbnails = letters.map((letter, index) => {
+        const button = document.createElement("button");
+        button.className = "letter-thumb";
+        button.type = "button";
+        button.setAttribute("aria-label", `Open ${getLetterTitle(letter, index)}`);
+        button.setAttribute("aria-pressed", "false");
+        button.dataset.letterIndex = String(index);
+
+        const thumbnailImage = document.createElement("img");
+        thumbnailImage.alt = "";
+        thumbnailImage.loading = index < 4 ? "eager" : "lazy";
+        thumbnailImage.decoding = "async";
+        setLetterImage(thumbnailImage, letter);
+
+        const number = document.createElement("span");
+        number.textContent = String(index + 1).padStart(2, "0");
+        button.append(thumbnailImage, number);
+        button.addEventListener("click", () => updateReader(index, true));
+        wheelTrack.appendChild(button);
+        return button;
+    });
+
+    let activeIndex = 0;
+    const updateReader = (nextIndex, shouldScrollThumb = false) => {
+        activeIndex = (nextIndex + letters.length) % letters.length;
+        const letter = letters[activeIndex];
+        const title = getLetterTitle(letter, activeIndex);
+        const source = getLetterImageSource(letter);
+        reader.setAttribute("aria-label", `${title} reader`);
+        image.alt = title;
+        image.hidden = !source;
+        if (source) {
+            image.src = source;
+        } else {
+            image.removeAttribute("src");
+        }
+
+        textFallback.replaceChildren();
+        if (!source) {
+            const body = document.createElement("div");
+            normalizeParagraphs(letter.body).forEach((paragraphText) => {
+                const paragraph = document.createElement("p");
+                paragraph.textContent = paragraphText;
+                body.appendChild(paragraph);
+            });
+            textFallback.appendChild(body);
+        }
+        textFallback.hidden = Boolean(source);
 
         const metaBits = [];
         if (typeof letter.date === "string" && letter.date) {
@@ -518,32 +620,73 @@ function renderArchive(archive, targets) {
         if (typeof letter.location === "string" && letter.location) {
             metaBits.push(letter.location);
         }
+        caption.replaceChildren();
+        const captionTitle = document.createElement("strong");
+        captionTitle.textContent = title;
+        const captionCount = document.createElement("span");
+        captionCount.textContent = `${activeIndex + 1} / ${letters.length}`;
+        caption.append(captionTitle, captionCount);
         if (metaBits.length) {
-            const meta = document.createElement("p");
-            meta.className = "letter-meta";
-            meta.textContent = metaBits.join(" / ");
-            shell.appendChild(meta);
+            const captionMeta = document.createElement("small");
+            captionMeta.textContent = metaBits.join(" / ");
+            caption.appendChild(captionMeta);
         }
 
-        const body = document.createElement("div");
-        body.className = "letter-body";
-        const paragraphs = normalizeParagraphs(letter.body);
-        paragraphs.forEach((paragraphText) => {
-            const paragraph = document.createElement("p");
-            paragraph.textContent = paragraphText;
-            body.appendChild(paragraph);
+        previous.disabled = letters.length < 2;
+        next.disabled = letters.length < 2;
+        thumbnails.forEach((thumbnail, index) => {
+            const isActive = index === activeIndex;
+            thumbnail.setAttribute("aria-pressed", String(isActive));
+            thumbnail.tabIndex = isActive ? 0 : -1;
         });
-        shell.appendChild(body);
-
-        if (typeof letter.signoff === "string" && letter.signoff) {
-            const signoff = document.createElement("p");
-            signoff.className = "letter-meta";
-            signoff.textContent = letter.signoff;
-            shell.appendChild(signoff);
+        if (shouldScrollThumb) {
+            thumbnails[activeIndex]?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
         }
+    };
 
-        lettersList.appendChild(shell);
+    previous.addEventListener("click", () => updateReader(activeIndex - 1, true));
+    next.addEventListener("click", () => updateReader(activeIndex + 1, true));
+    reader.addEventListener("keydown", (event) => {
+        if (event.key === "ArrowLeft") {
+            event.preventDefault();
+            updateReader(activeIndex - 1, true);
+        }
+        if (event.key === "ArrowRight") {
+            event.preventDefault();
+            updateReader(activeIndex + 1, true);
+        }
     });
+
+    updateReader(0);
+    lettersList.appendChild(library);
+}
+
+function getLetterTitle(letter, index) {
+    return typeof letter.title === "string" && letter.title.trim()
+        ? letter.title
+        : `Letter ${String(index + 1).padStart(2, "0")}`;
+}
+
+function getLetterImageSource(letter) {
+    if (typeof letter.image === "string" && letter.image.startsWith("data:image/")) {
+        return letter.image;
+    }
+
+    if (typeof letter.imageData === "string" && letter.imageData.startsWith("data:image/")) {
+        return letter.imageData;
+    }
+
+    return "";
+}
+
+function setLetterImage(image, letter) {
+    const source = getLetterImageSource(letter);
+    if (source) {
+        image.src = source;
+        return;
+    }
+
+    image.hidden = true;
 }
 
 function normalizeParagraphs(value) {
