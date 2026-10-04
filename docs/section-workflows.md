@@ -19,23 +19,11 @@ Mini-project good practices
 9. Use hidden safety limits for expensive sketches, but make completion feel driven by the visual goal rather than an arbitrary visible counter.
 10. For heavy simulations, prefer persistent offscreen buffers, spatial indexing, and adaptive per-frame work over large visible control surfaces.
 
-Add a new essay theme
-1. Create `essays/<theme>/index.html`.
-2. Keep theme-specific notes or assets under that directory.
-3. Link the theme from `/essays/`.
-
-Add a new essay page later
-1. Create it under the relevant theme directory.
-2. Keep supporting images or media with the essay if they are theme-specific.
-3. Cross-link from the theme hub and only then from elsewhere.
-
-Publish an essay
-1. Create or edit `essays/<theme>/<slug>/content.md`.
-2. Keep the first `#` heading as the published essay title.
-3. Leave the file empty if the theme card should stay queue-only for now.
-4. Run `node scripts/sync-site.mjs` to generate or remove the essay detail page and wire the theme-card link state.
-5. Do not hand-author a placeholder essay `index.html`; the sync step owns that file.
-6. There are currently no published essay detail pages, so any first non-empty essay will become the first live one.
+Add a new piece of writing
+1. Create `words/<slug>/content.md` and keep its assets local.
+2. Add a tagged link from `/words/` once it is ready to publish.
+3. Run `node scripts/sync-site.mjs`; non-empty markdown generates `words/<slug>/index.html`.
+4. Existing assignments are preserved in `docs/writing-backlog.md`.
 
 Update a single-note project page
 1. Edit `projects/<slug>/content.md`.

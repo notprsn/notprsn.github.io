@@ -1,22 +1,22 @@
 # notprsn.github.io
 
-Personal website for Prasann Iyer: work, projects, essays, Bollywoodle, and CloudScript.
+Personal website for Prasann Iyer: work, projects, words, Bollywoodle, and CloudScript.
 
 Live at https://notprsn.github.io/.
 
 Current sections
-- `/`, `/about/`, `/work/`, `/projects/`, `/fun/`, `/essays/`, and `/love-letters/` are all live.
+- `/`, `/about/`, `/work/`, `/projects/`, `/fun/`, `/words/`, and `/love-letters/` are all live.
 - `/gallery/` is still a placeholder.
 - `/secret/` is deployed by GitHub Actions from a private puzzle source repo.
 
 Structure notes
 - Shared primitives and global chrome live in `css/style.css`.
-- Top-level page-family styling lives in `css/pages/`, for example `home.css`, `work.css`, `projects.css`, `essays.css`, and `love.css`.
+- Top-level page-family styling lives in `css/pages/`, for example `home.css`, `work.css`, `projects.css`, `words.css`, and `love.css`.
 - Mini projects under `fun/projects/<slug>/` keep their own local `style.css`, `script.js`, and `index.html`.
 - Shared behavior lives in `js/site.js`, with page-owned entrypoints under `js/pages/`.
 - Firebase-backed analytics are disabled until `js/firebase-config.js` is filled in; setup details live in `docs/analytics-setup.md`.
-- Markdown-backed writing currently lives in `work/stories/<slug>/story.md`, `projects/<slug>/content.md`, `projects/<slug>/<note>/content.md`, and `essays/<theme>/<slug>/content.md`.
-- `scripts/sync-site.mjs` updates cache-busting metadata, SEO metadata, `robots.txt`, `sitemap.xml`, static markdown HTML, and generated essay detail pages from non-empty essay `content.md` files.
+- Markdown-backed writing currently lives in `work/stories/<slug>/story.md`, `projects/<slug>/content.md`, `projects/<slug>/<note>/content.md`, and `words/<slug>/content.md`.
+- `scripts/sync-site.mjs` updates cache-busting metadata, SEO metadata, `robots.txt`, `sitemap.xml`, static markdown HTML, and generated writing pages from non-empty `content.md` files.
 - `.github/workflows/pages.yml` builds the public Pages artifact and injects `/secret/` from the private puzzle repo at deploy time.
 - Contributor workflows live in `docs/section-workflows.md`.
 - Private puzzle deployment steps live in `docs/private-puzzle-deploy.md`.

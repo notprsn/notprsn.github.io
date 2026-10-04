@@ -1,12 +1,12 @@
 ---
 name: writing-editor
-description: Use when editing or finalizing markdown drafts in essays/*/*/content.md, projects/*/content.md, or work/stories/*/story.md, especially for improving clarity, coherence, tone, structure, and repo-ready finalization without inventing facts.
+description: Use when editing or finalizing markdown drafts in words/*/content.md, projects/*/content.md, or work/stories/*/story.md, especially for improving clarity, coherence, tone, structure, and repo-ready finalization without inventing facts.
 ---
 
 # writing-editor
 
 Use this skill for:
-- polishing drafts in `essays/<theme>/<slug>/content.md`
+- polishing drafts in `words/<slug>/content.md`
 - tightening project write-ups in `projects/<slug>/content.md`
 - tightening finished work stories in `work/stories/*/story.md`
 - restructuring rough notes into readable essays, project write-ups, or work summaries
@@ -24,8 +24,7 @@ Keep the skill lean:
 1. Identify the draft type from the file location or slug:
    - `work/stories/<slug>/story.md`
    - `projects/<slug>/content.md`
-   - `essays/travel/<slug>/content.md`
-   - `essays/miscellaneous/<slug>/content.md`
+   - `words/<slug>/content.md`
 2. Read the full draft once before changing anything. Write down the piece's core point in one sentence.
 3. Load the minimum reference needed:
    - use `references/quality-rubric.md` for evaluation and acceptance criteria
@@ -65,7 +64,7 @@ Keep the skill lean:
 
 ## Repo-specific rules
 
-- `essays/<theme>/<slug>/content.md` is the canonical location for essay drafts and published essay prose.
+- `words/<slug>/content.md` is the canonical location for essay drafts and published essay prose.
 - `projects/<slug>/content.md` is the canonical location for project long-form markdown.
 - `work/stories/<slug>/story.md` is the canonical location for finalized work stories.
 - Keep `projects/` separate from `work/`.

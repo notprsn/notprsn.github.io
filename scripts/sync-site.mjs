@@ -17,16 +17,16 @@ const SOCIAL_LINKS = [
     "https://bollywoodle.app",
     "https://cloudscript.lalalab.tech",
 ];
-const TRAVEL_ESSAY_CONFIG = {
-    directory: resolve(repoRoot, "essays", "travel"),
-    backPath: "/essays/travel/",
-    backLabel: "Travel Stories",
-    descriptionLabel: "travel story",
+const WORDS_CONFIG = {
+    directory: resolve(repoRoot, "words"),
+    backPath: "/words/",
+    backLabel: "Words",
+    descriptionLabel: "piece of writing",
 };
 const SEO_OVERRIDES = {
     "/": {
         title: "Prasann Iyer",
-        description: "Personal website of Prasann Iyer: work, projects, stories, Bollywoodle, CloudScript, math, music, and small web experiments.",
+        description: "Personal website of Prasann Iyer: work, projects, words, Bollywoodle, CloudScript, math, music, and small web experiments.",
         schemaType: "home",
     },
     "/about/": {
@@ -49,24 +49,21 @@ const SEO_OVERRIDES = {
     "/fun/": {
         description: "Pretty math experiments and visual toys by Prasann Iyer.",
     },
-    "/essays/": {
-        title: "Stories | Prasann Iyer",
-        description: "Story themes and writing queues for Prasann Iyer.",
-    },
-    "/essays/travel/": {
-        title: "Travel Stories | Prasann Iyer",
-        description: "Travel atlas and story index for Prasann Iyer.",
+    "/words/": {
+        title: "I Like Words | Prasann Iyer",
+        description: "Especially the kind that make me feel",
     },
 };
 const NOINDEX_ROUTES = new Set([
     "/love-letters/",
+    "/404.html",
 ]);
 
 const version = buildVersion();
 const generatedAt = new Date().toISOString();
 
-const essayEntries = await collectEssayEntries();
-await syncEssayPages(essayEntries);
+const wordEntries = await collectWordEntries();
+await syncWordPages(wordEntries);
 await rm(resolve(dataDir, "writings-manifest.json"), { force: true });
 await writeJson(resolve(dataDir, "site-meta.json"), { version, generatedAt });
 
@@ -89,17 +86,12 @@ function buildVersion() {
     return new Date().toISOString().replace(/\D/g, "");
 }
 
-async function collectEssayEntries() {
+async function collectWordEntries() {
     const entries = [];
-    const folders = await readdir(TRAVEL_ESSAY_CONFIG.directory, { withFileTypes: true });
+    const contentFiles = await collectFiles(WORDS_CONFIG.directory, (path) => path.endsWith("/content.md"));
 
-    for (const folder of folders) {
-        if (!folder.isDirectory()) {
-            continue;
-        }
-
-        const slug = folder.name;
-        const contentPath = resolve(TRAVEL_ESSAY_CONFIG.directory, slug, "content.md");
+    for (const contentPath of contentFiles) {
+        const slug = relative(WORDS_CONFIG.directory, dirname(contentPath)).replaceAll("\\", "/");
         let markdown = "";
 
         try {
@@ -112,28 +104,28 @@ async function collectEssayEntries() {
             slug,
             markdown,
             hasContent: Boolean(markdown.trim()),
-            outputPath: resolve(TRAVEL_ESSAY_CONFIG.directory, slug, "index.html"),
-            route: `${TRAVEL_ESSAY_CONFIG.backPath}${encodeURIComponent(slug)}/`,
+            outputPath: resolve(WORDS_CONFIG.directory, slug, "index.html"),
+            route: `${WORDS_CONFIG.backPath}${slug.split("/").map(encodeURIComponent).join("/")}/`,
             title: extractTitle(markdown) || fallbackTitle(slug),
-            ...TRAVEL_ESSAY_CONFIG,
+            ...WORDS_CONFIG,
         });
     }
 
     return entries.sort((left, right) => left.route.localeCompare(right.route));
 }
 
-async function syncEssayPages(entries) {
+async function syncWordPages(entries) {
     for (const entry of entries) {
         if (!entry.hasContent) {
             await rm(entry.outputPath, { force: true });
             continue;
         }
 
-        await writeFile(entry.outputPath, buildTravelEssayHtml(entry), "utf8");
+        await writeFile(entry.outputPath, buildWordHtml(entry), "utf8");
     }
 }
 
-function buildTravelEssayHtml(entry) {
+function buildWordHtml(entry) {
     const assetPrefix = buildAssetPrefix(entry.outputPath);
     const proseMarkdown = stripLeadingTitle(entry.markdown);
     const proseHtml = renderMarkdown(proseMarkdown.trim() ? proseMarkdown : entry.markdown);
@@ -141,16 +133,16 @@ function buildTravelEssayHtml(entry) {
     const backLabel = escapeHtml(entry.backLabel);
     const descriptionLabel = escapeHtml(entry.descriptionLabel);
     const currentYear = new Date().getFullYear().toString();
-    const heroMarkup = `        <section class="paper-hero paper-hero--work work-story-page__hero">
+    const heroMarkup = `        <section class="paper-hero paper-hero--work words-entry__hero">
             <div>
-                <a class="story-back-link work-story-page__back" href="${entry.backPath}">&lt; Back to ${backLabel}</a>
-                <h1 class="paper-ledger__title work-story-page__title">${title}</h1>
+                <a class="story-back-link words-entry__back" href="${entry.backPath}">&lt; Back to ${backLabel}</a>
+                <h1 class="paper-ledger__title words-entry__title">${title}</h1>
             </div>
             <div class="paper-hero__rule" aria-hidden="true"></div>
         </section>`;
     const articleMarkup = `        <section class="paper-section">
-            <article class="paper-panel work-story-page__panel">
-                <div class="writing-prose work-story-page__prose">
+            <article class="paper-panel words-entry__panel">
+                <div class="writing-prose words-entry__prose">
 ${indentMultiline(proseHtml, 20)}
                 </div>
             </article>
@@ -170,10 +162,9 @@ ${buildFaviconLinks(assetPrefix)}
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="${assetPrefix}css/style.css" rel="stylesheet">
-    <link href="${assetPrefix}css/pages/essays.css" rel="stylesheet">
-    <link href="${assetPrefix}css/pages/work.css" rel="stylesheet">
+    <link href="${assetPrefix}css/pages/words.css" rel="stylesheet">
 </head>
-<body class="page-paper page-travel-story">
+<body class="page-paper page-words">
     <header class="site-header">
         <div class="site-nav-shell">
             <a class="site-brand" href="/">Prasann Iyer</a>
@@ -182,7 +173,7 @@ ${buildFaviconLinks(assetPrefix)}
                 <a href="/work/">Work</a>
                 <a href="/projects/">Projects</a>
                 <a href="/fun/">Fun Stuff</a>
-                <a href="/essays/" aria-current="page">Stories</a>
+                <a href="/words/" aria-current="page">Words</a>
             </nav>
             </div>
         </div>
@@ -197,7 +188,7 @@ ${articleMarkup}
         <div class="footer-shell">
             <span>${backLabel}</span>
             <div class="footer-links">
-                <a href="/essays/">Stories</a>
+                <a href="/words/">Words</a>
                 <span class="footer-link-placeholder">Gallery</span>
                 <a href="https://github.com/notprsn" target="_blank" rel="noreferrer">GitHub</a>
             </div>
@@ -409,7 +400,6 @@ async function updateHtml(filePath, source) {
     const seo = buildSeoForPage(route, updated);
 
     updated = await renderMarkdownBackedContent(updated);
-    updated = renameEssayLabels(updated);
     updated = normalizeFooterLinks(updated);
     updated = ensureTitle(updated, seo.title);
     updated = ensureMeta(updated, "description", seo.description);
@@ -427,16 +417,6 @@ async function updateHtml(filePath, source) {
     );
 
     return updated;
-}
-
-function renameEssayLabels(source) {
-    return source
-        .replaceAll(">Essays<", ">Stories<")
-        .replaceAll("Travel Essays", "Travel Stories")
-        .replaceAll("travel essays", "travel stories")
-        .replaceAll("travel essay", "travel story")
-        .replaceAll("Essay themes", "Story themes")
-        .replaceAll("essays, Bollywoodle", "stories, Bollywoodle");
 }
 
 function normalizeFooterLinks(source) {

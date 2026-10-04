@@ -6,7 +6,7 @@ Primary sections
 - `/work/`
 - `/projects/`
 - `/fun/`
-- `/essays/`
+- `/words/`
 - `/love-letters/`
 - `/gallery/`
 - `/secret/` private-source puzzle trail deployed into GitHub Pages
@@ -27,7 +27,7 @@ Current page-family CSS
 - `/` uses `css/pages/home.css`.
 - `/work/` and `/work/stories/*` use `css/pages/work.css`.
 - `/projects/` and `projects/*` use `css/pages/projects.css`.
-- `/essays/`, essay theme pages, and generated essay detail pages use `css/pages/essays.css`.
+- `/words/`, reading and writing checklists, and generated writing pages use `css/pages/words.css`.
 - `/love-letters/` uses `css/pages/love.css`.
 - `/about/` uses `css/pages/about.css`.
 - `/fun/` uses `css/pages/fun.css`.
@@ -37,7 +37,7 @@ Patterns
 - Work: resume-backed, factual, low-interpretation.
 - Projects: current build shelf plus selective project-specific detail pages.
 - Fun: hub page plus self-contained project directories.
-- Essays: theme hubs plus theme-local `content.md` files that publish when they have prose.
+- Words: a tagged shelf, reading and writing checklists, and local `content.md` files that publish when they have prose.
 - Gallery: placeholder now, fuller structure later.
 - Secret puzzle: intentionally off-nav, noindex, and injected from a private repo during Pages deployment.
 - Shared style language: see `docs/style-language.md`.
@@ -53,9 +53,10 @@ Current content inventory
   - Polymarket Crypto Desk has a shelf card and sample data, but no linked public detail page yet.
 - Fun:
   - `/fun/` links to 6 live mini-projects.
-- Essays:
-  - `/essays/` has 2 theme hubs.
-  - All 22 essay `content.md` files are currently blank, so there are 0 generated public essay detail pages.
+- Words:
+  - `/words/` links to the 1,000-night reading program and the writing checklist.
+  - Existing writing assignments are preserved in `docs/writing-backlog.md`.
+  - Empty `words/<slug>/content.md` drafts do not generate public pages.
 - Love Letters:
   - The decryption flow is live and `data/love-letters.enc.json` is initialized with a real encrypted bundle.
 - Gallery:
@@ -65,8 +66,7 @@ Current content inventory
 
 Current self-contained directories
 - `fun/projects/<slug>/`
-- `essays/travel/`
-- `essays/miscellaneous/`
+- `words/<slug>/`
 - `projects/<slug>/`
 - `projects/bollywoodle/<note>/`
 - `work/stories/<slug>/`
