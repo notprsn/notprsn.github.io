@@ -9,8 +9,8 @@ Rules
 - Keep `projects/` separate from `work/`.
 - Keep `fun/` experiments inside `fun/projects/<slug>/` with local `index.html`, `style.css`, and `script.js`.
 - When working on p5.js or Processing-based `fun/` projects, consult `skills/p5js-processing/SKILL.md` first and keep any project-specific runtime/assets local to that project unless they are intentionally shared.
-- Keep essay themes inside their own directories under `essays/`.
-- Keep essay drafts and published essay markdown in section-owned files at `essays/<theme>/<slug>/content.md`.
+- Keep writing under `words/`, using tags for content types.
+- Keep essay drafts and published essay markdown in section-owned files at `words/<slug>/content.md`.
 - Prefer project long-form markdown in `projects/<slug>/content.md` for single-note project pages.
 - If one project owns multiple standalone write-ups, keep them under `projects/<slug>/<note>/content.md` with a matching local `index.html`.
 - Organize styling under `css/`:
@@ -28,14 +28,14 @@ Section map
 - `/projects/` current projects shelf
 - `/projects/<slug>/` or `/projects/<slug>/<note>/` project detail pages
 - `/fun/` hub for mini projects
-- `/essays/` hub for themes
+- `/words/` writing and reading hub
 - `/love-letters/` encrypted archive
 - `/gallery/` future photo gallery placeholder
-- `/essays/<theme>/<slug>/` generated essay pages for non-empty `content.md`
+- `/words/<slug>/` generated essay pages for non-empty `content.md`
 - `/secret/` private-source noindex puzzle trail injected by the Pages workflow; do not commit puzzle source here
 
 Before shipping
 - Search for stale usernames and dead links.
-- Check that nav order stays `Work`, `Projects`, `Fun Stuff`, `Stories`.
+- Check that nav order stays `Work`, `Projects`, `Fun Stuff`, `Words`.
 - Verify mobile layout for new pages.
 - Run `node scripts/sync-site.mjs` if hooks are unavailable.

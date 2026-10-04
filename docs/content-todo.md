@@ -7,7 +7,7 @@ Current snapshot
 - [x] Fun hub is live with 6 mini projects
 - [x] All 6 work experience blocks have public long-form story pages
 - [x] Bollywoodle has public project writing (`story`)
-- [ ] Essays are still unpublished
+- [ ] Original writing is still unpublished
 - [x] CloudScript has a public story page
 - [ ] Polymarket Crypto Desk still needs a public detail page
 - [x] Love letters archive is initialized
@@ -31,35 +31,10 @@ Fun Stuff
 - [ ] Add the next mini project under `fun/projects/`
 - [ ] Decide whether hobbies and TV notes should become their own mini pages later
 
-Essays
-- [ ] Publish the first essay
-- [ ] Pick it from the current public-ready travel queue:
-  - Goa with the boys
-  - Europe
-  - Mysore
-  - Goa with Sable and Rohan
-  - Vietnam with the boys
-  - Goa VRPp
-  - Tiruchirapalli
-  - Dubai
-  - Kasol + Tosh
-  - Gurgaon
-  - Chunchi
-  - UK
-  - Andaman and Nicobar
-- [ ] Keep these travel drafts private/later unless you want to revisit that decision:
-  - Lonavala
-  - Kerala
-  - Pune
-  - Gokarna
-  - Bangalore
-- [ ] Write the first Miscellaneous essay
-- [ ] Current miscellaneous prompt queue:
-  - Jigsaw puzzles
-  - Painting
-  - Guitar
-  - Television notes
-- [ ] Decide the styling direction for individual essay pages after the first piece exists
+Words
+- [ ] Publish the first piece of writing
+- [ ] Choose a topic from `docs/writing-backlog.md`
+- [ ] Follow the 1,000-night reading schedule
 
 Love Letters
 - [x] Replace the uninitialized placeholder bundle in `data/love-letters.enc.json`

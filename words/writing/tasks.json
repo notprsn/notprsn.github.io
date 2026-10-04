@@ -1,0 +1,172 @@
+{
+  "tasks": [
+    {
+      "id": "brunei",
+      "title": "Brunei",
+      "startYear": 2006,
+      "endYear": 2009
+    },
+    {
+      "id": "singapore",
+      "title": "Singapore",
+      "startYear": 2006,
+      "endYear": 2009
+    },
+    {
+      "id": "malaysia",
+      "title": "Malaysia",
+      "startYear": 2006,
+      "endYear": 2009
+    },
+    {
+      "id": "thailand",
+      "title": "Thailand",
+      "startYear": 2006,
+      "endYear": 2009
+    },
+    {
+      "id": "canada",
+      "title": "Canada",
+      "startYear": 2013,
+      "endYear": 2013
+    },
+    {
+      "id": "jordan",
+      "title": "Jordan",
+      "startYear": 2015,
+      "endYear": 2015
+    },
+    {
+      "id": "sri-lanka",
+      "title": "Sri Lanka",
+      "startYear": 2017,
+      "endYear": 2017
+    },
+    {
+      "id": "indonesia",
+      "title": "Indonesia",
+      "startYear": 2019,
+      "endYear": 2019
+    },
+    {
+      "id": "netherlands",
+      "title": "Netherlands",
+      "startYear": 2023,
+      "endYear": 2023
+    },
+    {
+      "id": "belgium",
+      "title": "Belgium",
+      "startYear": 2023,
+      "endYear": 2023
+    },
+    {
+      "id": "vietnam",
+      "title": "Vietnam",
+      "startYear": 2024,
+      "endYear": 2024
+    },
+    {
+      "id": "united-arab-emirates",
+      "title": "United Arab Emirates",
+      "startYear": 2024,
+      "endYear": 2024
+    },
+    {
+      "id": "united-kingdom",
+      "title": "United Kingdom",
+      "startYear": 2025,
+      "endYear": 2025
+    },
+    {
+      "id": "india",
+      "title": "India",
+      "startYear": null,
+      "endYear": null
+    },
+    {
+      "id": "mumbai",
+      "title": "Mumbai",
+      "startYear": null,
+      "endYear": null
+    },
+    {
+      "id": "new-delhi",
+      "title": "New Delhi",
+      "startYear": null,
+      "endYear": null
+    },
+    {
+      "id": "gurgaon",
+      "title": "Gurgaon",
+      "startYear": null,
+      "endYear": null
+    },
+    {
+      "id": "jaipur",
+      "title": "Jaipur",
+      "startYear": null,
+      "endYear": null
+    },
+    {
+      "id": "agra",
+      "title": "Agra",
+      "startYear": null,
+      "endYear": null
+    },
+    {
+      "id": "goa",
+      "title": "Goa",
+      "startYear": null,
+      "endYear": null
+    },
+    {
+      "id": "sikkim",
+      "title": "Sikkim",
+      "startYear": null,
+      "endYear": null
+    },
+    {
+      "id": "himachal-pradesh",
+      "title": "Himachal Pradesh",
+      "startYear": null,
+      "endYear": null
+    },
+    {
+      "id": "kerala",
+      "title": "Kerala",
+      "startYear": null,
+      "endYear": null
+    },
+    {
+      "id": "uttarakhand",
+      "title": "Uttarakhand",
+      "startYear": null,
+      "endYear": null
+    },
+    {
+      "id": "tiruchirapalli",
+      "title": "Tiruchirapalli",
+      "startYear": null,
+      "endYear": null
+    },
+    {
+      "id": "bengaluru",
+      "title": "Bengaluru",
+      "startYear": null,
+      "endYear": null
+    },
+    {
+      "id": "mysuru",
+      "title": "Mysuru",
+      "startYear": null,
+      "endYear": null
+    },
+    {
+      "id": "andaman-and-nicobar",
+      "title": "Andaman and Nicobar",
+      "startYear": null,
+      "endYear": null
+    }
+  ]
+}
