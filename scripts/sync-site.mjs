@@ -50,7 +50,7 @@ const SEO_OVERRIDES = {
         description: "Pretty math experiments and visual toys by Prasann Iyer.",
     },
     "/words/": {
-        title: "I Like Words | Prasann Iyer",
+        title: "Words | Prasann Iyer",
         description: "Especially the kind that make me feel",
     },
 };

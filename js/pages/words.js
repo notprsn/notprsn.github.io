@@ -19,6 +19,8 @@ async function initChecklist() {
     let connected = false;
     let saving = false;
     let nightNumber = 1;
+    let firstUnreadOpened = false;
+    let maybeOpenFirstUnread = () => {};
     let service;
 
     try {
@@ -138,6 +140,12 @@ async function initChecklist() {
                 showNight(value);
                 location.hash = `night-${nightNumber}`;
             }
+            maybeOpenFirstUnread = () => {
+                if (!owner || !connected || firstUnreadOpened) return;
+                firstUnreadOpened = true;
+                const firstUnread = items.find((item) => records[item.night]?.complete !== true);
+                navigate(firstUnread?.night ?? items.length);
+            };
             const readHash = () => showNight(location.hash.match(/^#night-(\d+)$/)?.[1] || 1);
             previous.addEventListener("click", () => navigate(nightNumber - 1));
             next.addEventListener("click", () => navigate(nightNumber + 1));
@@ -156,11 +164,13 @@ async function initChecklist() {
                 connected = true;
                 render();
                 updateOwner();
+                maybeOpenFirstUnread();
             },
             onOwner(value) {
                 owner = value;
                 render();
                 updateOwner();
+                maybeOpenFirstUnread();
             },
             onError(error) {
                 connected = false;
