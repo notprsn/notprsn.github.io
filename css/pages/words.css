@@ -195,6 +195,14 @@
   font-size: 0.9rem;
 }
 
+.words-reading-note {
+  display: block;
+  margin-top: 0.4rem;
+  color: var(--paper-tone-muted);
+  font-size: 0.75rem;
+  line-height: 1.5;
+}
+
 .words-reading-actions {
   display: grid;
   gap: 0.2rem;

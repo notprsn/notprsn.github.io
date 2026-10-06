@@ -25,7 +25,11 @@ The original list contains incorrect links. For example, its Night 2 Kipling sto
 
 `source-links.json` records verified reading links keyed by the schedule's title and author. Reimports preserve these corrections and apply them to repeated assignments. Only mark an entry verified after confirming the actual assigned piece in the source. Unchecked entries retain the original URL, display “Link unchecked”, and offer a title-and-author search. Some assignments name selections ambiguously; do not silently substitute a different piece.
 
-The first three nights have been checked, with direct section links and corrections for four wrong book links. These corrections also apply when the same assignments recur. A complete audit of the 465 distinct source URLs remains future work. Full texts downloaded for checking links stay outside the repository.
+All 300 assignments in the first 100 nights now have checked reading destinations. Corrections and exact title matches in the same checked editions also populate later nights: 1,968 of 3,000 readings have checked links, covering all three assignments in 297 nights. The remaining 1,032 readings retain their unchecked labels. This is not a complete audit of every source in the program. Gutenberg destinations use section anchors or text fragments where possible; hosts without reliable section anchors may open the correct complete work. Full texts downloaded for checking links stay outside the repository.
+
+Numbered Dickinson and Whitman selections follow the linked edition's reading order, as approved by Prasann. Dickinson counts numbered poems across the three series in ebook 12242, excluding the unnumbered introductory poem; Whitman counts poem headings in ebook 1322, excluding book headings. Each selection displays its resolved poem title in a small note. Shakespeare sonnets link to their numbered poem's opening line. Alternate translation titles and unspecified excerpts are also noted. The Tatler assignment does not identify individual papers, so its link opens the credited collection with that limitation stated.
+
+Links were checked against the actual edition's contents and Gutenberg's own catalogue on 2026-10-06, rather than trusting the original ebook IDs. Bibliographic titles, authors, original source URLs, and the source document hash remain unchanged. Corrections also link to credited publications on Poetry Foundation, the Orwell Foundation, Wikisource, the Lovecraft Archive, Representative Poetry Online, Poetry in Translation, and Poem Hunter.
 
 ## Writing
 

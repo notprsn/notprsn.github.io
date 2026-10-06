@@ -76,6 +76,7 @@ async function initChecklist() {
                     addText(copy, "words-reading-kind", kinds[item.kind]);
                     addText(copy, "words-reading-title", item.title);
                     addText(copy, "words-reading-author", item.author);
+                    if (item.readingNote) addText(copy, "words-reading-note", item.readingNote);
                     const actions = document.createElement("div");
                     actions.className = "words-reading-actions";
                     addLink(actions, item.url, item.verified ? "Read ↗" : "Source ↗", `${item.verified ? "Read" : "Original source for"} ${item.title} by ${item.author}`);
