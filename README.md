@@ -5,13 +5,13 @@ Personal website for Prasann Iyer: work, projects, words, Bollywoodle, and Cloud
 Live at https://notprsn.github.io/.
 
 Current sections
-- `/`, `/about/`, `/work/`, `/projects/`, `/fun/`, `/words/`, and `/love-letters/` are all live.
+- `/`, `/about/`, `/work/`, `/projects/`, `/fun/`, `/words/`, and `/letters/` are all live.
 - `/gallery/` is still a placeholder.
 - `/secret/` is deployed by GitHub Actions from a private puzzle source repo.
 
 Structure notes
 - Shared primitives and global chrome live in `css/style.css`.
-- Top-level page-family styling lives in `css/pages/`, for example `home.css`, `work.css`, `projects.css`, `words.css`, and `love.css`.
+- Top-level page-family styling lives in `css/pages/`, for example `home.css`, `work.css`, `projects.css`, `words.css`, and `letters.css`.
 - Mini projects under `fun/projects/<slug>/` keep their own local `style.css`, `script.js`, and `index.html`.
 - Shared behavior lives in `js/site.js`, with page-owned entrypoints under `js/pages/`.
 - Firebase-backed analytics are disabled until `js/firebase-config.js` is filled in; setup details live in `docs/analytics-setup.md`.

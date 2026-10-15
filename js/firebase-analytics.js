@@ -81,7 +81,7 @@ export async function trackPageView() {
     }
 }
 
-export async function trackLoveLettersUnlock() {
+export async function trackLettersUnlock() {
     const state = await getFirebaseState();
     if (!state.enabled) {
         debugAnalytics(state.reason);
@@ -104,7 +104,7 @@ export async function trackLoveLettersUnlock() {
 
         return { tracked: true };
     } catch (error) {
-        warnAnalytics("Could not track love-letter unlock.", error);
+        warnAnalytics("Could not track letter unlock.", error);
         return { tracked: false, reason: error.message };
     }
 }

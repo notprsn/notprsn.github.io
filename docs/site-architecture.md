@@ -7,7 +7,7 @@ Primary sections
 - `/projects/`
 - `/fun/`
 - `/words/`
-- `/love-letters/`
+- `/letters/`
 - `/gallery/`
 - `/secret/` private-source puzzle trail deployed into GitHub Pages
 
@@ -28,7 +28,7 @@ Current page-family CSS
 - `/work/` and `/work/stories/*` use `css/pages/work.css`.
 - `/projects/` and `projects/*` use `css/pages/projects.css`.
 - `/words/`, reading and writing checklists, and generated writing pages use `css/pages/words.css`.
-- `/love-letters/` uses `css/pages/love.css`.
+- `/letters/` uses `css/pages/letters.css`.
 - `/about/` uses `css/pages/about.css`.
 - `/fun/` uses `css/pages/fun.css`.
 - All six current math mini-projects share `css/pages/fun-projects.css` plus their local project styles.
@@ -57,8 +57,8 @@ Current content inventory
   - `/words/` links to the 1,000-night reading program and the writing checklist.
   - Existing writing assignments are preserved in `docs/writing-backlog.md`.
   - Empty `words/<slug>/content.md` drafts do not generate public pages.
-- Love Letters:
-  - The decryption flow is live and `data/love-letters.enc.json` is initialized with a real encrypted bundle.
+- Letters:
+  - The decryption flow is live and `data/letters.enc.json` is initialized with a real encrypted bundle.
 - Gallery:
   - The route is still a placeholder.
 - Secret:

@@ -3,79 +3,79 @@ const fetchVersionedResource =
     window.Site?.fetchVersionedResource ??
     ((resourcePath, options = {}) => fetch(resourcePath, options));
 const MEOW_PATHS = [
-    "/love-letters/audio/meow-1.mp3",
-    "/love-letters/audio/meow-2.mp3",
-    "/love-letters/audio/meow-3.mp3",
-    "/love-letters/audio/meow-4.mp3",
-    "/love-letters/audio/meow-5.mp3",
-    "/love-letters/audio/meow-6.mp3",
-    "/love-letters/audio/meow-7.mp3",
-    "/love-letters/audio/meow-8.mp3",
-    "/love-letters/audio/meow-9.mp3",
-    "/love-letters/audio/meow-10.mp3",
+    "/letters/audio/meow-1.mp3",
+    "/letters/audio/meow-2.mp3",
+    "/letters/audio/meow-3.mp3",
+    "/letters/audio/meow-4.mp3",
+    "/letters/audio/meow-5.mp3",
+    "/letters/audio/meow-6.mp3",
+    "/letters/audio/meow-7.mp3",
+    "/letters/audio/meow-8.mp3",
+    "/letters/audio/meow-9.mp3",
+    "/letters/audio/meow-10.mp3",
 ];
 const ARM_WIDTH_RATIO = 260 / 660;
 const PRINT_TO_ARM_RATIO = 0.52;
 const ARM_ASSETS = [
     {
-        src: "/love-letters/paws/arm-blue-1.png",
+        src: "/letters/paws/arm-blue-1.png",
         pawAnchorRatio: 0.1042,
     },
     {
-        src: "/love-letters/paws/arm-blue-2.png",
+        src: "/letters/paws/arm-blue-2.png",
         pawAnchorRatio: 0.0997,
     },
     {
-        src: "/love-letters/paws/arm-brown-1.png",
+        src: "/letters/paws/arm-brown-1.png",
         pawAnchorRatio: 0.1052,
     },
     {
-        src: "/love-letters/paws/arm-brown-2.png",
+        src: "/letters/paws/arm-brown-2.png",
         pawAnchorRatio: 0.0985,
     },
     {
-        src: "/love-letters/paws/arm-calico-1.png",
+        src: "/letters/paws/arm-calico-1.png",
         pawAnchorRatio: 0.1057,
     },
     {
-        src: "/love-letters/paws/arm-calico-2.png",
+        src: "/letters/paws/arm-calico-2.png",
         pawAnchorRatio: 0.0981,
     },
     {
-        src: "/love-letters/paws/arm-gray-1.png",
+        src: "/letters/paws/arm-gray-1.png",
         pawAnchorRatio: 0.1026,
     },
     {
-        src: "/love-letters/paws/arm-gray-2.png",
+        src: "/letters/paws/arm-gray-2.png",
         pawAnchorRatio: 0.1011,
     },
     {
-        src: "/love-letters/paws/arm-orange-1.png",
+        src: "/letters/paws/arm-orange-1.png",
         pawAnchorRatio: 0.1048,
     },
     {
-        src: "/love-letters/paws/arm-orange-2.png",
+        src: "/letters/paws/arm-orange-2.png",
         pawAnchorRatio: 0.0994,
     },
     {
-        src: "/love-letters/paws/arm-white-1.png",
+        src: "/letters/paws/arm-white-1.png",
         pawAnchorRatio: 0.105,
     },
     {
-        src: "/love-letters/paws/arm-white-2.png",
+        src: "/letters/paws/arm-white-2.png",
         pawAnchorRatio: 0.1008,
     },
 ];
 const PRINT_PATHS = [
-    "/love-letters/paws/print-1.png",
-    "/love-letters/paws/print-2.png",
-    "/love-letters/paws/print-3.png",
-    "/love-letters/paws/print-4.png",
-    "/love-letters/paws/print-5.png",
-    "/love-letters/paws/print-6.png",
+    "/letters/paws/print-1.png",
+    "/letters/paws/print-2.png",
+    "/letters/paws/print-3.png",
+    "/letters/paws/print-4.png",
+    "/letters/paws/print-5.png",
+    "/letters/paws/print-6.png",
 ];
 const START_ARM_ASSET = ARM_ASSETS.find((asset) => asset.src.endsWith("arm-orange-2.png")) ?? ARM_ASSETS[0];
-const START_PRINT_PATH = "/love-letters/paws/print-2.png";
+const START_PRINT_PATH = "/letters/paws/print-2.png";
 const STATUS_COPY = {
     empty: "Enter the answer first.",
     locked: "Locked and Encrypted",
@@ -90,20 +90,20 @@ const CAT_LIMITS = {
     meowCooldownMs: 260,
 };
 
-onReady(initLoveLetters);
+onReady(initLetters);
 onReady(initCatPaws);
 
-function initLoveLetters() {
-    const form = document.querySelector("[data-love-letters-form]");
+function initLetters() {
+    const form = document.querySelector("[data-letters-form]");
     if (!form) {
         return;
     }
 
     const passwordInput = form.querySelector('input[name="password"]');
-    const status = document.querySelector("[data-love-letters-status]");
-    const output = document.querySelector("[data-love-letters-output]");
+    const status = document.querySelector("[data-letters-status]");
+    const output = document.querySelector("[data-letters-output]");
     const lettersList = document.querySelector("[data-letters-list]");
-    const pageMain = document.querySelector(".page-main--love");
+    const pageMain = document.querySelector(".page-main--letters");
     let bundlePromise;
 
     const setStatus = (message, state = "info") => {
@@ -118,7 +118,7 @@ function initLoveLetters() {
 
     const getBundle = async () => {
         if (!bundlePromise) {
-            bundlePromise = fetchVersionedResource("/data/love-letters.enc.json").then(async (response) => {
+            bundlePromise = fetchVersionedResource("/data/letters.enc.json").then(async (response) => {
                 if (!response.ok) {
                     throw new Error("Could not load ciphertext bundle.");
                 }
@@ -173,9 +173,9 @@ function initLoveLetters() {
 
 function trackSuccessfulUnlock() {
     void loadAnalyticsModule()
-        .then((analytics) => analytics.trackLoveLettersUnlock())
+        .then((analytics) => analytics.trackLettersUnlock())
         .catch((error) => {
-            console.debug("[site analytics] Love-letter unlock analytics did not start.", error);
+            console.debug("[site analytics] Letter unlock analytics did not start.", error);
         });
 }
 
@@ -191,7 +191,7 @@ function initCatPaws() {
     }
 
     const startButton = document.querySelector("[data-cat-paw-start]");
-    const heroRow = startButton?.closest(".love-hero-row");
+    const heroRow = startButton?.closest(".letters-hero-row");
     const interactiveSelector = [
         "a",
         "button",

@@ -50,12 +50,12 @@ const SEO_OVERRIDES = {
         description: "Pretty math experiments and visual toys by Prasann Iyer.",
     },
     "/words/": {
-        title: "Words | Prasann Iyer",
+        title: "I Like Words | Prasann Iyer",
         description: "Especially the kind that make me feel",
     },
 };
 const NOINDEX_ROUTES = new Set([
-    "/love-letters/",
+    "/letters/",
     "/404.html",
 ]);
 
@@ -697,7 +697,7 @@ async function writeRobotsTxt() {
         "User-agent: *",
         "Allow: /",
         "Disallow: /private/",
-        "Disallow: /data/love-letters.enc.json",
+        "Disallow: /data/letters.enc.json",
         "",
         `Sitemap: ${SITE_ORIGIN}/sitemap.xml`,
         "",

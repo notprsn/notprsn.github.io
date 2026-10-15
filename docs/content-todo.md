@@ -10,7 +10,7 @@ Current snapshot
 - [ ] Original writing is still unpublished
 - [x] CloudScript has a public story page
 - [ ] Polymarket Crypto Desk still needs a public detail page
-- [x] Love letters archive is initialized
+- [x] Letters archive is initialized
 
 Best things to finish today
 - [ ] Write and publish the first essay
@@ -36,8 +36,8 @@ Words
 - [ ] Choose a topic from `docs/writing-backlog.md`
 - [ ] Follow the 1,000-night reading schedule
 
-Love Letters
-- [x] Replace the uninitialized placeholder bundle in `data/love-letters.enc.json`
+Letters
+- [x] Replace the uninitialized placeholder bundle in `data/letters.enc.json`
 - [x] Generate a real encrypted bundle
 - [x] Choose a long passphrase and share it off-platform only
 

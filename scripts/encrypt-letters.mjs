@@ -2,17 +2,17 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, extname, resolve } from "node:path";
 import { pbkdf2Sync, randomBytes, createCipheriv } from "node:crypto";
 
-const DEFAULT_INPUT = "private/love-letters.json";
-const DEFAULT_OUTPUT = "data/love-letters.enc.json";
+const DEFAULT_INPUT = "private/letters.json";
+const DEFAULT_OUTPUT = "data/letters.enc.json";
 const ITERATIONS = 600000;
 
 async function main() {
     const inputPath = resolve(process.argv[2] || DEFAULT_INPUT);
     const outputPath = resolve(process.argv[3] || DEFAULT_OUTPUT);
-    const passphrase = process.env.LOVE_LETTERS_PASSWORD;
+    const passphrase = process.env.LETTERS_PASSWORD;
 
     if (!passphrase) {
-        throw new Error("Set LOVE_LETTERS_PASSWORD in the environment before running this script.");
+        throw new Error("Set LETTERS_PASSWORD in the environment before running this script.");
     }
 
     const source = await readArchive(inputPath);
@@ -77,7 +77,7 @@ function mimeTypeFor(filePath) {
         case ".png":
             return "image/png";
         default:
-            throw new Error(`Unsupported love-letter image format: ${filePath}`);
+            throw new Error(`Unsupported letter image format: ${filePath}`);
     }
 }
 
@@ -87,7 +87,7 @@ async function readArchive(inputPath) {
     } catch (error) {
         if (error && error.code === "ENOENT") {
             throw new Error(
-                `Missing ${inputPath}. Copy private/love-letters.template.json to private/love-letters.json and replace the example text first.`
+                `Missing ${inputPath}. Copy private/letters.template.json to private/letters.json and replace the example text first.`
             );
         }
         throw error;

@@ -20,7 +20,7 @@ Keep page-owned visuals in `css/pages/*.css` when they are specific to one top-l
 - experimental treatments that are not reused elsewhere
 - project shelf themes and project-detail themes
 - work ledger layout and work-story presentation
-- love-letters surfaces and lock layout
+- letters surfaces and lock layout
 
 The exception is `fun/projects/<slug>/`, where each mini project keeps its own `style.css`.
 
@@ -54,4 +54,4 @@ That keeps nav sizing, footer spacing, display typography, and body copy scale a
 - `/about/` uses the shared dark landing structure plus an about-specific neon rain effect.
 - `/work/` keeps its ledger and story layout in `css/pages/work.css`.
 - `/projects/` keeps its shelf card themes and project-note themes in `css/pages/projects.css`.
-- `/love-letters/` uses shared dark chrome but keeps its lock/archive styling in `css/pages/love.css`.
+- `/letters/` uses shared dark chrome but keeps its lock/archive styling in `css/pages/letters.css`.

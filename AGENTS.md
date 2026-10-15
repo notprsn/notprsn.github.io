@@ -18,7 +18,7 @@ Rules
   - `css/pages/<page>.css` for top-level page-specific styles
   - keep `fun/projects/<slug>/style.css` local to each mini project
 - Keep shared JS in `js/site.js`, and keep page-owned entrypoints in `js/pages/`.
-- Leave `data/love-letters.enc.json` encrypted-only. Plaintext stays under ignored local files.
+- Leave `data/letters.enc.json` encrypted-only. Plaintext stays under ignored local files.
 - Prefer small, explicit placeholder copy over invented marketing language.
 
 Section map
@@ -29,7 +29,7 @@ Section map
 - `/projects/<slug>/` or `/projects/<slug>/<note>/` project detail pages
 - `/fun/` hub for mini projects
 - `/words/` writing and reading hub
-- `/love-letters/` encrypted archive
+- `/letters/` encrypted archive
 - `/gallery/` future photo gallery placeholder
 - `/words/<slug>/` generated essay pages for non-empty `content.md`
 - `/secret/` private-source noindex puzzle trail injected by the Pages workflow; do not commit puzzle source here

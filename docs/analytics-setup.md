@@ -7,7 +7,7 @@ This site uses Firebase only after `js/firebase-config.js` is filled in and enab
 - A Firebase Anonymous Auth user is created for each browser profile.
 - Every page load increments `analytics/site.totalVisits`.
 - The first local visit for an anonymous user increments `analytics/site.uniqueVisitors`.
-- Successful love-letter decrypts increment `analytics/site.loveLettersUnlocks`.
+- Successful Letters unlocks increment the archive unlock counter.
 - Secret puzzle progress is stored in `puzzleProgress/{uid}` with `highestLevel`, `lastLevel`, `lastPath`, `hasWon`, and win timestamps.
 - The public secret puzzle solver count is stored in `publicStats/secretPuzzle.solverCount`.
 - Visitor docs live at `visitors/{uid}` and store only:
@@ -17,7 +17,7 @@ This site uses Firebase only after `js/firebase-config.js` is filled in and enab
   - visit count
   - timestamps
 
-The site does not store IP addresses, full referrer URLs, user agents, or plaintext love-letter data.
+The site does not store IP addresses, full referrer URLs, user agents, or plaintext letter data.
 
 ## Firebase console setup
 
