@@ -20,7 +20,7 @@ body.page-letters::after {
 
 body.page-letters::before {
   z-index: 0;
-  background: url("../../letters/fish-mosaic.png") center 34% / cover no-repeat;
+  background: url("../../letters/mosaic.jpg") center 34% / cover no-repeat;
   image-rendering: pixelated;
 }
 
