@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="site-version" content="20261114182918768">
+    <meta name="site-version" content="20261114183027794">
     <meta name="description" content="300 Python 3 practice questions for Programming in Science (420-SN1-RE), with expandable answers.">
     <title>Python practice questions</title>
     <link rel="canonical" href="https://notprsn.github.io/learning/" data-managed-seo>
@@ -2757,7 +2757,7 @@ print("0" &lt;= s &lt;= "9", s == 8)</code></pre>
                 </details>
             </li>
             <li id="q209">
-                <p>A grade is A for 90 and up, B for 80–89, and C below 80. Give the four adjacent test scores that straddle the two thresholds and their expected grades.</p>
+                <p>For integer scores, a grade is A for 90 and up, B for 80–89, and C below 80. Give the four scores that straddle the two thresholds and their expected grades.</p>
                 <details>
                     <summary aria-label="Answer to question 209">Answer</summary>
                     <div class="answer">
@@ -3211,8 +3211,9 @@ for name, hours, count in rows[1:]:
                     <div class="answer">
                         <pre><code>means = []
 for row in rows:
-    means.append(sum(row) / len(row))</code></pre>
-                        <p>Append one scalar after computing it from that row’s values.</p>
+    if row:
+        means.append(sum(row) / len(row))</code></pre>
+                        <p>Skip empty rows to avoid dividing by zero. Append one mean for each remaining row.</p>
                     </div>
                 </details>
             </li>
